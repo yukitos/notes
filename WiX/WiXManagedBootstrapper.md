@@ -1,4 +1,4 @@
-# マネージWiX Bootstrapperを作成する
+# 作業メモ：マネージWiX Bootstrapperを作成する
 
 参照記事： http://bryanpjohnston.com/2012/09/28/custom-wix-managed-bootstrapper-application
 
