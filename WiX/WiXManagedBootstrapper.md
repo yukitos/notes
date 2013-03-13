@@ -46,7 +46,7 @@ DummyInstallerプロジェクトのProduct.wxsファイルを編集して、追�
 
 ## Bootstrapper UXの作成
 
-1. ソリューションエクスプローラー上で「ソリューション 'CusotomBootstrapper'」を選択後、[追加]-[新しいプロジェクト]を選択
+1. ソリューションエクスプローラー上で「ソリューション 'CustomBootstrapper'」を選択後、[追加]-[新しいプロジェクト]を選択
 2. [インストール済み]-[Visual C#]-[クラス ライブラリ]を選択
 
 ```text
