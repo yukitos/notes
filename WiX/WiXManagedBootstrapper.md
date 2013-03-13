@@ -432,7 +432,11 @@ BootstrapperCore.configファイルを以下の通り変更する。
 
 ### BootstrapperSetupをビルド
 
+ビルドする。
+
 ## 動作確認
+
+CustomBootstrapper\BootstrapperSetup\bin\{Debug,Release} 以下に作成されたBootstrapperSetup.exeを実行する。
 
 起動直後：
 
