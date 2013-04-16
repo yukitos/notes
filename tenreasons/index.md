@@ -24,9 +24,9 @@ IT業界に就職したのもそれが理由。
 
 関数型言語にしても、僕にとってはまだ出てきたばっかりで、それに乗っかるべきかどうかまだ決めかねるところがある。
 
-もちろん、一部の学者様達は [ML](http://en.wikipedia.org/wiki/ML_(programming_language)) だとか [Haskell](http://en.wikipedia.org/wiki/Haskell_(programming_language)) だとかはもうJavaとかPHPみたいに十分歴史があるって言うんだろうけど、僕にしてみればHaskellなんてついこの間初めて聞いたばっかりだし、そんな議論をしたいわけでもないんだ。
+もちろん、一部の学者様達は [ML](<http://en.wikipedia.org/wiki/ML_(programming_language)>) だとか [Haskell](<http://en.wikipedia.org/wiki/Haskell_(programming_language)>) だとかはもうJavaとかPHPみたいに十分歴史があるって言うんだろうけど、僕にしてみればHaskellなんてついこの間初めて聞いたばっかりだし、そんな議論をしたいわけでもないんだ。
 
-その中でも生まれたての [F#](http://fsharp.org/) っていうのもある。
+その中でも生まれたての [F#](<http://fsharp.org/>) っていうのもある。
 これはまだたった7歳だよ。
 勘弁してくれ！
 地質学者にしてみれば7年は十分長い時間かもしれないけど、インターネット業界では7年なんて瞬き一つで過ぎ去る程度だ。
@@ -40,7 +40,7 @@ IT業界に就職したのもそれが理由。
 1日に500行もコードを書いたらそれはもうやりきった感がすごいよね。
 コミットもたくさんするし、上司もそれをみてああこいつ頑張ってるなって思ってるんじゃないかな。
 
-だけど古き良きCスタイルのコードと関数型言語の[コードを比べてみる](http://fsharpforfunandprofit.com/posts/fvsc-sum-of-squares/)と、関数型言語のそれはもう身の毛もよだつようなシンプルさだ。
+だけど古き良きCスタイルのコードと関数型言語の[コードを比べてみる](<http://fsharpforfunandprofit.com/posts/fvsc-sum-of-squares/>)と、関数型言語のそれはもう身の毛もよだつようなシンプルさだ。
 
 たとえばおなじみの言語で書かれたこんなコードがあるとする：
 
@@ -72,7 +72,7 @@ let sumOfSquares n = [1..n] |> List.map square |> List.sum
 ```
 
 17行と2行。
-[これがプロジェクト全体に及んだら、果たしてどういうことになるのか想像つくだろう！](http://www.simontylercousins.net/journal/2013/2/22/does-the-language-you-choose-make-a-difference.html)
+[これがプロジェクト全体に及んだら、果たしてどういうことになるのか想像つくだろう！](<http://www.simontylercousins.net/journal/2013/2/22/does-the-language-you-choose-make-a-difference.html>)
 
 このアプローチを採用しようものなら、僕の生産性はだだ下がりだ。
 申し訳ないけどお断りだよね。
@@ -130,7 +130,7 @@ type Squarer() =
 
 うーん。でも僕は型の宣言って好きなんだよね。
 引数全部の型がわからないとちょっと不安なんだよ。
-だから[Java](http://steve-yegge.blogspot.co.uk/2006/03/execution-in-kingdom-of-nouns.html)なんかはまさにお気に入りの言語だ。
+だから[Java](<http://steve-yegge.blogspot.co.uk/2006/03/execution-in-kingdom-of-nouns.html>)なんかはまさにお気に入りの言語だ。
 
 MLっぽいコードだと関数のシグネチャはこんな感じになる。
 型を書く必要はなくて、自動的に推論されるわけだ。
@@ -171,7 +171,7 @@ public IEnumerable<IGrouping<TKey, TSource>> GroupBy<TSource, TKey>(
 製品コードにバグを見つけたりしたらそれはもうすごいよね。
 なんと言ってもヒーローになれるチャンスなんだし。
 
-だけど型付けされた関数型言語だとバグが入り込む隙間がないって[聞いたことがある](http://www.simontylercousins.net/journal/2013/3/7/why-bugs-dont-like-f.html)。
+だけど型付けされた関数型言語だとバグが入り込む隙間がないって[聞いたことがある](<http://www.simontylercousins.net/journal/2013/3/7/why-bugs-dont-like-f.html>)。
 
 がっかりだよね。
 
@@ -181,7 +181,7 @@ public IEnumerable<IGrouping<TKey, TSource>> GroupBy<TSource, TKey>(
 バグ修正の話を続けると、僕はコードをステップ実行するだけで1日が終わっていく。
 もちろん単体テストをした方がいいって話もあるけど、でも実際動かしてみればわかるよって話でしょ？
 
-それはおいといて、静的に型付けされた関数型言語の場合、[コードがコンパイルできたってことはそれが動くってことだ](http://www.haskell.org/haskellwiki/Why_Haskell_just_works)。
+それはおいといて、静的に型付けされた関数型言語の場合、[コードがコンパイルできたってことはそれが動くってことだ](<http://www.haskell.org/haskellwiki/Why_Haskell_just_works>)。
 
 型を前もって一致させる作業には結構時間がかかるけど、それさえ終わってコンパイルが通れば後はデバッグの必要もないっていう話は聞いたことがある。
 でもそれって面白い？
@@ -201,7 +201,7 @@ public IEnumerable<IGrouping<TKey, TSource>> GroupBy<TSource, TKey>(
 理由8：やっぱりnullチェックしないと。
 -------------------------------
 
-メソッドでは毎回[nullチェック](http://stackoverflow.com/questions/7585493/null-parameter-checking-in-c-sharp)が欠かせないよね。
+メソッドでは毎回[nullチェック](<http://stackoverflow.com/questions/7585493/null-parameter-checking-in-c-sharp>)が欠かせないよね。
 そうすればコードがちゃんと守られてるっていう感じで満たされるし。
 
 ```csharp
@@ -219,12 +219,12 @@ void someMethod(SomeClass x)
 
 だけどヌルポでひどいクラッシュが起きるときだけはガッするようにはしてる。
 そうすれば僕がエラーを探している間もビジネス的な損失はそれほど起こらないからね。
-なのでnullの処理ってそんなに[たいした話](http://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare)じゃないと思う。
+なのでnullの処理ってそんなに[たいした話](<http://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare>)じゃないと思う。
 
 理由9：いつでもどこでもデザインパターン使いたい
 ---------------------------------------
 
-[デザパタ本](http://www.amazon.com/First-Design-Patterns-Elisabeth-Freeman/dp/0596007124)でデザインパターンを知った口（何か理由があってGoF本を読まないといけなくなったんだけど、理由は覚えてない）なんだけど、これはありとあらゆる問題を解決する神アイテムだと思ってる。
+[デザパタ本](<http://www.amazon.com/First-Design-Patterns-Elisabeth-Freeman/dp/0596007124>)でデザインパターンを知った口（何か理由があってGoF本を読まないといけなくなったんだけど、理由は覚えてない）なんだけど、これはありとあらゆる問題を解決する神アイテムだと思ってる。
 デザインパターンを使っておけば、コードがまじめで「エンタープライズっぽい」感じになるし、上司受けもいいからね。
 
 だけど関数型言語向けのパターンって全然見かけない。
@@ -243,7 +243,7 @@ ss=: +/ @: *:
 ```
 
 おおっと！
-ごめんこれは[J用のコード](http://en.wikipedia.org/wiki/J_(programming_language))だった。
+ごめんこれは[J用のコード](<http://en.wikipedia.org/wiki/J_(programming_language)>)だった。
 
 だけどやっぱり関数型プログラムだと`<*>`とか`>>=`とかいうへんてこな記号を使ったり、「モナド」とか「函手」とかいうぼんやりとした概念を使ったりしているんだって話は聞いたことがある。
 
@@ -257,13 +257,13 @@ ss=: +/ @: *:
 僕は使わない。
 関数型プログラミングが便利だとも思わないし。
 
-とにかく、あれこれいろんなことを言われても正直よくわからないんで、誰か3行で[説明して](http://fsharpforfunandprofit.com/why-use-fsharp/)くれってことだけ言いたかったんだ。
+とにかく、あれこれいろんなことを言われても正直よくわからないんで、誰か3行で[説明して](<http://fsharpforfunandprofit.com/why-use-fsharp/>)くれってことだけ言いたかったんだ。
 
 アップデート：なので「everything you need to know on one page」のページを見たけどちょっと短すぎてわかんなかった。
 
-誰か僕が興味を持てるように[kw](http://fsharpforfunandprofit.com/posts/designing-for-correctness/)[s](http://fsharpforfunandprofit.com/series/designing-with-types.html)[k](http://fsharpforfunandprofit.com/posts/computation-expressions-intro/)教えてくれないかな。
+誰か僕が興味を持てるように[kw](<http://fsharpforfunandprofit.com/posts/designing-for-correctness/>)[s](<http://fsharpforfunandprofit.com/series/designing-with-types.html>)[k](<http://fsharpforfunandprofit.com/posts/computation-expressions-intro/>)教えてくれないかな。
 
-だけど[チュートリアル](http://learnyouahaskell.com/)嫁と[かサンプル動かせ](http://www.tryfsharp.org/Learn)とかコード書けとかはナシで。
+だけど[チュートリアル](<http://learnyouahaskell.com/>)嫁とか[サンプル動かせ](<http://www.tryfsharp.org/Learn>)とかコード書けとかはナシで。
 仕事じゃないのにそんなことしたくも無いんで。
 
 新しいパラダイムを勉強するためだけにこれまでのポリシーを曲げたくはないんだ。
