@@ -1,8 +1,6 @@
-Xamarin Studio Install
-======================
+# Xamarin Studio Install
 
-Xamarin Studioのダウンロード
-----------------------------
+## Xamarin Studioのダウンロード
 
 <http://xamarin.com/download> にアクセスして名前、メールアドレス、国名、ロールを入力または選択後、ダウンロードを開始する。
 
@@ -21,10 +19,9 @@ Xamarin Studioのダウンロード
 
 ![alt text][img02]
 
-Xamarin Studioのインストール
-----------------------------
+## Xamarin Studioのインストール
 
-ダウンロードしたXamarinInstaller.exeを実行する
+### ダウンロードしたXamarinInstaller.exeを実行する
 - - - - - - - - - - - - - - - - - - - - - - - - 
 
 ![alt text][img03]
