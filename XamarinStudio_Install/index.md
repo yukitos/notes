@@ -1,10 +1,10 @@
-# Xamarin Studio Install
+# Memo about Xamarin Studio Install
 
 ## Xamarin Studioのダウンロード
 
 <http://xamarin.com/download> にアクセスして名前、メールアドレス、国名、ロールを入力または選択後、ダウンロードを開始する。
 
-![alt text][img01]
+![Xamarin Studio Download Page][img01]
 
 ロールは以下のいずれかから選択する。今回は個人用にインストールしてみるだけなので「Indie」を選択。
 
@@ -17,30 +17,57 @@
 
 入力後[Download]を押してしばらく待つとXamarinInstaller.exeがダウンロードできる。
 
-![alt text][img02]
+![Xamarin Studio Downloading][img02]
 
 ## Xamarin Studioのインストール
 
 ### ダウンロードしたXamarinInstaller.exeを実行する
-- - - - - - - - - - - - - - - - - - - - - - - - 
 
-![alt text][img03]
+![Xamarin Studio Install 01][img03]
 
-![alt text][img04]
+![Xamarin Studio Install 02][img04]
 
-![alt text][img05]
+![Xamarin Studio Install 03][img05]
 
-![alt text][img06]
+![Xamarin Studio Install 04][img06]
 
-![alt text][img07]
+![Xamarin Studio Install 05][img07]
 
-![alt text][img08]
+![Xamarin Studio Install 06][img08]
 
-![alt text][img09]
+![Xamarin Studio Install 07][img09]
 
-![alt text][img10]
+![Xamarin Studio Install 08][img10]
 
-![alt text][img11]
+![Xamarin Studio Install 09][img11]
+
+## Xamarin Studioの起動
+
+[スタート]-[すべてのプログラム]-[Xamarin Studio]で起動する。
+
+![Xamarin Studio Startup][img12]
+
+## Xamarin StudioにF#の開発環境をインストールする
+
+[ツール]-[アドイン マネージャ]を選択
+
+![Xamarin Studio Create New Solution][img13]
+
+[Gallery]タブを選択した状態で「fsharp」を検索。
+
+![Xamarin Studio F# Add-ins][img14]
+
+「F# support for Xamarin.Android development」を選択してインストール（すれば自動的に依存関係が解決されてF# Language Bindingもインストールされる）。
+
+## Xamarin StudioでF#アプリケーションを作成する
+
+F#のアドインをインストールすると以下のようなプロジェクトが追加される。
+
+![Xamarin Studio F# Projects][img15]
+
+![Xamarin Studio F# for Android Projects][img16]
+
+![Xamarin Studio F# for ASP.NET Projects][img17]
 
 [img01]: <img/img01.png> "Download page"
 [img02]: <img/img02.png> "Downloading"
@@ -53,3 +80,9 @@
 [img09]: <img/img09.png> "Xamarin Installer 07"
 [img10]: <img/img10.png> "Xamarin Installer 08"
 [img11]: <img/img11.png> "Xamarin Installer 09"
+[img12]: <img/img12.png> "Xamarin Studio Startup"
+[img13]: <img/img13.png> "Xamarin Studio Add-in Manager"
+[img14]: <img/img14.png> "Xamarin Studio F# Add-ins"
+[img15]: <img/img15.png> "Xamarin Studio F# Projects"
+[img16]: <img/img16.png> "Xamarin Studio F# for Android Projects"
+[img17]: <img/img17.png> "Xamarin Studio F# for ASP.NET Projects"
