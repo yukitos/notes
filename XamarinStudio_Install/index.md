@@ -69,6 +69,21 @@ F#のアドインをインストールすると以下のようなプロジェク
 
 ![Xamarin Studio F# for ASP.NET Projects][img17]
 
+### F# 3.0 Console Projectの作成
+
+[ファイル]-[新規]-[ソリューション]を選択後、[F#]-[F# 3.0 Console Project]を選択して適当な名前とソリューション名を入力する。
+
+![Xamarin Studio New Solution Dialog][img18]
+
+ファイルを追加するにはソリューションエクスプローラ上でプロジェクトを右クリックしてから[追加]-[新しいファイル]を選択する。
+
+![Xamarin Studio New File Dialog][img19]
+
+ファイルを追加した後はファイルのビルド順序を指定する必要がある。
+ビルド順序はメニューから[プロジェクト]-[(プロジェクト名)のオプション]を選択し、[ビルド]-[一般]の[Build Order]タブで指定する。
+
+![Xamarin Studio F# Project's Build Order][img20]
+
 [img01]: <img/img01.png> "Download page"
 [img02]: <img/img02.png> "Downloading"
 [img03]: <img/img03.png> "Xamarin Installer 01"
@@ -86,3 +101,6 @@ F#のアドインをインストールすると以下のようなプロジェク
 [img15]: <img/img15.png> "Xamarin Studio F# Projects"
 [img16]: <img/img16.png> "Xamarin Studio F# for Android Projects"
 [img17]: <img/img17.png> "Xamarin Studio F# for ASP.NET Projects"
+[img18]: <img/img18.png> "Xamarin Studio F# 3.0 Console Project"
+[img19]: <img/img19.png> "Xamarin Studio Adding New Class File"
+[img20]: <img/img20.png> "Xamarin Studio F# Project's Build Order"
