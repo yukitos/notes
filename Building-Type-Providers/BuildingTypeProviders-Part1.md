@@ -110,7 +110,7 @@ F#コンパイラのプロセス内でロードされるため、デザイン時
 「駄目だ！
 かつては型セーフなコードクォートだったおかげですばらしくて簡潔なコードだったのに、
 今は文字列に頼ったリフレクションAPIを使っているせいでエラーの起こりやすい
-   　ひどいコードに書き換えようとしているじゃないか。
+ひどいコードに書き換えようとしているじゃないか。
 なんという退化だろうか。
 もっといい方法があるはずだ。」
 
@@ -141,5 +141,5 @@ F#コンパイラのプロセス内でロードされるため、デザイン時
 [id04]: http://msdn.microsoft.com/en-gb/library/hh361034.aspx "Tutorial: Creating a Type Provider"
 [id05]: http://www.tryfsharp.org/Learn/data-science#world-bank-type-provider "World Bank type provider on TryF#"
 [id06]: https://github.com/fsharp/FSharp.Data/blob/master/src/Providers/AssemblyReplacer.fs "AssemblyReplacer"
-[id07]: http://tomasp.net/ "TomasP.net"
-[id08]: https://github.com/fsharp/FSharp.Data/blob/master/src/Providers/QuotationBuilder.fs "QuotationBuilder"
+[id07]: https://github.com/fsharp/FSharp.Data/blob/master/src/Providers/QuotationBuilder.fs "QuotationBuilder"
+[id08]: http://tomasp.net/ "TomasP.net"
