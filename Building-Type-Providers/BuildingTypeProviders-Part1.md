@@ -1,5 +1,7 @@
-型プロバイダーの作成 パート1
-============================
+型プロバイダーの作成 パート1 (翻訳)
+==============================
+
+(原文：[Building Type Providers - Part 1][id00])
 
 型プロバイダーはF# 3.0における主要な新機能の1つです。
 この機能を使用することにより、一般的には動的言語や文字列による型付けが行われるような領域において静的な型付けを行うことができるようになります。
@@ -132,6 +134,7 @@ F#コンパイラのプロセス内でロードされるため、デザイン時
 - 複数の.NET Frameworkプロファイルをサポートする方法
 - 型プロバイダーの開発中によく起こるエラーについて
 
+[id00]: http://blog.codebeside.org/blog/2013/05/13/building-type-providers-part1/ "Building Type Providers - Part 1"
 [id01]: http://blogs.msdn.com/b/dsyme/archive/2013/01/30/twelve-type-providers-in-pictures.aspx "All your types are belong to us"
 [id02]: http://fsharp.github.com/FSharp.Data/ "FSharp.Data"
 [id03]: http://fsharp3sample.codeplex.com/ "F# 3.0 Sample Pack"
