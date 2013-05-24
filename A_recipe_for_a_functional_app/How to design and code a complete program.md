@@ -1,8 +1,7 @@
 # 完全なプログラムを設計してコードを書く方法（翻訳） #
+関数型アプリケーションのレシピ パート1
 
 原文：[How to design and code a complete program][link01]
-
-## 関数型アプリケーションのレシピ パート1 ##
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
@@ -24,7 +23,7 @@
   これがOOからFPへとスムーズに移行できるようなアプローチであればよいのですが。
 * 話を簡単にするために（また単純なF#スニペットとして利用可能なように）、全体的なインフラ用モックを使用して、直接UIを操作するようにはしないものとします。
 
-### 概要 ###
+## 概要 ##
 
 
 [link01]: http://fsharpforfunandprofit.com/posts/recipe-part1/ "How to design and code a complete program"
