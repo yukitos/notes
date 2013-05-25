@@ -171,6 +171,158 @@ val bind : ('a -> Result<'b,'c>) -> Result<'a,'c> -> Result<'b,'c>
 * リターンされた関数の出力は``'b``と``'c``という別の型を持った``Result``型です。
   この型はスイッチ関数の出力と同じ型になっています。
 
+上記のように、この型シグネチャがまさに期待する通りのものになっていることが分かると思います。
+
+なおこの関数は完全にジェネリックで、任意のスイッチ関数と任意の型に対応できます。
+制限されるのは``switchFunction``の「形」だけで、具体的な型については特に制限されません。
+
+### bind関数を別の方法で作成する ###
+
+少し話がそれますが、bind関数は別の書き方をすることもできます。
+
+1つは以下のように、内部で定義した``twoTrackInput``を2番目の引数として明示的に受け取るようにする方法です：
+
+```fsharp
+let bind switchFunction twoTrackInput =
+    match twoTrackInput with
+    | Success s -> switchFunction s
+    | Failure f -> Failure f
+```
+
+これは最初の定義と全く同じものです。
+2引数の関数が1引数の関数と全く同じだと言える理由が分からなければ、是非 [カリー化][link16] の記事を参照してください！
+
+もう1つの書き方としては、以下のように``match..with``を``function``キーワードで書き換えてしまう方法です：
+
+```fsharp
+let bind switchFunction =
+    function
+    | Success s -> switchFunction s
+    | Failure f -> Failure f
+```
+
+以上3つのコードスタイルを見かけることになると思いますが、引数が明確になっていたほうが非エキスパートであってもコードを読みやすいと思うため、筆者としては2番目のスタイル(``let bind switchFunction twoTrackInput =``)を推奨します。
+
+## 例：複数の検証用関数を組み合わせる ##
+
+コンセプトがうまくいっているかテストするために、ここで少しコードを書いてみましょう。
+
+まずは既に定義済みのものがあります。
+``Request``と``Result``、``bind``は以下の通りです：
+
+```fsharp
+type Result<'TSuccess, 'TFailure> =
+    | Success of 'TSuccess
+    | Failure of 'TFailure
+
+type Request = {name:string; email:string}
+
+let bind switchFunction twoTrackInput =
+    match twoTrackInput with
+    | Success s -> switchFunction s
+    | Failure f -> Failure f
+```
+
+次に3つの関数を作成します。
+それぞれは「スイッチ」関数で、最終的には1つの巨大な関数として組み合わせることになります：
+
+```fsharp
+let validate1 input =
+    if input.name = "" then Failure "名前を入力してください"
+    else Success input
+
+let validate2 input =
+    if input.name.Length > 50 then Failure "名前は50文字以下で入力してください"
+    else Success input
+
+let validate3 input =
+    if input.email = "" then Failure "メールアドレスを入力してください"
+    else Success input
+```
+
+次はこれらを連結できるように、それぞれの関数に対して``bind``関数を呼び出して2路線用の新しい関数を作成します。
+
+その後、以下のように標準の関数合成演算子を使用して2路線関数を連結します：
+
+```fsharp
+/// 3つの検証用関数を1つにまとめます
+let combinedValidation =
+    // スイッチ関数を2路線関数に変換します
+    let validate2' = bind validate2
+    let validate3' = bind validate3
+    // 2路線関数を連結します
+    validate1 >> validate2' >> validate3'
+```
+
+``validate2'``と``validate3'``は2路線を入力とするような新しい関数です。
+シグネチャを確認すると、``Result``を引数にとって``Result``をリターンするようになっていることがわかります。
+しかし``validate1``は2路線入力できるように変換する必要はないという点に注意してください。
+この入力は1路線のままになっていて、出力は既に2路線になっているため、合成に必要な条件を満たしています。
+
+``validate1``(未bind)スイッチと``validate2``、``validate3``スイッチをそれぞれ``validate2'``、``validate3'``アダプターにして連結すると下図のようになります。
+
+![combined validate functions][link16]
+
+以下のように``bind``を「インライン化」することもできます：
+
+```fsharp
+let combinedValidation =
+    // 2路線用関数を連結します
+    validate1
+    >> bind validate2
+    >> bind validate3
+```
+
+不正な入力2パターンと正常入力1パターンをテストしてみましょう：
+
+```fsharp
+// テスト1
+let input1 = {name=""; email=""}
+combinedValidation input1
+|> printfn "Result1=%A"
+
+// ==> Result1=Failure "名前を入力してください"
+
+// テスト2
+let input2 = {name="Alice"; email=""}
+combinedValidation input2
+|> printfn "Result2=%A"
+
+// ==> Result2=Failure "メールアドレスを入力してください"
+
+let input3 = {name="Alice"; email="good"}
+combinedValidation input3
+|> printfn "Result3=%A"
+
+// ==> Result3=Success {name = "Alice"; email = "good";}
+```
+
+是非上のコードを実際に試してみたり、違う値をテストしてみたりしてください。
+
+> 上記3つの関数を直列ではなく並列に実行して、検証エラーを一度に取得できないだろうかと思うかもしれません。
+> もちろん可能です。
+> この記事で後ほど説明する予定です。
+
+### パイプ化演算子としてのbind ###
+
+``bind``関数の説明が続きますが、スイッチ関数をパイプ化するシンボルとしては``>>=``が一般的に使用されます。
+
+定義は以下の通りで、左右に指定した関数を簡単に連結させることができるようになっています：
+
+```fsharp
+/// 中置演算子を作成します
+let (>>=) twoTrackInput switchFunction =
+    bind switchFunction twoTrackInput
+```
+
+> このシンボルは、合成演算子``>>``の後に線路のシンボル``=``を続けたものと覚えてください。
+
+こういった演算子を使用すると、``>>=``演算子をスイッチ関数用のパイプ演算子(``|>``)とみなすことができます。
+
+通常のパイプ演算では、左辺に1路線の値を指定して、右辺に通常の関数を指定します。
+しかし「bindパイプ」演算子の場合、左辺には2路線の値を指定して右辺にスイッチ関数を指定します。
+
+
 
 [link01]: http://fsharpforfunandprofit.com/posts/recipe-part2/ "Railway oriented programming"
 [link02]: img/01-10.png "Figure 01-10.png"
@@ -187,3 +339,4 @@ val bind : ('a -> Result<'b,'c>) -> Result<'a,'c> -> Result<'b,'c>
 [link13]: img/02-11.png "Figure 02-11.png"
 [link14]: img/02-12.png "Figure 02-12.png"
 [link15]: img/02-13.png "Figure 02-13.png"
+[link16]: img/02-14.png "Figure 02-14.png"
