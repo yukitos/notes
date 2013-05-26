@@ -1,5 +1,6 @@
 # 鉄道指向プログラミング #
 関数型アプリケーションのためのレシピ パート2
+
 原文：[Railway oriented programming][link01]
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -363,11 +364,11 @@ let combinedValidation =
 中央のあたりを隠してみましょう。
 そうすると1入力2出力になっていることがわかります：
 
-![Combined two switch functions seems another switch][link18]
+![Combined two switch functions seems another switch][link19]
 
 つまり実際には以下のようにしてスイッチ関数を連結できるというわけです：
 
-![Two switch functions become another switch function][link19]
+![Two switch functions become another switch function][link20]
 
 それぞれの合成結果が別のスイッチになっているわけなので、さらに別のスイッチを追加してより大きな関数となり、やはりこれもスイッチなので別のスイッチを追加できるといった具合です。
 
@@ -405,18 +406,19 @@ let combinedValidation =
 それぞれの機能は以下の通りです：
 
 * **bind**は1つのスイッチ関数を引数にとります。
-  スイッチ関数を完全な2路線(つまり2路線入力かつ2路線出力)関数に変換します。* **スイッチ合成**は2つのスイッチ関数を引数にとります。
+  スイッチ関数を完全な2路線(つまり2路線入力かつ2路線出力)関数に変換します。
+* **スイッチ合成**は2つのスイッチ関数を引数にとります。
   一連のスイッチ関数を連結して、新しい1つのスイッチ関数を作成します。
 
 スイッチ合成よりもbindを使用したほうがいい場合があるのでしょうか？
 それはコンテキストによって異なります。
 既に2路線システムが構築されていて、そこへさらにスイッチを追加する必要がある場合には、bindでスイッチ関数を2路線入力できるように変換する必要があります。
 
-![Need to use bind if two-track system exists][link20]
+![Need to use bind if two-track system exists][link21]
 
 一方、全体的なデータフローがスイッチの連鎖で構成されている場合にはスイッチ合成のほうが簡単でしょう。
 
-![switch composition can be simpler][link21]
+![switch composition can be simpler][link22]
 
 ### bindの観点からのスイッチ合成 ###
 
@@ -424,15 +426,15 @@ let combinedValidation =
 1つめのスイッチをbind後の2つめのスイッチと連結させればスイッチ合成と同じことができます。
 つまり2つのスイッチがそれぞれあるとして：
 
-![Two separate switches][link22]
+![Two separate switches][link23]
 
 それぞれを合成してより大きなスイッチが作られます：
 
-![Switches composed together][link23]
+![Switches composed together][link24]
 
 これは2つめのスイッチに``bind``を使用した場合と同じです：
 
-![use bind on the second switch][link24]
+![use bind on the second switch][link25]
 
 この考え方でスイッチ合成を書き直すと以下のようになります：
 
@@ -469,7 +471,7 @@ let canonicalizeEmail input =
 別の言い方をすれば、この関数用のアダプターブロックが必要だということです。
 コンセプトとしては``bind``の場合と同じですが、今回の場合はアダプターブロックが1路線関数用のスロットを持ち、全体の「形」としてはアダプターブロックがスイッチになっていなければいけないという違いがあります。
 
-![Adapter block having a slot for one-track function][link25]
+![Adapter block having a slot for one-track function][link26]
 
 実装コードは単純です。
 1路線関数の出力を2路線用の出力へと変換してやればよいだけです。
@@ -484,7 +486,7 @@ let switch f x =
 鉄道用語で言えば、ある意味で廃線を増やしたとも言えるでしょう。
 全体からすると(1路線入力、2路線出力の)スイッチ関数のように見えますが、当然ながら実際には失敗用の路線は単なるダミーで、決して使用されることがありません。
 
-![added a bit of failure track][link26]
+![added a bit of failure track][link27]
 
 ``switch``が出来上がれば、あとは``canonicalizeEmail``関数を最後の位置に連結させるだけです。
 機能も増えてきたため、あわせて関数の名前を``usecase``に変更しましょう。
@@ -520,12 +522,12 @@ usecase badInput
 
 しかし場合によっては2路線モデルを直接使用して、1路線関数を2路線関数に直接変換したいということもあるでしょう：
 
-![turn a one-track function into a two-track function directly][link27]
+![turn a one-track function into a two-track function directly][link28]
 
 この場合もやはり、単純な関数をスロットにもつようなアダプターブロックが必要です。
 このようなアダプターを一般的に``map``と呼んでいます。
 
-![adapter called as map][link28]
+![adapter called as map][link29]
 
 今回もやはり直感的に実装できます。
 2路線入力が``Success``の場合には関数を呼び出して、結果をSuccessとして返すだけです。
@@ -587,3 +589,4 @@ let usecase =
 [link26]: img/02-24.png "Figure 02-24.png"
 [link27]: img/02-25.png "Figure 02-25.png"
 [link28]: img/02-26.png "Figure 02-26.png"
+[link29]: img/02-27.png "Figure 02-27.png"
