@@ -322,6 +322,241 @@ let (>>=) twoTrackInput switchFunction =
 通常のパイプ演算では、左辺に1路線の値を指定して、右辺に通常の関数を指定します。
 しかし「bindパイプ」演算子の場合、左辺には2路線の値を指定して右辺にスイッチ関数を指定します。
 
+この演算子を使用すると、``combinedValidation``関数を以下のような方法でも作成できます。
+
+```fsharp
+let combinedValidation x =
+    x
+    |> validate1  // validate1は1路線入力なので通常のパイプ演算を使用しますが
+                  // 結果としては2路線を出力するので...
+    >>= validate2 // ...「bindパイプ」が使用できます。この結果も2路線出力なので
+    >>= validate3 // ... さらに「bindパイプ」が使用できます。
+```
+
+前回の実装と異なる点は、今回の場合は関数指向というよりはデータ指向の実装になっているという点です。
+初期のデータ値として``x``を明示的に受け取るようになっています。
+``x``は最初の関数に渡されて、出力データが後続する関数に渡されていくという形になっています。
+
+前回の実装では(以下に再掲しますが)データ引数を全くとらないものでした！
+関数自体に焦点が置かれていて、関数毎のデータフローについては対象になっていません。
+
+```fsharp
+let combinedValidation =
+    validate1
+    >> bind validate2
+    >> bind validate3
+```
+
+## bindを使用しない方法 ##
+
+スイッチ関数を連結する別の方法としては、2路線入力関数に接続するのではなく、単純に直接それぞれのスイッチ関数を連結して、より大きなスイッチ関数を作成します。
+
+つまり、以下のスイッチ関数があるとして：
+
+![Two switch functions][link17]
+
+以下のように連結します：
+
+![Combined two switch functions][link18]
+
+しかしよく考えてみると、この連結した路線もまた違ったスイッチ関数だと見なすことができます！
+中央のあたりを隠してみましょう。
+そうすると1入力2出力になっていることがわかります：
+
+![Combined two switch functions seems another switch][link18]
+
+つまり実際には以下のようにしてスイッチ関数を連結できるというわけです：
+
+![Two switch functions become another switch function][link19]
+
+それぞれの合成結果が別のスイッチになっているわけなので、さらに別のスイッチを追加してより大きな関数となり、やはりこれもスイッチなので別のスイッチを追加できるといった具合です。
+
+スイッチを合成するコードは以下のようになります。
+標準的なシンボルは``>=>``で、通常の合成用シンボルに似ていますが、間に線路が置かれた形になっています。
+
+```fsharp
+let (>=>) switch1 switch2 x =
+    match switch1 x with
+    | Success s -> switch2 s
+    | Failure f -> Failure f
+```
+
+今回も実際の実装としては非常に単純です。
+1路線入力``x``を最初のスイッチに渡します。
+そして結果が成功であれば2番目のスイッチに結果を渡し、失敗した場合には2番目のスイッチが完全にスキップされます。
+
+さてこれでbindを使用せずに``combinedValidation``関数が作成できるようになりました：
+
+```fsharp
+let combinedValidation =
+    validate1
+    >=> validate2
+    >=> validate3
+```
+
+これが一番シンプルな形ではないかと思います。
+もちろん拡張も非常に簡単で、4つめの検証用関数を追加したい場合には、最後の位置に追加するだけです。
+
+### bind 対 スイッチ合成 ###
+
+それぞれは一見すると同じに見えるものの、コンセプトがそれぞれ異なります。
+何が異なるのでしょうか？
+
+それぞれの機能は以下の通りです：
+
+* **bind**は1つのスイッチ関数を引数にとります。
+  スイッチ関数を完全な2路線(つまり2路線入力かつ2路線出力)関数に変換します。* **スイッチ合成**は2つのスイッチ関数を引数にとります。
+  一連のスイッチ関数を連結して、新しい1つのスイッチ関数を作成します。
+
+スイッチ合成よりもbindを使用したほうがいい場合があるのでしょうか？
+それはコンテキストによって異なります。
+既に2路線システムが構築されていて、そこへさらにスイッチを追加する必要がある場合には、bindでスイッチ関数を2路線入力できるように変換する必要があります。
+
+![Need to use bind if two-track system exists][link20]
+
+一方、全体的なデータフローがスイッチの連鎖で構成されている場合にはスイッチ合成のほうが簡単でしょう。
+
+![switch composition can be simpler][link21]
+
+### bindの観点からのスイッチ合成 ###
+
+偶然にも、スイッチ合成はbindを使用して記述することができます。
+1つめのスイッチをbind後の2つめのスイッチと連結させればスイッチ合成と同じことができます。
+つまり2つのスイッチがそれぞれあるとして：
+
+![Two separate switches][link22]
+
+それぞれを合成してより大きなスイッチが作られます：
+
+![Switches composed together][link23]
+
+これは2つめのスイッチに``bind``を使用した場合と同じです：
+
+![use bind on the second switch][link24]
+
+この考え方でスイッチ合成を書き直すと以下のようになります：
+
+```fsharp
+let (>=>) switch1 switch2 =
+    switch1 >> (bind switch2)
+```
+
+このスイッチ合成の実装は最初のものよりも単純で、それでいながらより抽象化されています。
+しかしそれが初学者にとって簡単かどうかはまた別の問題です！
+関数をデータの流れから考えるのではなく、正しく機能として認識することができるようになれば、このアプローチのほうが理解しやすいのではないかと思います。
+
+## 単純な関数を鉄道指向プログラミングモデルへと変換する ##
+
+いったんコツがつかめれば、ありとあらゆるものをこのモデルに適用できるようになります。
+
+たとえばスイッチ関数ではなく、普通の関数を考えてみましょう。
+また、それをフローの中に組み込みたいものとします。
+
+具体的には検証が完了した後、メールアドレスから前後の空白を削除しつつ小文字に揃えたいとします。
+コードとしては以下のような関数を用意します：
+
+```fsharp
+let canonicalizeEmail input =
+    { input with email = input.email.Trim().ToLower() }
+```
+
+このコードは(1路線の)``Request``を受け取り、(1路線の)``Request``を返します。
+
+これを検証処理と更新処理の間に挿入するにはどうしたらよいでしょうか？
+
+この単純な関数をスイッチ関数に変換出来たとすれば、後は既に説明したようにスイッチ合成を行うだけです。
+
+別の言い方をすれば、この関数用のアダプターブロックが必要だということです。
+コンセプトとしては``bind``の場合と同じですが、今回の場合はアダプターブロックが1路線関数用のスロットを持ち、全体の「形」としてはアダプターブロックがスイッチになっていなければいけないという違いがあります。
+
+![Adapter block having a slot for one-track function][link25]
+
+実装コードは単純です。
+1路線関数の出力を2路線用の出力へと変換してやればよいだけです。
+今回の場合、結果は常にSuccessになります。
+
+```fsharp
+// 通常の関数をスイッチに変換します
+let switch f x =
+    f x |> Success
+```
+
+鉄道用語で言えば、ある意味で廃線を増やしたとも言えるでしょう。
+全体からすると(1路線入力、2路線出力の)スイッチ関数のように見えますが、当然ながら実際には失敗用の路線は単なるダミーで、決して使用されることがありません。
+
+![added a bit of failure track][link26]
+
+``switch``が出来上がれば、あとは``canonicalizeEmail``関数を最後の位置に連結させるだけです。
+機能も増えてきたため、あわせて関数の名前を``usecase``に変更しましょう。
+
+```fsharp
+let usecase =
+    validate1
+    >=> validate2
+    >=> validate3
+    >=> switch canonicalizeEmail
+```
+
+そうするとどうなるか確認してみましょう：
+
+```fsharp
+let goodInput = {name="Alice"; email="UPPERCASE   "}
+usecase goodInput
+|> printfn "正規化された正常な結果 = %A"
+
+// 正規化された正常な結果 = Success {name = "Alice"; email = "uppercase";}
+
+let badInput = {name=""; email="UPPERCASE   "}
+usecase badInput
+|> printfn "正規化された不正な結果 = %A"
+
+// 正規化された不正な結果 = Failure "名前を入力してください"
+```
+
+## 1路線関数から2路線関数を作成する ##
+
+先ほどの例では1路線関数を元にしてスイッチ関数を作成しました。
+そうすることによって、スイッチ合成できるようになったわけです。
+
+しかし場合によっては2路線モデルを直接使用して、1路線関数を2路線関数に直接変換したいということもあるでしょう：
+
+![turn a one-track function into a two-track function directly][link27]
+
+この場合もやはり、単純な関数をスロットにもつようなアダプターブロックが必要です。
+このようなアダプターを一般的に``map``と呼んでいます。
+
+![adapter called as map][link28]
+
+今回もやはり直感的に実装できます。
+2路線入力が``Success``の場合には関数を呼び出して、結果をSuccessとして返すだけです。
+一方、入力が``Failure``だった場合には関数を完全にスキップさせます。
+
+コードは以下の通りです：
+
+```fsharp
+// 通常の関数を2路線関数に変換します
+let map oneTrackFunction twoTrackInput =
+    match twoTrackInput with
+    | Success s -> Success (oneTrackFunction s)
+    | Failure f -> Failure f
+```
+
+``canonicalizeEmail``と組み合わせると以下のようになります：
+
+```fsharp
+let usecase =
+    validate1
+    >=> validate2
+    >=> validate3
+    >> map canonicalizeEmail // 通常の合成
+```
+
+``map canonicalizeEmail``は完全に2路線の関数を返し、``validate3``スイッチの出力と直接連結させることができるため、通常の合成を使用している点に注意してください。
+
+別の言い方をすると、1路線関数に対しては``>=> switch``と``>> map``が全く同じ機能をするということです。
+
+## 行き止まり関数を2路線関数に変換する ##
+
 
 
 [link01]: http://fsharpforfunandprofit.com/posts/recipe-part2/ "Railway oriented programming"
@@ -340,3 +575,15 @@ let (>>=) twoTrackInput switchFunction =
 [link14]: img/02-12.png "Figure 02-12.png"
 [link15]: img/02-13.png "Figure 02-13.png"
 [link16]: img/02-14.png "Figure 02-14.png"
+[link17]: img/02-15.png "Figure 02-15.png"
+[link18]: img/02-16.png "Figure 02-16.png"
+[link19]: img/02-17.png "Figure 02-17.png"
+[link20]: img/02-18.png "Figure 02-18.png"
+[link21]: img/02-19.png "Figure 02-19.png"
+[link22]: img/02-20.png "Figure 02-20.png"
+[link23]: img/02-21.png "Figure 02-21.png"
+[link24]: img/02-22.png "Figure 02-22.png"
+[link25]: img/02-23.png "Figure 02-23.png"
+[link26]: img/02-24.png "Figure 02-24.png"
+[link27]: img/02-25.png "Figure 02-25.png"
+[link28]: img/02-26.png "Figure 02-26.png"
