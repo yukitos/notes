@@ -1232,4 +1232,4 @@ let usecase =
 [link35]: img/02-33.png "Figure 02-33.png"
 [link36]: img/02-34.png "Figure 02-34.png"
 [link37]: img/02-35.png "Figure 02-35.png"
-[link38]: "How to design and code a complete program.md" "How to design and code a complete program"
+[link38]: How%20to%20design%20and%20code%20a%20complete%20program.md "How to design and code a complete program"
