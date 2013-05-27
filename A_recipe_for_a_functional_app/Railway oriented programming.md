@@ -7,7 +7,7 @@
 
 前回はユースケースを処理単位に分解する方法と、発生したエラーを以下のようにエラー用の回路に逃がす必要があるという説明をしました：
 
-![Combine to a single "failure" path][link02]
+![「失敗」パスを1つにまとめる][link02]
 
 今回はこれらのステップ関数を様々な方法で1つのユニットとして組み立てる方法を紹介します。
 関数の内部設計については別の記事で説明する予定です。
@@ -22,7 +22,7 @@
 おそらくは2つのケースが考えられます。
 1つはデータが正常な場合(正常パス)、そしてもう1つは何か問題がある場合で、この場合には以下のように別の経路をたどるようにして、残る処理がスキップされるようにします：
 
-![Validate function][link03]
+![検証用関数][link03]
 
 しかし以前と同様に、この関数は適切な関数にはなり得ません。
 関数は1つの出力しか行えないため、前回定義した``Result``を使うことになります。
@@ -35,7 +35,7 @@ type Result<'TSuccess, 'TFailure> =
 
 そうするとダイアグラムも以下のようになります：
 
-![Validate function with one output][link04]
+![1出力の検証用関数][link04]
 
 これが実際にどのように動作するのかは、以下のような具体的な検証用関数の例で確認できるでしょう：
 
@@ -68,7 +68,7 @@ validateInput : Request -> Result<Request,string>
 やりたいことは``Success``の出力を次の入力として渡し、ただし``Failure``出力の場合には次の関数をスキップするようにしたいということです。
 この概念を表すダイアグラムは以下のようになります：
 
-![Connect success output, or bypass next function][link05]
+![成否によって続く関数をスキップする][link05]
 
 この状況を例えるには皆さんがおそらく見慣れている、うってつけのものがあります。
 鉄道です！
@@ -76,30 +76,30 @@ validateInput : Request -> Result<Request,string>
 鉄道にはスイッチ(イギリスではポイント)があり、電車の進路を別の路線へと切り替えることができるようになっています。
 つまり「成功/失敗」関数を以下のような鉄道のスイッチと見なすことができるわけです：
 
-!["Success/Failure" functions as railway switch][link06]
+![「成功/失敗」関数としてのスイッチ][link06]
 
 そして横につなげてみることができます。
 
-![Two railways in a row][link07]
+![横につなげた2つのスイッチ][link07]
 
 2つの失敗路線を連結するにはどうすればよいでしょうか？
 もちろんこういう感じです！
 
-![Connect two failure tracks][link08]
+![失敗路線の連結][link08]
 
 たくさんのスイッチがある場合でも、下の図のようにすればどこまでも2路線のシステムを延長できます：
 
-![Two track system][link09]
+![2路線システム][link09]
 
 上側の路線が成功パスで、下側が失敗パスです。
 
-ここで少し話を戻して全体像を見てみると、2車線の線路を覆い隠すようなブラックボックス関数がいくつかあり、それぞれの関数はデータを処理した後に次の関数へとそれを受け渡していることがわかります：
+ここで少し話を戻して全体像を見てみると、2車線の線路を覆い隠すようなブラックボックス関数がいくつかあり、それぞれの関数はデータを処理した後に次の関数へと結果を受け渡していることがわかります：
 
-![Functions straddling a two-track railway][link10]
+![2路線鉄道上にまたがった関数][link10]
 
 しかし関数の中身を見ると、実際にはそれぞれの中にスイッチがあり、不正なデータであれば失敗用の路線に切り替えている形になっています：
 
-![Inside the functions][link11]
+![関数の中身][link11]
 
 なお一度失敗用の路線に入ってしまうと(本来であれば)成功パスには決して戻さないという点に注意してください。
 終点にたどり着くまでは以降の処理をスキップさせるだけです。
@@ -113,17 +113,17 @@ validateInput : Request -> Result<Request,string>
 
 1路線用の関数を複数接続したい場合、``>>``というシンボルで表される、左から右への合成演算子を使用します。
 
-![left-to-right composition operator][link12]
+![左から右への合成演算子][link12]
 
 この合成演算子は2路線用の関数にも適用できます：
 
-![composition operator for two-track functions][link13]
+![2路線関数に対する合成演算子][link13]
 
 合成における唯一の制限は、左辺の関数における出力の型が右辺の関数における入力の型と一致しなければいけないということだけです。
 
 今回の鉄道の例であれば、1路線出力を1路線入力、あるいは2路線出力を2路線入力に接続することができますが、2路線出力を1路線入力に接続することはできないということです。
 
-![invalid composition][link14]
+![不正な合成][link14]
 
 ## スイッチを2路線用の入力に変換する ##
 
@@ -131,17 +131,17 @@ validateInput : Request -> Result<Request,string>
 
 各ステップ用の関数はそのままだと1路線入力のスイッチになります。
 しかし処理全体としては両方の路線を覆うような2路線システムになっていなければいけません。
-これはつまり各関数は単に1路線入力(``Request``)ではなく、2路線入力(``Result``)できるようになっていなければいけないということです。
+つまり各関数は単に1路線入力(``Request``)ではなく、2路線入力(``Result``)できるようになっていなければいけないということです。
 
 どうすれば2路線システムにスイッチを導入できるのでしょうか？
 
 答えは単純です。
-以下の図にあるように、各関数の「穴」あるいは「スロット」を埋めて、適切な2路線用の関数へと変換するような「アダプター」関数を用意すればよいのです：
+以下の図にあるように、各関数用の「穴」あるいは「スロット」を持ち、適切な2路線用の関数へと変換するような「アダプター」関数を用意すればよいのです：
 
-![adapter function][link15]
+![アダプター関数][link15]
 
 また、実際のコードは以下のようになります。
-この関数をここでは``bind``と名付けましたが、この名前はこのような処理を表す標準的なものです。
+このような処理は標準的には``bind``と呼ばれることが多いため、ここでもそれにならっています。
 
 ```fsharp
 let bind switchFunction =
@@ -262,7 +262,7 @@ let combinedValidation =
 
 ``validate1``(未bind)スイッチと``validate2``、``validate3``スイッチをそれぞれ``validate2'``、``validate3'``アダプターにして連結すると下図のようになります。
 
-![combined validate functions][link16]
+![検証用関数の連結][link16]
 
 以下のように``bind``を「インライン化」することもできます：
 
@@ -354,21 +354,21 @@ let combinedValidation =
 
 つまり、以下のスイッチ関数があるとして：
 
-![Two switch functions][link17]
+![2つのスイッチ関数][link17]
 
 以下のように連結します：
 
-![Combined two switch functions][link18]
+![連結後のスイッチ関数][link18]
 
 しかしよく考えてみると、この連結した路線もまた違ったスイッチ関数だと見なすことができます！
 中央のあたりを隠してみましょう。
 そうすると1入力2出力になっていることがわかります：
 
-![Combined two switch functions seems another switch][link19]
+![2つのスイッチ関数を合成すると新しいスイッチ関数のように見える][link19]
 
 つまり実際には以下のようにしてスイッチ関数を連結できるというわけです：
 
-![Two switch functions become another switch function][link20]
+![2つのスイッチ関数を連結する][link20]
 
 それぞれの合成結果が別のスイッチになっているわけなので、さらに別のスイッチを追加してより大きな関数となり、やはりこれもスイッチなので別のスイッチを追加できるといった具合です。
 
@@ -414,11 +414,11 @@ let combinedValidation =
 それはコンテキストによって異なります。
 既に2路線システムが構築されていて、そこへさらにスイッチを追加する必要がある場合には、bindでスイッチ関数を2路線入力できるように変換する必要があります。
 
-![Need to use bind if two-track system exists][link21]
+![既存の2路線システムがある場合にはbindが必要][link21]
 
 一方、全体的なデータフローがスイッチの連鎖で構成されている場合にはスイッチ合成のほうが簡単でしょう。
 
-![switch composition can be simpler][link22]
+![スイッチの合成][link22]
 
 ### bindの観点からのスイッチ合成 ###
 
@@ -426,15 +426,15 @@ let combinedValidation =
 1つめのスイッチをbind後の2つめのスイッチと連結させればスイッチ合成と同じことができます。
 つまり2つのスイッチがそれぞれあるとして：
 
-![Two separate switches][link23]
+![2つの独立したスイッチ][link23]
 
 それぞれを合成してより大きなスイッチが作られます：
 
-![Switches composed together][link24]
+![合成語のスイッチ][link24]
 
 これは2つめのスイッチに``bind``を使用した場合と同じです：
 
-![use bind on the second switch][link25]
+![2つめのスイッチにbindを使用する][link25]
 
 この考え方でスイッチ合成を書き直すと以下のようになります：
 
@@ -471,7 +471,7 @@ let canonicalizeEmail input =
 別の言い方をすれば、この関数用のアダプターブロックが必要だということです。
 コンセプトとしては``bind``の場合と同じですが、今回の場合はアダプターブロックが1路線関数用のスロットを持ち、全体の「形」としてはアダプターブロックがスイッチになっていなければいけないという違いがあります。
 
-![Adapter block having a slot for one-track function][link26]
+![1路線関数用のスロットを持ったアダプターブロック][link26]
 
 実装コードは単純です。
 1路線関数の出力を2路線用の出力へと変換してやればよいだけです。
@@ -486,7 +486,7 @@ let switch f x =
 鉄道用語で言えば、ある意味で廃線を増やしたとも言えるでしょう。
 全体からすると(1路線入力、2路線出力の)スイッチ関数のように見えますが、当然ながら実際には失敗用の路線は単なるダミーで、決して使用されることがありません。
 
-![added a bit of failure track][link27]
+![失敗路線の増設][link27]
 
 ``switch``が出来上がれば、あとは``canonicalizeEmail``関数を最後の位置に連結させるだけです。
 機能も増えてきたため、あわせて関数の名前を``usecase``に変更しましょう。
@@ -522,16 +522,16 @@ usecase badInput
 
 しかし場合によっては2路線モデルを直接使用して、1路線関数を2路線関数に直接変換したいということもあるでしょう：
 
-![turn a one-track function into a two-track function directly][link28]
+![1路線関数を直接2路線関数に変換する][link28]
 
 この場合もやはり、単純な関数をスロットにもつようなアダプターブロックが必要です。
 このようなアダプターを一般的に``map``と呼んでいます。
 
-![adapter called as map][link29]
+![mapというアダプター][link29]
 
 今回もやはり直感的に実装できます。
 2路線入力が``Success``の場合には関数を呼び出して、結果をSuccessとして返すだけです。
-一方、入力が``Failure``だった場合には関数を完全にスキップさせます。
+一方、入力が``Failure``だった場合には関数を完全にスキップします。
 
 コードは以下の通りです：
 
@@ -559,7 +559,156 @@ let usecase =
 
 ## 行き止まり関数を2路線関数に変換する ##
 
+使用頻度の高いものとしては、もう1つ「行き止まり」関数があるでしょう。
+これはつまり入力を受け付けるものの、有効な出力を行わないようなものです。
 
+たとえばデータベースのレコードを更新する関数を考えてみましょう。
+この関数は副作用を起こすことだけが重要で、通常は特に返り値を返しません。
+
+こういった関数をどうすればフローの中に組み込めるでしょうか？
+
+必要な処理は以下の通りです：
+
+* 入力のコピーを保存する
+* 関数を呼び出して、それが出力を持つなら出力を無視する
+* 元々の入力をチェインの次の関数に渡す
+
+鉄道用語でいえば、以下のように行き止まり用の待避路線を用意することになります。
+
+![行き止まり用の待避路線][link30]
+
+これが機能するには、``switch``のようなまた新しいアダプター関数を用意する必要があります。
+ただし今回は1路線の行き止まり関数用のスロットを持ち、行き止まり関数を1路線入出力のパススルー関数に変換するようなものになります。
+
+![行き止まり関数用のアダプター][link31]
+
+コードは以下の通りで、UNIXのteeコマンドにならって``tee``と名付けています：
+
+```fsharp
+let tee f x =
+    f x |> ignore
+    x
+```
+
+これで行き止まり関数を単純な1路線パススルー関数に変換できるようになったので、先に説明した``switch``あるいは``map``を使用してデータフローに追加できます。
+
+「スイッチ合成」スタイルのコードだと以下のようになります：
+
+```fsharp
+// 行き止まり関数
+let updateDatabase input =
+    () // 今のところはダミー
+
+let usecase =
+    validate1
+    >=> validate2
+    >=> validate3
+    >=> switch canonicalizeEmail
+    >=> switch (tee updateDatabase)
+```
+
+あるいは``switch``と``>=>``の代わりに``map``と``>>``を使用することもできます。
+
+通常の合成を使用する「2路線」スタイルの場合だと以下のような実装になります。
+
+```fsharp
+let usecase =
+    validate1
+    >> bind validate2
+    >> bind validate3
+    >> map canonicalizeEmail
+    >> map (tee updateDatabase)
+```
+
+## 例外処理 ##
+
+このデータベース更新関数は何も値を返さないかもしれませんが、かといってそれが例外をスローしないというわけではありません。
+例外時にはクラッシュしてしまうのではなく、例外をキャッチしてそれを失敗として通知したいはずです。
+
+コードは``switch``に似ていますが、例外をキャッチしているという違いがあります。
+この関数を``tryCatch``と名付けることにしましょう：
+
+```fsharp
+let tryCatch f x =
+    try
+        f x |> Success
+    with
+    | ex -> Failure ex.Message
+```
+
+データベース更新用の関数に対しては``switch``の代わりに``tryCatch``を使用した場合のコードは以下のようになります。
+
+```fsharp
+let usecase =
+    validate1
+    >=> validate2
+    >=> validate3
+    >=> switch canonicalizeEmail
+    >=> tryCatch (tee updateDatabase)
+```
+
+## 2路線入力の関数 ##
+
+これまでの関数はいずれも成功パスにおいてしか機能しないものばかりだったので、どの関数も1つの入力しか受け付けませんでした。
+
+しかし両方の路線を絶対に処理しなければならないような関数が必要になることもあります。
+たとえばログ処理関数は成功も失敗もどちらともログとして残さなければいけません。
+
+今回もやはりアダプター関数を作成することになります。
+ただし今回は1路線関数用のスロットを2つ持てるようにします。
+
+![2つの1路線関数用スロットを持つアダプター][link32]
+
+コードは以下の通りです：
+
+```fsharp
+let doubleMap successFunc failureFunc twoTrackInput =
+    match twoTrackInput with
+    | Success s -> Success (successFunc s)
+    | Failure f -> Failure (failureFunc f)
+```
+
+ちなみに失敗用の関数に``id``を使用すると、``map``のシンプルバージョンをこの関数で作成できます：
+
+```fsharp
+let map successFunc =
+    doubleMap successFunc id
+```
+
+では``doubleMap``を使用して、ログ処理をデータフローに組み込んでみましょう：
+
+```fsharp
+let log twoTrackInput =
+    let success x = printfn "DEBUG. 今のところ問題なし: %A" x; x
+    let failure x = printfn "ERROR. %A" x; x
+    doubleMap success failure twoTrackInput
+
+let usecase =
+    validate1
+    >=> validate2
+    >=> validate3
+    >=> switch canonicalizeEmail
+    >=> tryCatch (tee updateDatabase)
+    >> log
+```
+
+テストコードとその結果は以下のようになります：
+
+```fsharp
+let goodInput = {name="Alice"; email="good"}
+usecase goodInput
+|> printfn "良い結果 = %A"
+
+// DEBUG. 今のところ問題なし: {name = "Alice"; email = "good";}
+// 良い結果 = Success {name = "Alice"; email = "good";}
+
+let badInput = {name=""; email=""}
+usecase badInput
+|> printfn "悪い結果 = %A"
+
+// ERROR. "名前を入力してください"
+// 悪い結果 = Failure "名前を入力してください"
+```
 
 [link01]: http://fsharpforfunandprofit.com/posts/recipe-part2/ "Railway oriented programming"
 [link02]: img/01-10.png "Figure 01-10.png"
@@ -590,3 +739,6 @@ let usecase =
 [link27]: img/02-25.png "Figure 02-25.png"
 [link28]: img/02-26.png "Figure 02-26.png"
 [link29]: img/02-27.png "Figure 02-27.png"
+[link30]: img/02-28.png "Figure 02-28.png"
+[link31]: img/02-29.png "Figure 02-29.png"
+[link32]: img/02-30.png "Figure 02-30.png"
