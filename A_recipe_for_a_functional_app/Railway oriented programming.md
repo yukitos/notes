@@ -37,7 +37,7 @@ type Result<'TSuccess, 'TFailure> =
 
 ![1出力の検証用関数][link04]
 
-これが実際にどのように動作するのかは、以下のような具体的な検証用関数の例で確認できるでしょう：
+実際の動作は以下のような具体的な検証用関数の例で確認できるでしょう：
 
 ```fsharp
 type Request = { name:string; email:string }
@@ -280,22 +280,22 @@ let combinedValidation =
 // テスト1
 let input1 = {name=""; email=""}
 combinedValidation input1
-|> printfn "Result1=%A"
+|> printfn "結果1=%A"
 
-// ==> Result1=Failure "名前を入力してください"
+// ==> 結果1=Failure "名前を入力してください"
 
 // テスト2
 let input2 = {name="Alice"; email=""}
 combinedValidation input2
-|> printfn "Result2=%A"
+|> printfn "結果2=%A"
 
-// ==> Result2=Failure "メールアドレスを入力してください"
+// ==> 結果2=Failure "メールアドレスを入力してください"
 
 let input3 = {name="Alice"; email="good"}
 combinedValidation input3
-|> printfn "Result3=%A"
+|> printfn "結果3=%A"
 
-// ==> Result3=Success {name = "Alice"; email = "good";}
+// ==> 結果3=Success {name = "Alice"; email = "good";}
 ```
 
 是非上のコードを実際に試してみたり、違う値をテストしてみたりしてください。
@@ -668,7 +668,7 @@ let doubleMap successFunc failureFunc twoTrackInput =
     | Failure f -> Failure (failureFunc f)
 ```
 
-ちなみに失敗用の関数に``id``を使用すると、``map``のシンプルバージョンをこの関数で作成できます：
+ちなみに失敗用の関数に``id``を使用すると、``map``のシンプルバージョンを作成できます：
 
 ```fsharp
 let map successFunc =
@@ -710,6 +710,244 @@ usecase badInput
 // 悪い結果 = Failure "名前を入力してください"
 ```
 
+## 1つの値を2路線用の値に変換する ##
+
+完全のためには1つの単純な値から2路線用の成功または失敗へと変換するような単純な関数も作成しておくべきでしょう。
+
+```fsharp
+let succeed x =
+    Success x
+let fail x =
+    Failure x
+```
+
+見たままの通り、単に``Result``型のコンストラクタを呼び出しているだけですが、コーディングの経験を積むうちに、直接ユニオン型のコンストラクタを呼び出すのではなく、このように関数を挟むことによって内部的な変更と外部のコードを切り離すというテクニックに遭遇することもあるでしょう。
+
+## 関数を並列に連結する ##
+
+これまでで一連の関数を連結できるようにはなりました。
+しかしたとえば検証用の関数のように、以下のように複数のスイッチを並列に実行して結果を集計したい場合もあります：
+
+![複数のスイッチを並列に実行する][link33]
+
+この処理を簡単にするために、スイッチ合成と同じトリックを使用してみましょう。
+多数のスイッチではなく1組のスイッチに焦点を絞って、それらを「足した」スイッチが作成できれば、任意個のスイッチを「加算」することができます。
+つまりは以下のように実装する必要があります：
+
+![スイッチを加算する][link34]
+
+2つのスイッチを並列に加算するにはどうしたらよいでしょうか？
+
+* まず受け取った入力をそれぞれの関数に渡します
+* 次に両方のスイッチからの結果を見て、両方が成功していれば最終結果として``Success``を返します
+* どちらかが失敗している場合には最終結果として``Failure``を返します
+
+``plus``と名付けたこの関数は以下の通りです：
+
+```fsharp
+let plus switch1 switch2 x =
+    match (switch1 x),(switch2 x) with
+    | Success s1, Success s2 -> Success (s1 + s2)
+    | Failure f1, Success _  -> Failure f1
+    | Success _ , Failure f2 -> Failure f2
+    | Failure f1, Failure f2 -> Failure (f1 + f2)
+```
+
+しかしここには新しい問題があります。
+2つの結果がいずれも成功、またはいずれも失敗の場合にどうしたらよいのでしょう？
+どうやって結果を組み合わせればよいのでしょうか？
+
+上のコードでは``s1 + s2``や``f1 + f2``になっていますが、ここでは``+``演算子のようなものが使用できることにしてしまっています。
+文字や整数であれば確かに用意されていますが、一般的には用意されているとは限りません。
+
+値を連結する方法はコンテキストによって異なるため、いついかなる場合にも対応するようなものを探すのではなくて、必要に応じて呼び出し側で連結処理を行う関数を指定できるようにすることにしましょう。
+
+書き直すと以下のようになります：
+
+```fsharp
+let plus addSuccess addFailure switch1 switch2 x =
+    match (switch1 x),(switch2 x) with
+    | Success s1, Success s2 -> Success (addSuccess s1 s2)
+    | Failure f1, Success _  -> Failure f1
+    | Success _ , Failure f2 -> Failure f2
+    | Failure f1, Failure f2 -> Failure (addFailure f1 f2)
+```
+
+ここでは部分適用できるように、新しい関数用の引数を最初にとるようにしています。
+
+### 並列的な検証機能を実装する ###
+
+では検証機能に対する「plus」を作成しましょう。
+
+* 両方の関数が成功した場合、リクエストを変更しないまま返せばよいため、
+  ``addSuccess``関数ではどちらの値を返してもよい
+* 両方の関数が失敗した場合、それぞれ異なる文字列が返されるはずなので、
+  ``addFailure``では2つの文字列を結合した値を返すようにする
+
+そうすると検証用関数の「plus」演算は「論理積(AND)」のようになっています。
+つまり両方が「true」の場合だけ「true」が返されます。
+
+なので演算子記号としては``&&``が直感的に思い浮かびますが、これは既に予約されているため、以下のように``&&&``を使用することにしましょう：
+
+```fsharp
+// 検証用関数の「plus」関数
+let (&&&) =
+    let addSuccess r1 r2 = r1 // 1つめを返します
+    let addFailure s1 s2 = s1 + ";" + s2 // 連結します
+    plus addSuccess addFailure
+```
+
+そして``&&&``を使用して、3つの小さな検証用関数を連結して1つの検証用関数を作成します：
+
+```fsharp
+let combinedValidation =
+    validate1
+    &&& validate2
+    &&& validate3
+```
+
+では先ほどと同じテストを実行してみましょう：
+
+```fsharp
+// テスト1
+let input1 = {name=""; email=""}
+combinedValidation input1
+|> printfn "結果1=%A"
+// ==> 結果1=Failure "名前を入力してください;メールアドレスを入力してください"
+
+// テスト2
+let input2 = {name="Alice"; email=""}
+combinedValidation input2
+|> printfn "結果2=%A"
+// ==> 結果2=Failure "メールアドレスを入力してください"
+
+
+// テスト3
+let input3 = {name="Alice"; email="good"}
+combinedValidation input3
+|> printfn "結果3=%A"
+// ==> 結果3=Success {name = "Alice"; email = "good";}
+```
+
+最初のテストでは期待通り、2つの検証エラーが1つの文字列として返されています。
+
+次に、この3つの検証関数を組み合わせたものをメインデータフロー関数である``usecase``に組み込みます：
+
+```fsharp
+let usecase =
+    combinedValidation
+    >=> switch canonicalizeEmail
+    >=> tryCatch (tee updateDatabase)
+```
+
+この関数をテストすると、成功時にはメールアドレスが小文字かつ前後の空白無しで出力されることが確認できます：
+
+```fsharp
+// テスト4
+let input4 = {name="Alice"; email="UPPERCASE   "}
+usecase input4
+|> printfn "結果4=%A"
+// ==> 結果4=Success {name = "Alice"; email = "uppercase";}
+```
+
+> 同じようにして論理和(OR)を作成できないものかと思うかもしれません。
+> それはつまりどちらかが成功すれば成功を返すということでしょうか？
+> もちろん実装できます。
+> 是非試してみてください！
+> シンボルとしては``|||``をおすすめします。
+
+## 関数の動的な注入 ##
+
+もう1つ欲しい機能としては、設定ファイルやデータの中身に応じて関数を動的にフローへ追加または削除するというものです。
+
+一番簡単な方法としては、もし不要であれば``id``関数に置き換えられるようなフローの間に注入できる2路線関数を作成する方法です。
+
+アイディアとしては以下のようなものです：
+
+```fsharp
+let injectableFunction =
+    if config.debug then debugLogger else id
+```
+
+実際のコードにしてみましょう：
+
+```fsharp
+type Config = {debug:bool}
+
+let debugLogger twoTrackInput =
+    let success x = printfn "DEBUG. 今のところ問題なし: %A" x; x
+    let failure = id // ここではログをとらない
+    doubleMap success failure twoTrackInput
+
+let injectableLogger config =
+    if config.debug then debugLogger else id
+
+let usecase config =
+    combinedValidation
+    >> map canonicalizeEmail
+    >> injectableLogger config
+```
+
+以下のように使用します：
+
+```fsharp
+let input = {name="Alice"; email="good"}
+
+let releaseConfig = {debug=false}
+input
+|> usecase releaseConfig
+|> ignore
+
+// 出力なし
+
+let debugConfig = {debug=true}
+input
+|> usecase debugConfig
+|> ignore
+
+// デバッグ出力
+// DEBUG. 今のところ問題なし: {name = "Alice"; email = "good";}
+```
+
+## 鉄道路線関数：ツールキット ##
+
+これまでに実装した機能を振り返ってみましょう。
+
+鉄道路線を比喩とすることで、任意のデータフロースタイルのアプリケーションでも動作するような機能を多数作成しました。
+
+大まかには以下の区分に分けられます：
+
+* 新しい路線を作成するための「コンストラクタ(constructors)」
+* ある種の路線を別の種類に変換するための「アダプター(adapters)」
+* 路線区間を連結して、さらに大きな路線を作成するための「コンビナー(combiners)」
+
+これらの関数はいわゆるコンビネーターライブラリを構成するものです。
+コンビネーターライブラリとはある型(ここでは鉄道路線)を処理する関数群で、小さな関数を変形したり連結したりしてより大きな機能を作成できるように設計されたものです。
+
+``bind``や``map``、``plus``のような関数は任意の関数型プログラミングシナリオでも活用できます。
+そのためこれらは全く同じとは言えませんが、OOの「ビジター(visitor)」「シングルトン(singleton)」「ファサード(facade)」のようなパターンと同じように、関数的なパターンだとみなすこともできるでしょう。
+
+まとめると以下の通りです：
+
+| コンセプト    | 説明
+| ------------- | ----
+| ``succeed``   | 1路線入力をとり、成功路線に続くような2路線用の値を
+|               | 作成します。別のコンテキストでは``return``あるいは
+|               | ``pure``とも呼ばれます。
+| ``fail``      | 1路線入力を取り、失敗路線に続くような2路線用の値を
+|               | 作成します。
+| ``bind``      | 
+| ``>>=``       | 
+| ``>>``        | 
+| ``>=>``       | 
+| ``switch``    | 
+| ``map``       | 
+| ``tee``       | 
+| ``tryCatch``  | 
+| ``doubleMap`` | 
+| ``plus``      | 
+| ``&&&``       | 
+
 [link01]: http://fsharpforfunandprofit.com/posts/recipe-part2/ "Railway oriented programming"
 [link02]: img/01-10.png "Figure 01-10.png"
 [link03]: img/02-01.png "Figure 02-01.png"
@@ -742,3 +980,5 @@ usecase badInput
 [link30]: img/02-28.png "Figure 02-28.png"
 [link31]: img/02-29.png "Figure 02-29.png"
 [link32]: img/02-30.png "Figure 02-30.png"
+[link33]: img/02-31.png "Figure 02-31.png"
+[link34]: img/02-32.png "Figure 02-32.png"
