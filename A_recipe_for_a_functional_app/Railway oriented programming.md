@@ -931,22 +931,93 @@ input
 
 | コンセプト    | 説明
 | ------------- | ----
-| ``succeed``   | 1路線入力をとり、成功路線に続くような2路線用の値を  
-|               | 作成します。別のコンテキストでは``return``あるいは  
-|               | ``pure``とも呼ばれます。
-| ``fail``      | 1路線入力を取り、失敗路線に続くような2路線用の値を  
-|               | 作成します。
-| ``bind``      | 
-| ``>>=``       | 
-| ``>>``        | 
-| ``>=>``       | 
-| ``switch``    | 
-| ``map``       | 
-| ``tee``       | 
-| ``tryCatch``  | 
-| ``doubleMap`` | 
-| ``plus``      | 
-| ``&&&``       | 
+| ``succeed``   | 1路線入力をとり、成功路線に続くような2路線用の値を作成するコンストラクタです。別のコンテキストでは``return``あるいは``pure``とも呼ばれます。
+| ``fail``      | 1路線入力を取り、失敗路線に続くような2路線用の値を作成するコンストラクタです。
+| ``bind``      | スイッチ関数をとり、2路線用の入力を受け付けるような新しい関数を作成するアダプターです。
+| ``>>=``       | 2路線値をスイッチ関数に連結させる、bindの中置バージョンです。
+| ``>>``        | 通常の関数合成です。通常の関数を2つつなげて新しい関数を作成するコンビナーです。
+| ``>=>``       | スイッチを合成します。2つのスイッチ関数をつなげて新しいスイッチ関数を作成するコンビナーです。
+| ``switch``    | 通常の1路線関数をとり、スイッチ関数へと変換するようなアダプターです。(コンテキストによっては「lift」とも呼ばれます。)
+| ``map``       | 通常の1路線関数をとり、2路線関数へと変換するようなアダプターです。(コンテキストによっては「lift」とも呼ばれます。)
+| ``tee``       | 行き止まり関数をとり、データフロー内で使用できるような1路線関数を返すアダプターです。(``tap``とも呼ばれます。)
+| ``tryCatch``  | 通常の1路線関数をとり、スイッチ関数へと変換するアダプターですが、例外をキャッチするようになります。
+| ``doubleMap`` | 2つの1路線関数をとり、1つの2路線関数へと変換するようなアダプターです。(``bimap``とも呼ばれます。)
+| ``plus``      | 2つのスイッチ関数をとり、それらを「並列」に連結して結果を「加算」して返すような新しいスイッチ関数を作成するコンビナーです。(コンテキストによっては``++``や``<+>``とも表されます。)
+| ``&&&``       | 検証関数用に特化した「加算」コンビナーで、論理積をモデルにしています。
+
+### 鉄道路線関数：コード全容 ###
+
+コードの全容を以下にまとめておきます。
+
+なお上で紹介したコードから若干変更しています：
+
+* 多くの関数はコア関数``either``を使用して定義されるようになっています。
+* ``tryCatch``は例外ハンドラ用の引数をとるようになっています。
+
+```fsharp
+// 2路線型
+type Result<'TSuccess, 'TFailure> =
+    | Success of 'TSuccess
+    | Failure of 'TFailure
+
+// 1入力を2路線用の値に変換します
+let succeed x =
+    Success x
+
+// 1入力を2路線用の値に変換します
+let fail x =
+    Failure x
+
+// 成功用関数または失敗用関数のいずれかを適用します
+let either successFunc failureFunc twoTrackInput =
+    match twoTrackInput with
+    | Success s -> successFunc s
+    | Failure f -> failureFunc f
+
+// スイッチ関数を2路線関数に変換します
+let bind f =
+    either f fail
+
+// 2路線値をスイッチ関数に接続します
+let (>>=) x f =
+    bind f x
+
+// 2つのスイッチを1つに連結します
+let (>=>) s1 s2 =
+    s1 >> bind s2
+
+// 1路線関数をスイッチに変換します
+let switch f =
+    f >> succeed
+
+// 1路線関数を2路線関数に変換します
+let map f =
+    either (f >> succeed) fail
+
+// 行き止まり関数を1路線関数に変換します
+let tee f =
+    f x; x
+
+// 1路線関数を例外処理ありのスイッチに変換します
+let tryCatch f exnHandler x =
+    try
+        f x |> succeed
+    with
+    | ex -> exnHandler ex |> fail
+
+// 2つの1路線関数を1つの2路線関数に変換します
+let doubleMap successFunc failureFunc =
+    either (successFunc >> succeed) (failureFunc >> fail)
+
+// 2つのスイッチを並列に加算します
+let plus addSuccess addFailure switch1 switch2 x =
+    match (switch1 x),(switch2 x) with
+    | Success s1,Success s2 -> Success (addSuccess s1 s2)
+    | Failure f1,Success _  -> Failure f1
+    | Success _ ,Failure f2 -> Failure f2
+    | Failure f1,Failure f2 -> Failure (addFailure f1 f2)
+```
+
 
 [link01]: http://fsharpforfunandprofit.com/posts/recipe-part2/ "Railway oriented programming"
 [link02]: img/01-10.png "Figure 01-10.png"
