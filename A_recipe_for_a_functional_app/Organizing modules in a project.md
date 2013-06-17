@@ -128,6 +128,7 @@ F#プロジェクト内で対応するコードを用意すると以下のよう
 [link05]: http://jeffreypalermo.com/blog/the-onion-architecture-part-1/ "Onion architecture"
 [link06]: http://www.martinfowler.com/bliki/AnemicDomainModel.html "AnemicDomainModel"
 [link07]: http://c2.com/cgi/wiki?OneMoreLevelOfIndirection "One More Level Of Indirection"
+[link08]: How%20to%20design%20and%20code%20a%20complete%20program.md "How to design and code a complete program"
 
 [img01]: img/03-01.png
 [img02]: img/03-02.png
