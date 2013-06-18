@@ -1194,8 +1194,11 @@ let usecase =
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 [←1. 完全なプログラムを設計して作成する方法][link38]
+
 <div style="float: right">
+
 [3. プロジェクト内のモジュールを整理する→][link39]
+
 </div>
 
 [link01]: http://fsharpforfunandprofit.com/posts/recipe-part2/ "Railway oriented programming"
