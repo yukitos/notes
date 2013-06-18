@@ -40,7 +40,7 @@ F#を始めたばかりだと、コードをC#と同じようにクラスの内�
 ドメインレイヤーはインフラレイヤーに依存し、プレゼンテーションレイヤーはドメインレイヤーに依存するといった具合です。
 
 そして最も重要なこととして、ドメインレイヤーはパーシステンスレイヤーに依存しては **いけません** 。
-これは[永続化の不可知論][link03]に従うべきだからです。
+これは [persistence agnostic"(「永続化の不可知論」)][link03] に従うべきだからです。
 
 そういうわけで、先ほどのダイアグラムは以下のように書き換える必要があります(矢印が依存性を表しています)：
 
@@ -48,7 +48,7 @@ F#を始めたばかりだと、コードをC#と同じようにクラスの内�
 
 また、理想的にはアプリケーションサービスやドメインサービスなどがある「サービスレイヤー」も含めて、より詳細な粒度で再構成すべきです。
 そして再構成の作業が終われば、コアのドメインクラスは「純粋」で、かつドメインの外部には全く依存しないようになるでしょう。
-この状態は [「六角形アーキテクチャ」][link04] あるいは [「玉葱アーキテクチャ」][link05] とよく呼ばれます。
+この状態は ["hexagonal architecture"(「六角形アーキテクチャ」)][link04] あるいは ["onion architecture"(「玉葱アーキテクチャ」)][link05] と呼ばれます。
 しかしこの記事のテーマはオブジェクト指向設計の機微ではないので、今のところはもっと単純なモデルを採用することにします。
 
 ## 型から挙動を分離する ##
@@ -64,7 +64,7 @@ F#を始めたばかりだと、コードをC#と同じようにクラスの内�
 実際、真にオブジェクト指向のデザインでは挙動 **以外のもの** を持つべきではありません。
 データはプライベートにしておき、メソッド経由でのみアクセスできるようになっているべきです。
 
-事実、OODではデータ型に関連のある挙動が十分に揃えられていないことが悪とされ、[「無気力ドメインモデル」][link06]という名前で呼ばれることもあります。
+事実、OODではデータ型に関連のある挙動が十分に揃えられていないことが悪とされ、["anemic domain model"(「無気力ドメインモデル」)][link06]という名前で呼ばれることもあります。
 
 しかし関数型デザインの場合、透過的な「無能データ」の方が良しとされます。
 一般的にはカプセル化もされていないようなデータで十分です。
@@ -119,7 +119,362 @@ F#プロジェクト内で対応するコードを用意すると以下のよう
 
 リストの一番下には「main」あるいは「program」という名前で、プログラムのエントリポイントを含むようなファイルが置かれることになります。
 
+そして下から2番目のコードにはアプリケーションのユースケースが来ます。
+このファイル中にはその他のモジュールが「組み合わされて」、特定のユースケースやサービスリクエストを表すような関数を実装するコードがすべて定義されます。
+(OOデザインで言うところの ["application services"(「アプリケーションサービス」)][link09] が最も近いものだと言えます。)
 
+また、その上には「UIレイヤー」や「DBレイヤー」などが続きます。
+
+このアプローチの利点としては、このコードを初めて目にした場合であっても、どこから手をつければいいのかがすぐにはっきりとわかるという点です。
+上方にあるファイルは常に「低レイヤー」のコードで、下方にあるファイルは常に「高レイヤー」のコードになっています。
+フォルダなどは必要ありません！
+
+## コードをクラスではなくモジュールに配置する ##
+
+F#を始めたばかりの頃は「クラスを使わないのならコードをどこに書けばいいのだろう？」とよく疑問に思うものです。
+
+その答えは **モジュール** です。
+既に説明した通り、オブジェクト指向プログラムではデータとそのデータに関連する関数が共に1つのクラス内に定義されます。
+しかしF#のような関数型スタイルの場合、データ構造とデータ操作に関連する関数はモジュール内に定義します。
+
+型と関数の組み合わせとしては以下の3パターンがあります：
+
+* 関数と同じモジュール内で型を宣言する
+* 同じファイル中で型と関数を別々に定義する
+* 型と関数を別のファイルに定義しておき、型の宣言だけしか含まないようなファイルを用意する
+
+1番目のアプローチの場合、型は関連する関数と共にモジュール **内** に定義されます。
+主要な型が1つしかない場合、「T」のような単純な名前か、モジュールの名前にします。
+
+たとえば以下のようになります：
+
+```fsharp
+namespace Example
+
+module Person =
+    
+    type T = { First:string; Last:string }
+
+    // コンストラクタ
+    let create first last =
+        { First=first; Last=last }
+
+    // この型を操作するメソッド
+    let fullName { First=first; Last=last } =
+        first + " " + last
+```
+
+そうすると型自身は ``Person.T`` という名前でアクセスすることになりますが、それぞれの関数は ``Person.create`` あるいは ``Person.fullName`` という名前でアクセスできます。
+
+2番目のアプローチの場合、型は同じファイル内で定義されますが、モジュールの外部で定義します：
+
+```fsharp
+namespace Example
+
+// モジュールの外部で型を宣言する
+type PersonType = { First:string; Last:string }
+
+// この型を操作するメソッド用のモジュールを宣言する
+module Person =
+
+    // コンストラクタ
+    let create first last =
+        { First=first; Last=last }
+
+    // この型を操作するメソッド
+    let fullName { First=first; Last=last } =
+        first + " " + last
+```
+
+この場合、型は ``PersonType`` という名前でアクセスできますが、それぞれの関数は先ほどと同じ名前( ``Person.create`` や ``Person.fullName`` )でアクセスできます。
+
+最後に3番目のアプローチです。
+型は(通常は別個のファイルとして用意される)特別な「型専用」のモジュールで定義します：
+
+```fsharp
+// ===============================
+// ファイル名： DomainTypes.fs
+// ===============================
+namespace Example
+
+// 「型専用」モジュール
+[<AutoOpen>]
+module DomainTypes =
+    
+    type Person = { First:string; Last:string }
+
+    type OtherDomainType = ...
+
+    type ThirdDomainType = ...
+```
+
+このアプローチの場合、 ``AutoOpen`` 属性を指定してプロジェクト内のすべてのモジュール内で型が自動的に利用できるように、つまり「グローバル」にしておく方法が一般的です。
+
+そしてたとえば ``Person`` 型を操作する関数をすべて含むモジュールを別途用意します。
+
+```fsharp
+// ===============================
+// ファイル名： Person.fs
+// ===============================
+namespace Example
+
+// 特定の型に対する関数用のモジュールを宣言する
+module Person =
+
+    // コンストラクタ
+    let create first last =
+        { First=first; Last=last }
+
+    // この型を操作するメソッド
+    let fullName { First=first; Last=last } =
+        first + " " + last
+```
+
+この例の場合、型とモジュールの名前がいずれも ``Person`` であることに注意してください。
+実際にはこれが問題となることはなく、コンパイラが適宜必要な方を選択してくれます。
+
+つまり以下のように記述したとします：
+
+```fsharp
+let f (p:Person) = p.First
+```
+
+そうするとコンパイラは ``Person`` 型を参照しているのだと認識します。
+
+一方、以下のように記述したとしましょう：
+
+```fsharp
+let g () = Person.create "Alice" "Smith"
+```
+
+この場合にはコンパイラは ``Person`` モジュールを参照しているのだと認識します。
+
+モジュールの詳細については [organizing functions(関数を整理する)][link10] を参照してください。
+
+## モジュールの整理 ##
+
+今回のレシピでは以下のガイドラインに則って、複数のアプローチを組み合わせて使用します：
+
+### モジュールガイドライン ###
+
+型が複数のモジュールから利用される場合、特別な型専用のモジュールに配置します。
+
+* たとえば型がグローバルに使用される(あるいはDDD的に言えば「束縛されたドメイン」内で使用される)場合、 ``DomainTypes`` あるいは ``DomainModel`` という名前のモジュール内で、かつ早い段階でコンパイルされるファイル内で型を定義します。
+* 型がたとえばいくつかのUIモジュールのようなサブシステムでのみ使用される場合、 ``UITypes`` といったモジュール内で、その他のUIモジュールの直前にコンパイルされるファイル内で型を定義します。
+
+型が1つ(ないしは2つ)のモジュールでしか使用されないプライベートなものである場合、関連する機能と同一のモジュール内で定義します。
+
+* たとえば検証機能においてのみ利用される型は ``Validation`` モジュール、データベースへのアクセスでのみ利用される型は ``Database`` モジュール内で定義するという具合です。
+
+当然ながら型を整理する方法は他にもまだまだありますが、上記ガイドラインはなかなか良い標準ガイドラインになるのではないでしょうか。
+
+### おいおい、フォルダはどこに行ってしまったんだ？ ###
+
+F#プロジェクトの既知の制限として、フォルダ構造がサポートされておらず、そのために巨大なプロジェクトを整理できないのではないかということがよく話題に上ります。
+
+純粋にオブジェクト指向デザインに従っているのであればこの苦情はもっともなものです。
+しかしこれまでの説明からすれば、モジュールを直列的なリストにして依存性を正しく管理してやれば十分実用的であることがわかるはずです。
+確かに理論上はファイルがバラバラになっていてもコンパイラが正しい順序を見つけ出すことが出来るはずではありますが、実際には正しい順序を見つけ出すのはそれほど簡単な話ではありません。
+
+さらに重要なのは、 **人が** 正しい順序を見つけ出すことはさらに難しいわけで、必要以上に管理が大変になってしまうことでしょう。
+
+巨大なプロジェクトの場合、現実的にはフォルダが無くても思うほどは問題になりません。
+F#コンパイラ自身のように、この制限があるままでもきちんと統制されている巨大なF#プロジェクトもいくつかあります。
+詳細については [cycles and modularity in the wild(現存プロジェクトの循環性とモジュール性)][link11] を参照してください。
+
+### 型が相互依存している場合にはどうしたらいい？ ###
+
+OOデザイン畑から移動してくると、以下のように相互依存している型が出てきてコンパイルできなくなることがあります：
+
+```fsharp
+type Location = { name:string; workers:Employee list }
+
+type Employee = { name:string; worksAt:Location }
+```
+
+F#コンパイラが幸せになるためにはどう手直ししたらよいのでしょう？
+
+それほど難しい話ではありませんが、もう少し説明が必要になるので別途 [循環参照の扱いに関する記事][link12] を参照してください。
+
+## サンプルコード ##
+
+前回までのパートで作成したコードに話を戻しますが、今回はモジュールとしてコードを整理します。
+
+以下の各モジュールは基本的には個別のファイルに含まれます。
+
+なお以下のコードはスケルトンになっていることに注意してください。
+いくつかのモジュールが不足していたり、空のままのモジュールになっていたりします。
+
+このような整理方法は小さなプロジェクトにとってはやり過ぎかもしれませんが、コードは大きく成長するものです！
+
+```fsharp
+/// ========================================================
+/// 複数のプロジェクト間で共有される型および関数
+/// ========================================================
+module CommonLibrary =
+
+    // 2路線型
+    type Result<'TSuccess, 'TFailure> =
+        | Success of 'TSuccess
+        | Failure of 'TFailure
+
+    // 1入力を2路線用の値に変換します
+    let succeed x =
+        Success x
+
+    // 1入力を2路線用の値に変換します
+    let fail x =
+        Failure x
+
+    // 成功用関数または失敗用関数のいずれかを適用します
+    let either successFunc failureFunc twoTrackInput =
+        match twoTrackInput with
+        | Success s -> successFunc s
+        | Failure f -> failureFunc f
+
+    // スイッチ関数を2路線関数に変換します
+    let bind f =
+        either f fail
+
+    // 2路線値をスイッチ関数に接続します
+    let (>>=) x f =
+        bind f x
+
+    // 2つのスイッチを1つに連結します
+    let (>=>) s1 s2 =
+        s1 >> bind s2
+
+    // 1路線関数をスイッチに変換します
+    let switch f =
+        f >> succeed
+
+    // 1路線関数を2路線関数に変換します
+    let map f =
+        either (f >> succeed) fail
+
+    // 行き止まり関数を1路線関数に変換します
+    let tee f x =
+        f x; x
+
+    // 1路線関数を例外処理ありのスイッチに変換します
+    let tryCatch f exnHandler x =
+        try
+            f x |> succeed
+        with
+        | ex -> exnHandler ex |> fail
+
+    // 2つの1路線関数を1つの2路線関数に変換します
+    let doubleMap successFunc failureFunc =
+        either (successFunc >> succeed) (failureFunc >> fail)
+
+    // 2つのスイッチを並列に加算します
+    let plus addSuccess addFailure switch1 switch2 x =
+        match (switch1 x),(switch2 x) with
+        | Success s1,Success s2 -> Success (addSuccess s1 s2)
+        | Failure f1,Success _  -> Failure f1
+        | Success _ ,Failure f2 -> Failure f2
+        | Failure f1,Failure f2 -> Failure (addFailure f1 f2)
+
+/// ========================================================
+/// 現在のプロジェクト内でグローバルな型
+/// ========================================================
+module DomainTypes =
+
+    open CommonLibrary
+
+    /// リクエストに対するDTO
+    type Request = { name:string; email:string }
+
+    // その他多くの型についてはまた後で！
+
+/// ========================================================
+/// ログ用関数
+/// ========================================================
+module Logger =
+
+    open CommonLibrary
+    open DomainTypes
+
+    let log twoTrackInput =
+        let success x = printfn "DEBUG. 今のところ問題なし: %A" x; x
+        let failure x = printfn "ERROR. %A" x; x
+        doubleMap success failure twoTrackInput
+
+/// ========================================================
+/// 検証用関数
+/// ========================================================
+module Validation =
+
+    open CommonLibrary
+    open DomainTypes
+
+    let validate1 input =
+        if input.name = "" then Failure "名前を入力してください"
+        else Success input
+
+    let validate2 input =
+        if input.name.Length > 50 then Failure "名前は50文字以下で入力してください"
+        else Success input
+
+    let validate3 input =
+        if input.email = "" then Failure "メールアドレスを入力してください"
+        else Success input
+
+    // 検証用関数を「加算する」関数
+    let (&&&) v1 v2 =
+        let addSuccess r1 r2 = r1 // 1つめを返します
+        let addFailure s1 s2 = s1 + "; " + s2 // 連結します
+        plus addSuccess addFailure v1 v2
+
+    let combinedValidation =
+        validate1
+        &&& validate2
+        &&& validate3
+
+    let canonicalizeEmail input =
+        { input with email = input.email.Trim().ToLower() }
+
+/// ========================================================
+/// データベース関数
+/// ========================================================
+module CustomerRepository =
+
+    open CommonLibrary
+    open DomainTypes
+
+    let updateDatabase input =
+        () // 今のところはダミーの行き止まり関数
+
+    // 例外処理を行う新しい関数
+    let updateDatabaseStep =
+        tryCatch (tee updateDatabase) (fun ex -> ex.Message)
+
+/// ========================================================
+/// すべてのユースケースやサービスを一カ所に配置します
+/// ========================================================
+module UseCase =
+
+    open CommonLibrary
+    open DomainTypes
+
+    let handleUpdateRequest =
+        Validation.combinedValidation
+        >> map Validation.canonicalizeEmail
+        >> bind CustomerRepository.updateDatabaseStep
+        >> Logger.log
+```
+
+## まとめ ##
+
+今回の記事ではコードをモジュールとして整頓する方法を紹介しました。
+次回はついに現実的なコーディングに取り組んでいきます！
+
+それまでの間、相互依存に関する以下の記事に目を通しておくことをおすすめします：
+
+* [Cyclic dependencies are evil(循環依存は悪手である)][link12]
+* [Refactoring to remove cyclic dependencies.(循環依存をリファクタリングで取り除く)][link13]
+* [Cycles and modularity in the wild(現存プロジェクトの循環性とモジュール性)][link11]
+  この記事では実際のC#およびF#プロジェクトを比較しています
 
 [link01]: http://fsharpforfunandprofit.com/posts/recipe-part3/ "Organizing modules in a project"
 [link02]: http://www.sturmnet.org/blog/2008/05/20/f-compiler-considered-too-linear "F# compiler considered too linear"
@@ -129,6 +484,11 @@ F#プロジェクト内で対応するコードを用意すると以下のよう
 [link06]: http://www.martinfowler.com/bliki/AnemicDomainModel.html "AnemicDomainModel"
 [link07]: http://c2.com/cgi/wiki?OneMoreLevelOfIndirection "One More Level Of Indirection"
 [link08]: How%20to%20design%20and%20code%20a%20complete%20program.md "How to design and code a complete program"
+[link09]: http://stackoverflow.com/questions/2268699/domain-driven-design-domain-service-application-service "Domain Driven Design: Domain Service, Application Service"
+[link10]: http://fsharpforfunandprofit.com/posts/organizing-functions/ "Organizing functions"
+[link11]: http://fsharpforfunandprofit.com/posts/cycles-and-modularity-in-the-wild/ "Cycles and modularity in the wild"
+[link12]: http://fsharpforfunandprofit.com/posts/cyclic-dependencies/ "Cyclic dependencies are evil"
+[link13]: http://fsharpforfunandprofit.com/posts/removing-cyclic-dependencies/ "Refactoring to remove cyclic dependencies"
 
 [img01]: img/03-01.png
 [img02]: img/03-02.png
