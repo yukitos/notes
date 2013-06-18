@@ -192,6 +192,12 @@ type Result<'TSuccess, 'TFailure> =
 * ユースケース関数は各データ処理を表す小さな関数の組み合わせになっている
 * 各処理で発生したエラーは1つの失敗パスとして組み合わされる
 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+<div style="float: right">
+[2. 鉄道指向プログラミング→][link14]
+</div>
+
 [link01]: http://fsharpforfunandprofit.com/posts/recipe-part1/ "How to design and code a complete program"
 [link02]: http://fsharpforfunandprofit.com/posts/recipe-part2/ "Railway oriented programming"
 [link03]: img/01-01.png "Figure 01-01.png"
@@ -205,3 +211,4 @@ type Result<'TSuccess, 'TFailure> =
 [link11]: img/01-09.png "Figure 01-09.png"
 [link12]: http://msdn.microsoft.com/ja-jp/library/ee353439.aspx "Core.Choice<'T1, 'T2> 共用体"
 [link13]: img/01-10.png "Figure 01-10.png"
+[link14]: Railway%20oriented%20programming.md "Railway oriented programming"

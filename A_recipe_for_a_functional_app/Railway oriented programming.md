@@ -1194,6 +1194,9 @@ let usecase =
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 [←1. 完全なプログラムを設計して作成する方法][link38]
+<div style="float: right">
+[3. プロジェクト内のモジュールを整理する→][link39]
+</div>
 
 [link01]: http://fsharpforfunandprofit.com/posts/recipe-part2/ "Railway oriented programming"
 [link02]: img/01-10.png "Figure 01-10.png"
@@ -1233,3 +1236,4 @@ let usecase =
 [link36]: img/02-34.png "Figure 02-34.png"
 [link37]: img/02-35.png "Figure 02-35.png"
 [link38]: How%20to%20design%20and%20code%20a%20complete%20program.md "How to design and code a complete program"
+[link39]: Organizing%20modules%20in%20a%20project.md "Organizing modules in a project"
