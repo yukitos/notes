@@ -478,8 +478,9 @@ module UseCase =
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-[←2. 鉄道指向プログラミング][link14]
-
+| 前回                                | 次回                                |
+|:------------------------------------|------------------------------------:|
+|[←2. 鉄道指向プログラミング][link14]|                                     |
 
 [link01]: http://fsharpforfunandprofit.com/posts/recipe-part3/ "Organizing modules in a project"
 [link02]: http://www.sturmnet.org/blog/2008/05/20/f-compiler-considered-too-linear "F# compiler considered too linear"

@@ -194,7 +194,9 @@ type Result<'TSuccess, 'TFailure> =
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-<div style="float: right"> [2. 鉄道指向プログラミング→][link14] </div>
+| 前回 | 次回                                |
+|:-----|------------------------------------:|
+|      |[2. 鉄道指向プログラミング→][link14]|
 
 [link01]: http://fsharpforfunandprofit.com/posts/recipe-part1/ "How to design and code a complete program"
 [link02]: http://fsharpforfunandprofit.com/posts/recipe-part2/ "Railway oriented programming"
