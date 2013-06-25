@@ -1,7 +1,7 @@
-# 鉄道指向プログラミング：増補版(翻訳) #
+# 鉄道指向プログラミング：カーボン化版(翻訳) #
 FizzBuzzを実装する3通りの方法
 
-原文：[Railway oriented programming: Carbonated edition][link01]
+原文：[Railway oriented programming: Carbonated edition][link00]
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
@@ -905,6 +905,7 @@ let carbonateAll =
 課題として上記の ``zero`` 関数を作成してみてください。
 (ヒント：既に別の名前で定義されたものがあります)
 
+[link00]: http://fsharpforfunandprofit.com/posts/railway-oriented-programming-carbonated/ "Railway oriented programming: Carbonated edition"
 [link01]: Railway%20oriented%20programming.md "鉄道指向プログラミング(翻訳)"
 [link02]: http://fsharpforfunandprofit.com/posts/railway-oriented-programming-carbonated/ "Railway oriented programming: Carbonated edition"
 [link03]: http://imranontech.com/2007/01/24/using-fizzbuzz-to-find-developers-who-grok-coding/ "FizzBuzz problem"
