@@ -4,8 +4,8 @@
 
 ----
 
-  この記事では.NETチームが作成している新しい64ビットJust-In-Time(JIT)コンパイラを紹介します。
-  CLR Runtime PMチームのPMマネージャであるAndrew Pardoeによって執筆されました。
+> この記事では.NETチームが作成している新しい64ビットJust-In-Time(JIT)コンパイラを紹介します。
+> 執筆者はCLR Runtime PMチームのPMマネージャであるAndrew Pardoeです。
 
 32ビット環境よりも必ずしも高速あるいは効率的ではないにもかかわらず、世の中のマシンは64ビット環境へと徐々に移行しています。
 要因としては様々なものがありますが、多くのプログラムは64ビット環境よりも32ビット環境のほうが高速に動作します。
@@ -46,6 +46,7 @@ JITが2倍高速になったとしてもアプリケーションが2倍高速に
 
 以下のグラフは様々なサンプルコードに対して、JIT64とRyuJITのコンパイル時間(スループット)の割合を比較したものです。
 各行はRyuJITがJIT64と比較してどのくらい高速かを表したもので、数値が大きいほど優れた結果を表します。
+(訳注：画像は [元のサイト][link01] のものを転載しています)
 
 ![JIT64に対するRyuJITのパフォーマンス改善結果][link02]
 
@@ -105,7 +106,7 @@ RyuJITをインストールしてもシステム上のNGenは更新されませ�
 インストールした後は、2通りの方法でRyuJITを有効化できます。
 1つのアプリケーションに対してのみRyuJITを有効化したい場合、
 環境変数を設定してください： ``COMPLUS_AltJit=*``
-マシン全体で有効化する場合、レジストリキー HKLM\SOFTWARE\Microsoft\.NETFramework\AltJit に文字列「*」を設定してください。
+マシン全体で有効化する場合、レジストリキー ``HKLM\SOFTWARE\Microsoft\.NETFramework\AltJit`` に文字列「*」を設定してください。
 いずれの方法でも、64bit CLRがJIT64の代わりにRyuJITを使用するようになります。
 また、どちらも一時的な設定です。
 RyuJITをインストールしただけではマシンに永続的な変更が行われません
@@ -122,5 +123,5 @@ RyuJITがCTPからOne True .NET JIT Compiler&trade;に進化する過程につ�
 
 [link01]: http://blogs.msdn.com/b/dotnet/archive/2013/09/30/ryujit-the-next-generation-jit-compiler.aspx "RyuJIT: The next-generation JIT compiler"
 [link02]: img/Performance_Improvement_of_RyuJIT_over_JIT64.png
-[link03]: http://aka.ms/RyuJIT RyuJIT installer
+[link03]: http://aka.ms/RyuJIT "RyuJIT installer"
 [link04]: http://blogs.msdn.com/b/clrcodegeneration/ ".NET CodeGen blog"
