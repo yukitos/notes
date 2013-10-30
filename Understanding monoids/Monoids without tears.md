@@ -357,9 +357,8 @@ removeAll はどうでしょう？
 | Int32 | 等式       | No            ||                           | その他      |
 | Int32 | より少ない | No            ||                           | その他      |
 ||
-| Float | かけ算     | Yes           | No(補足を参照) | 1         | モノイド    |
-| Float | 割り算     | Yes           | No        | 1              | その他      |
-| コメントで指摘のあった通り、[Floatには結合性がありません][link08]。Floatではなく実数であれば結合性があります。 ||||||
+| Float | かけ算     | Yes           | No ( [補足](#note1) を参照) | 1 | モノイド |
+| Float | 割り算     | Yes           | No        | 1               | その他       |
 ||
 | 正の整数 | 足し算  | Yes           | Yes       | なし           | 半群        |
 | 正の整数 | かけ算  | Yes           | Yes       | 1              | モノイド    |
@@ -374,6 +373,9 @@ removeAll はどうでしょう？
 | リスト   | 連結     | Yes          | Yes       | 空のリスト []  | モノイド    |
 | リスト   | 共通集合 | Yes          | Yes       | なし           | 半群        |
 
+<a name="note01">
+コメントで指摘のあった通り、[Floatには結合性がありません][link08]。Floatではなく実数であれば結合性があります。
+</a>
 
 [link01]: http://fsharpforfunandprofit.com/posts/monoids-without-tears/ "Monoids without tears"
 [link02]: http://fsharpforfunandprofit.com/posts/partial-application/ "Partial application"
