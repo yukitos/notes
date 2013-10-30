@@ -356,23 +356,23 @@ removeAll はどうでしょう？
 | Int32 | Max        | Yes           | Yes       | Int32.MinValue | モノイド    |
 | Int32 | 等式       | No            ||                           | その他      |
 | Int32 | より少ない | No            ||                           | その他      |
-|||||||
-| Float | かけ算 | Yes | No(補足を参照) | 1 | モノイド |
-| Float | 割り算 | Yes | No | 1 | その他 |
-| コメントで指摘のあった通り、[Floatには結合性がありません][link08]。Floatではなく実数であれば結合性があります。 ||||||
-|||||||
-| 正の整数 | 足し算 | Yes | Yes | なし | 半群 |
-| 正の整数 | かけ算 | Yes | Yes | 1 | モノイド |
-|||||||
-| ブール値 | AND | Yes | Yes | true | モノイド |
-| ブール値 | OR | Yes | Yes | false | モノイド |
-|||||||
-| 文字列 | 連結 | Yes | Yes | 空文字列 "" | モノイド |
-| 文字列 | 等号 | No ||| その他 |
-| 文字列 | "removeAll" | Yes | No | 空文字列 "" | その他 |
-|||||||
-| リスト | 連結 | Yes | Yes | 空のリスト [] | モノイド |
-| リスト | 共通集合 | Yes | Yes | なし | 半群 |
+||
+| Float | かけ算     | Yes           | No(補足を参照) | 1         | モノイド    |
+| Float | 割り算     | Yes           | No        | 1              | その他      |
+| コメントで指摘のあった通り、[Floatには結合性がありません][link08]。Floatではなく実数であれば結合性があります。 |
+||
+| 正の整数 | 足し算  | Yes           | Yes       | なし           | 半群        |
+| 正の整数 | かけ算  | Yes           | Yes       | 1              | モノイド    |
+||
+| ブール値 | AND     | Yes           | Yes       | true           | モノイド    |
+| ブール値 | OR      | Yes           | Yes       | false          | モノイド    |
+||
+| 文字列   | 連結        | Yes       | Yes       | 空文字列 ""    | モノイド    |
+| 文字列   | 等号        | No        ||                           | その他      |
+| 文字列   | "removeAll" | Yes       | No        | 空文字列 ""    | その他      |
+||
+| リスト   | 連結     | Yes          | Yes       | 空のリスト []  | モノイド    |
+| リスト   | 共通集合 | Yes          | Yes       | なし           | 半群        |
 
 
 [link01]: http://fsharpforfunandprofit.com/posts/monoids-without-tears/ "Monoids without tears"
