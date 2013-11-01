@@ -958,7 +958,7 @@ module WordCountTest =
 
 筆者の4コアマシン上で実行した結果は以下の通りです：
 
-```fsharp
+```
 reduce後にカウント にかかった時間は 7955ms です
 map後にreduce にかかった時間は 698ms です
 並列map後にreduce にかかった時間は 603ms です
@@ -1098,7 +1098,7 @@ module FrequentWordTest =
 1番目のアプローチが正解です。
 しかし2番目のアプローチは全く見当外れな答えを返します！
 
-```fsharp
+```
 先に足しあわせた場合の最頻出単語は hello
 map reduceした場合の最頻出単語は helloworld
 ```
