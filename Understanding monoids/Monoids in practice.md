@@ -689,8 +689,488 @@ customers
 
 ## モノイド準同型
 
+これまでの説明により、 **モノイド準同型** (Monoid Homomorphisms)
+というものを理解するための用意ができました。
+
+皆さんが何を考えているかわかりますとも。
+あーもう！
+わけのわからない数学用語を一度に2つも出さないでくれ！
+
+ですが今はもう「モノイド」という単語は怖いものではなくなったのではないでしょうか。
+また、「準同型」という数学用語も、聞いた感じよりは単純なものです。
+単に「形が同じ」であることを示すもので、
+同じ「形」を維持するようなマッピングあるいは関数を説明するものでしかありません。
+
+具体的にはどういうことでしょう？
+
+これまでも、モノイドにはある特定の共通した構造があるという説明をしてきました。
+つまり根底をなすオブジェクト(数値や文字列、リスト、 ``CustomerStats`` など)が
+全く異なっていたとしても、それぞれの「モノイド性」は変わりません。
+かつてのGeroge W. Bushの言葉を応用すると、
+ひとたびモノイドがわかればすべてが分かったも同然です。
+
+要するに **モノイド** 準同型とはある変換を表すもので、
+たとえ「変換前」と「変換後」のオブジェクトが全く別物であったとしても
+本質的な「モノイド性」が損なわれないような変換のことです。
+
+この節では単純なモノイド準同型を紹介しましょう。
+「hello world」や「fibonacci series」などに対して
+単語数を数えるようなモノイド準同型です。
+
+### モノイドとしてのドキュメント
+
+たとえば以下のようなテキストブロックを表す型があるとしましょう：
+
+```fsharp
+type Text = Text of string
+```
+
+そして以下のようにすると2つの小さなテキストブロックを足して
+大きなテキストブロックにすることができます：
+
+```fsharp
+let addText (Text s1) (Text s2) =
+    Text (s1 + s2)
+```
+
+足し算の動作は以下のようにしてテストできます：
+
+```fsharp
+let t1 = Text "Hello"
+let t2 = Text " World"
+let t3 = addText t1 t2
+```
+
+皆さんはもうエキスパートになったわけなので、
+これがモノイドであることがすぐに分かり、
+ゼロも ``Text ""`` であることが分かるでしょう。
+
+さてでは( [こちらのような][link04] )書籍を執筆していて、
+原稿にどのくらいの量の単語を書いたのか知りたいとしましょう。
+
+以下はかなり大雑把な実装とそのテストコードです：
+
+```fsharp
+let wordCount (Text s) =
+    s.Split(' ').Length
+
+// テスト
+Text "Hello world"
+|> wordCount
+|> printfn "単語数は %i"
+```
+
+さて執筆を続けてテキストが3ページ分出来上がったとしましょう。
+ドキュメント全体の単語数はどうやって計算したらいいでしょうか？
+
+たとえばそれぞれバラバラなページを1つの完全なテキストブロックとして
+足しあわせた後に、このテキストブロックに対して ``wordCount`` を
+適用できるでしょう。
+次のようなダイアグラムになります：
+
+![ページを組み合わせた後にカウント][img01]
+
+しかしこれだと新しいページが出来上がる度にすべてのテキストを足して
+全体の単語数をカウントすることになります。
+
+言うまでもなく、もう少しいい方法があることにお気づきでしょう。
+すべてのテキストをまとめてからカウントするのではなく、
+以下のようにそれぞれのページ毎にカウントして
+それらを最終的に足しあわせればよいのです：
+
+![ページ毎にカウントして合計する][img02]
+
+2番目の方法は整数(カウント)自体がモノイドであって、
+それぞれを足しあわせれば期待した通りの結果が得られるということを頼りにしています。
+
+つまり ``wordCount`` 関数は「ページ」を集計するのではなく、
+「単語数」を集計するようになります。
+
+しかし大きな問題があります。
+``wordCount`` はモノイド準同型なのでしょうか？
+
+ページ(テキスト)と単語数(整数)はいずれもモノイドなので、
+確かに ``wordCount`` はモノイドを別のモノイドに変換しています。
+
+しかしもっと潜在的な条件、つまり「形」の維持についてはどうでしょうか？
+つまり、単語数の足し算はページの足し算と同じ結果になりますか？
+
+今回の場合はyesです。
+したがって ``wordCount`` はモノイド準同型です！
+
+これは当然のことで、今回のようなマッピングがすべて
+モノイド準同型になるだろうと思うかもしれません。
+しかしそうならないケースについて後ほど紹介します。
+
+### チャンク化できることの利点
+
+モノイド準同型のアプローチによる利点は「チャンク化できること」(chunkable)にあります。
+
+> 訳注：チャンクとはある程度の大きさをもった塊のことです。
+
+各マップと単語数はそれぞれ独立したものです。
+そのため個別に処理した後に最終的な答えを後で足しあわせることができるわけです。
+多くのアルゴリズムにとっては、大きなチャンクを対象にするよりは
+小さなチャンクを対象にしたほうが効率的です。
+したがって可能な限りチャンク化するようにしたほうがよいでしょう。
+
+チャンク化できることによって得られる直接的な結果としては、
+先の記事で触れたようないくつかの恩恵が得られるようになります。
+
+まずインクリメンタル(incremental)な処理が可能になります。
+つまり最後のページにテキストを追加したとしても、
+それ以前のすべてのページにある単語数を再計算する必要がありません。
+したがって処理時間がいくらか短縮できます。
+
+次に並列化が可能になります(parallelizable)。
+それぞれのチャンクは別のコアや別のマシン上で独立して処理できます。
+ただし現実的には並列化は過大評価されているところがあります。
+小さく細分化できることによって得られる利点は並列化というよりは
+パフォーマンス的に有利になるという方が大きいでしょう。
+
+### 単語数カウントの実装を比較する
+
+さてでは2つの異なるテクニックを使ってコードを書いてみましょう。
+
+まずは上で紹介したような基本的な実装から始めます。
+ただし単語数をカウントする部分については ``Split`` の代わりに
+正規表現を使用するように変更しています。
+
+```fsharp
+module WordCountTest =
+    open System
+
+    type Text = Text of string
+
+    let addText (Text s1) (Text s2) =
+        Text (s1 + s2)
+
+    let wordCount (Text s) =
+        System.Text.RegularExpressions.Regex.Matches(s,@"\S+").Count
+```
+
+次に1000個の単語を含んだページを1000ページ持ったドキュメントを用意します。
+
+```fsharp
+module WordCountTest =
+
+    // 前述のコード
+
+    let page() =
+        List.replicate 1000 "hello "
+        |> List.reduce (+)
+        |> Text
+
+    let document() =
+        page() |> List.replicate 1000
+```
+
+また、それぞれの実装による違いを計測するようなコードも必要になります。
+小さなヘルパー関数を用意しましょう。
+
+```fsharp
+module WordCountTest =
+
+    // 前述のコード
+
+    let time f msg =
+        let stopwatch = Diagnostics.Stopwatch()
+        stopwatch.Start()
+        f()
+        stopwatch.Stop()
+        printfn "%s にかかった時間は %ims です" msg stopwatch.ElapsedMilliseconds
+```
+
+では1番目のアプローチを実装しましょう。
+すべてのページを ``addText`` でまとめた後に、
+100万の単語を含んだドキュメント全体の単語数を計算します。
+
+```fsharp
+module WordCountTest =
+
+    // 前述のコード
+
+    let wordCountViaAddText() =
+        document()
+        |> List.reduce addText
+        |> wordCount
+        |> printfn "単語数は %i"
+
+    time wordCountViaAddText "reduce後にカウント"
+```
+
+2番目のアプローチではまず各ページに対して ``wordCount`` を呼び出した後、
+すべての結果を足しあわせます(当然 ``reduce`` を使用します)。
+
+```fsharp
+module WordCountTest =
+
+    // 前述のコード
+
+    let wordCountViaMap() =
+        document()
+        |> List.map wordCount
+        |> List.reduce (+)
+        |> printfn "単語数は %i"
+
+    time wordCountViaMap "map後にreduce"
+```
+
+わずか2行しかコードを変更していない点に注目してください！
+
+``wordCountViaAddText`` では以下のようにしてました：
+
+```fsharp
+|> List.reduce addText
+|> wordCount
+```
+
+そして ``wordCountViaMap`` ではこの順番を入れ替えています。
+以下の通り、 **最初に** ``wordCount`` を呼び出してから ``reduce`` を呼び出しています：
+
+```fsharp
+|> List.map wordCount
+|> List.reduce (+)
+```
+
+最後に並列化による違いを確認してみましょう。
+``List.map`` の代わりに組み込みの ``Array.Parallel.map`` を使います。
+つまり最初にリストを配列に変換する必要があります。
+
+```fsharp
+module WordCountTest =
+
+    // 前述のコード
+
+    let wordCountViaParallelAddCounts() =
+        document()
+        |> List.toArray
+        |> Array.Parallel.map wordCount
+        |> Array.reduce (+)
+        |> printfn "単語数は %i"
+
+    time wordCountViaParallelAddCounts "並列map後にreduce"
+```
+
+これらの実装について、皆さんがきちんとついていけているとよいのですがどうでしょうか。
+
+### 結果の分析
+
+筆者の4コアマシン上で実行した結果は以下の通りです：
+
+```fsharp
+reduce後にカウント にかかった時間は 7955ms です
+map後にreduce にかかった時間は 698ms です
+並列map後にreduce にかかった時間は 603ms です
+```
+
+この結果は大まかなもので、きちんとしたパフォーマンスプロファイル
+ではない点に注意してください。
+ただしそれでもmap/reduceバージョンの方が ``ViaAddText`` バージョンよりも
+明らかに性能がいいことがわかるでしょう。
+
+これがまさにモノイド準同型が重要である理由なのです。
+モノイド準同型があることによって、強力かつ簡単に実装できる
+「分割統治」アルゴリズムが利用できるようになるのです。
+
+もちろんこのアルゴリズムが効果的ではないようなケースもあるでしょう。
+巨大なテキストブロックを文字列連結で処理する方法は全く効率的では無く、
+単語の数え方ももっと適切な方法があるでしょう。
+しかしそれでも基本的な部分は変わらず有効です。
+わずか2行のコードを入れ替えるだけで
+遙かに優れたパフォーマンスを得られるようになるのです。
+
+また、若干のハッシュ化やキャッシュを行うことによっても
+インクリメンタル集計の利点を得ることができます。
+ページが変更された場合でも最小限の計算量で済ませることができるようになります。
+
+なお今回の場合、4コアを駆使しているにも関わらず、
+並列mapがそれほど効果的ではない点に注意してください。
+確かに ``toArray`` のコストがかかるようになったにもかかわらず
+ベストな結果になっていますが、マルチコアマシン上であっても
+パフォーマンスはわずかしか改善しないでしょう。
+繰り返しますが、最も大きな違いはmap/reduceアプローチに備えられた
+分割統治戦略を採用したことにあります。
+
+## 非モノイド準同型
+
+すべてのマッピングが必ずしもモノイド準同型だとは限らないと説明しました。
+この節ではそのような実例を見ていくことにします。
+
+今回の例では単語数をカウントするのではなく、
+テキストブロック中で最も出現頻度の大きい単語を返すようにします。
+
+基本的なコードは以下の通りです：
+
+```fsharp
+module FrequentWordTest =
+
+    open System
+    open System.Text.RegularExpressions
+
+    type Text = Text of string
+
+    let addText (Text s1) (Text s2) =
+        Text (s1 + s2)
+
+    let mostFrequentWord (Text s) =
+        Regex.Matches(s,@"\S+")
+        |> Seq.cast<Match>
+        |> Seq.map (fun m -> m.ToString())
+        |> Seq.groupBy id
+        |> Seq.map (fun (k,v) -> k,Seq.length v)
+        |> Seq.sortBy (fun (_,v) -> -v)
+        |> Seq.head
+        |> fst
+```
+
+``mostFrequentWord`` 関数は先の ``wordCount`` よりも複雑なので
+順を追って説明していきます。
+
+まず正規表現を使って、空白ではないすべての文字にマッチさせます。
+この結果は ``Match`` のリストではなく ``MatchCollection`` になるため、
+これをシーケンスへと明示的にキャストします
+(C#的に言えば ``IEnumerable<Match>`` にします)。
+
+次にそれぞれの ``Match`` に対して ``ToString()`` を使って、
+一致した単語へと変換します。
+そして単語毎にグループ化した後、 ``(単語,単語のリスト)`` のペアを
+要素とするようなリストにします。
+その後 ``(単語,リストの要素数)`` となるように変換して、
+(単語の数を負数にすることで)逆順にソートします。
+
+最後に1番目のペアを取り出してからペアの1番目の項目を返します。
+これが最も出現頻度の大きい単語です。
+
+さて続けましょう。
+以前と同じようにページとドキュメントを用意します。
+今回はパフォーマンスについては特に問題にしないため、2ページで十分です。
+ただし今回の場合には **内容の異なる** 2ページが必要です。
+そこで1ページ目は「hello」だけを含み、
+2ページ目には「world」だけを含むようにします。
+(思うに、あまり面白そうな本ではなさそうですけどね！)
+
+```fsharp
+module FrequentWordTest =
+
+    // 前述のコード
+
+    let page1() =
+        List.replicate 1000 "hello "
+        |> List.reduce (+)
+        |> Text
+
+    let page2() =
+        List.replicate 500 "world "
+        |> List.reduce (+)
+        |> Text
+
+    let document() =
+        [ page1(); page2() ]
+```
+
+「hello」は1000作りましたが、「world」は500しか作っていません。
+したがって「hello」が最も出現頻度が高い単語になります。
+
+最後に以前と同じく2つのアプローチを比較してみます。
+1番目のアプローチとしてはすべてのページを連結した後に
+``mostFrequentWord`` を適用します。
+2番目のアプローチではページそれぞれに ``mostFrequentWord`` を適用した後に
+結果を連結します。
+
+```fsharp
+module FrequentWordTest =
+
+    // 前述のコード
+
+    document()
+    |> List.reduce addText
+    |> mostFrequentWord
+    |> printfn "先に足しあわせた場合の最頻出単語は %s"
+
+    document()
+    |> List.map mostFrequentWord
+    |> List.reduce (+)
+    |> printfn "map reduceした場合の最頻出単語は %s"
+```
+
+何が起こるかわかりますか？
+1番目のアプローチが正解です。
+しかし2番目のアプローチは全く見当外れな答えを返します！
+
+```fsharp
+先に足しあわせた場合の最頻出単語は hello
+map reduceした場合の最頻出単語は helloworld
+```
+
+2番目のアプローチでは各ページの最頻出単語を単に連結しただけです。
+この文字列はどのページにも **出てこない** 新しいものです。
+完全に間違いです！
+
+さて、文字列は連結においてはモノイドであるため、
+マッピングはモノイド(Text)からモノイド(文字列)への変換になっています。
+
+しかし今回のマッピングでは「形」が維持されていません。
+大きなテキストのチャンク内にある最頻出単語は小さなテキストのチャンク内にある
+最頻出単語から派生したものではありません。
+つまりモノイド準同型としては適切ではないということです。
+
+したがって、多数のテキストファイルに対して ``mostFrequentWord`` を使って
+最頻出単語を見つけ出す場合、残念ながらまずテキストを
+すべて無理矢理連結しなければならず、分割統治の戦略による利点も
+得られないということになります。
+
+...あるいは何か方法があるかも？
+``mostFrequentWord`` を正しいモノイド準同型へと変換する方法がある？
+それについてはまた後ほど！
+
+## 次のステップ
+
+これまではきちんとしたモノイドだけを扱ってきました。
+しかしモノイド **ではない** ものを扱いたい場合にはどうしたらよいでしょうか？
+他には？
+
+シリーズの次回の記事ではほとんどすべてのものを
+モノイドへと変換する方法について説明します。
+
+また今回の例にあった ``mostFrequentWord`` を正しいモノイド準同型へと修正して、
+ゼロに関するやっかいな問題の再検討と、ゼロを作成するための
+エレガントなアプローチについても紹介します。
+
+次回をお楽しみに！
+
+## 参考文献
+
+データ集計におけるモノイドの使用方法について興味があれば、
+以下のリンクにある議論が参考になるでしょう：
+
+* Twitter社による [Algebirdライブラリ][link05]
+* たいていの [確率的アルゴリズムのためのデータ構造][link06] がモノイドであることについて
+* [ガウシアン分布はモノイドを形成する][link07]
+* Google社による [MapReduceプログラミングモデル][link08] (PDF)
+* [Monoidify! 効率的なMapReduceアルゴリズムのためのデザイン原則としてのモノイド][link09] (PDF)
+* LinkedIn社による [Hadoop用Hourglassライブラリ][link10]
+* StackExchangeより： [データベースの計算において群やモノイド、環の用途は？][link11]
+
+もっと技術的なことを知りたい場合には
+図形ダイアグラムを使ってモノイドや半群について考察した以下の文献が
+参考になるでしょう：
+
+* [モノイド：テーマとバリエーション][link12] (PDF)
 
 
 [link01]: http://fsharpforfunandprofit.com/posts/monoids-part2/ "Monoids in practice"
 [link02]: Monoids%20without%20tears.md "難しくないモノイド"
 [link03]: http://fsharpforfunandprofit.com/posts/printf/ "Formatted text using printf"
+[link04]: https://leanpub.com/understandingfunctionalprogramming?utm_campaign=understandingfunctionalprogramming "Understanding Functional Programming"
+[link05]: https://blog.twitter.com/2012/scalding-080-and-algebird "Scalding 0.8.0 and Algebird"
+[link06]: http://highlyscalable.wordpress.com/2012/05/01/probabilistic-structures-web-analytics-data-mining/ "Probabilistic Data Structures for Web Analytics and Data Mining"
+[link07]: http://izbicki.me/blog/gausian-distributions-are-monoids "Gausian distributions form a monoid"
+[link08]: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.104.5859&rep=rep1&type=pdf "Google’s MapReduce Programming Model—Revisited"
+[link09]: http://arxiv.org/abs/1304.7544 "Monoidify! Monoids as a Design Principle for Efficient MapReduce Algorithms"
+[link10]: http://www.slideshare.net/matthewterencehayes/hourglass-27038297 "Hourglass: a Library for Incremental Processing on Hadoop"
+[link11]: http://cs.stackexchange.com/questions/9648/what-use-are-groups-monoids-and-rings-in-database-computations
+[link12]: http://www.cis.upenn.edu/~byorgey/pub/monoid-pearl.pdf
+
+[img01]: img/02-01.png
+[img02]: img/02-02.png
