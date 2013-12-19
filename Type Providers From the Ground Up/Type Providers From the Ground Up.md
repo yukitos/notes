@@ -29,7 +29,7 @@
 セキュリティやAppDomainといったやっかいな問題がある都合上、
 コンパイル済みのDLLではなくソースコードとして公開されている。
 なので単にこれらをプロジェクトに追加すればよい。
-なおこれらのファイルを自前で再作成しようなどとはきっと思わないことだろう。
+なおこれらのファイルを自前で再作成しようなどとはきっと思わないはずだ。
 
 3) Library1.fsの内容をたとえば以下のように書き換える：
 
@@ -95,7 +95,7 @@ Visual StudioのインスタンスがDLLファイルをロックしてしまう�
 DLLを参照する方法はうまくいかない。
 
 2つ目のVisual Studioを起動して(そのくらいは余裕があるRAMを乗せた
-ハードウェアを使ってるよね？)、そこでF#プロジェクトを作成する。
+ハードウェアを使ってるだろう？)、そこでF#プロジェクトを作成する。
 そして以下のようなfsxファイルを追加する：
 
 ```fsharp
@@ -132,7 +132,7 @@ Intellisenseに新しく作った型とstaticプロパティが一覧表示さ�
 この型を1つだけ要素とするリストを作成して、それを返している。
 
 `MyType` に対するCLR上の表現は `obj` として定義する。
-これはつまり非F#言語からアクセスした場合には、コンパイラ的には `object` に見えることになる。
+これはつまり非F#言語からアクセスした場合には、コンパイラ的には `object` として見えることになる。
 
 なかなかいい感じだ。
 ただしstaticプロパティのちょっと異様な `<@@ ... @>` シンタックスを除けば。
@@ -144,8 +144,9 @@ Intellisenseに新しく作った型とstaticプロパティが一覧表示さ�
 1つの式を表すオブジェクトとしてコンパイルされる。
 
 頭が痛くなった？
-僕もだよ...
-ここではコードクォートの詳細は省略する(僕も詳しいことはわかってないし！)けれども、
+私もだよ...
+ここではコードクォートの詳細は省略するけれども
+(私も詳しいことはわかってないからね！)、
 基本を押さえておく必要はあるだろう。
 
 簡単な例として、クォート式 `<@@ 1 + 2 @@>` はコンパイルされると
@@ -239,8 +240,315 @@ let thing2InnerState = thing2.InnerState
 
 # それで要点は？
 
+なかなかいい感じだ。
+ただしこれまでは型を静的に生成する方法しか扱っていなかったことに気づいたことと思う。
+それだけなら普通の文法を使っても宣言できることだ。
 
+そこでもう一歩進んでみよう。
+たとえばグラフのノードの種類を表すJson定義があり、
+それぞれには入出力用の「ポート」が複数定義されているものとする。
+グラフの要素はJson配列になっていて、各Nodeの種類とポートには
+Guid識別子と表示名がある。
 
+入力となるJSONデータは以下のようなものだ：
+
+```javascript
+
+   {
+      "Id":{
+         "Name":"Simple",
+         "UniqueId":"0ab82262-0ad3-47d3-a026-615b84352822"
+      },
+      "Ports":[
+         {
+            "Id":{
+               "Name":"Input",
+               "UniqueId":"4b69408e-82d2-4c36-ab78-0d2327268622"
+            },
+            "Type":"input"
+         },
+         {
+            "Id":{
+               "Name":"Output",
+               "UniqueId":"92ae5a96-6900-4d77-832f-d272329f8a90"
+            },
+            "Type":"output"
+         }
+      ]
+   },
+   {
+      "Id":{
+         "Name":"Join",
+         "UniqueId":"162c0981-4370-4db3-8e3f-149f13c001da"
+      },
+      "Ports":[
+         {
+            "Id":{
+               "Name":"Input1",
+               "UniqueId":"c0fea7ff-456e-4d4e-b5a4-9539ca134344"
+            },
+            "Type":"input"
+         },
+         {
+            "Id":{
+               "Name":"Input2",
+               "UniqueId":"4e93c3b1-11bc-422a-91b8-e53204368714"
+            },
+            "Type":"input"
+         },
+         {
+            "Id":{
+               "Name":"Output",
+               "UniqueId":"fb54728b-9602-4220-ba08-ad160d92d5a4"
+            },
+            "Type":"output"
+         }
+      ]
+   },
+   {
+      "Id":{
+         "Name":"Split",
+         "UniqueId":"c3e44941-9182-41c3-921c-863a82097ba8"
+      },
+      "Ports":[
+         {
+            "Id":{
+               "Name":"Input",
+               "UniqueId":"0ec2537c-3346-4503-9f5a-d0bb49e9e431"
+            },
+            "Type":"input"
+         },
+         {
+            "Id":{
+               "Name":"Output1",
+               "UniqueId":"77b5a50c-3d11-4a67-b14d-52d6246e78c5"
+            },
+            "Type":"output"
+         },
+         {
+            "Id":{
+               "Name":"Output2",
+               "UniqueId":"d4d1e928-5347-4d51-be54-8650bdfe9bac"
+            },
+            "Type":"output"
+         }
+      ]
+   }
+]
+```
+
+ここに来て事態がなかなか複雑になってきたので
+コード全体を確認したいと思うかもしれないが、
+コードは [GitHub] 上にあるのでそれぞれ好みの開発環境で参照しつつ
+読み進めてもらいたい。
+
+データのパースについては他に任せることにしよう。
+型プロバイダーのプロジェクトで、NuGetマネージャから `Newtonsoft.Json` への参照を
+追加して、3度 `createTypes` を見ていくことにする。
+
+まずJsonのデシリアライズ先となるクラスをいくつか用意する必要がある。
+出来合えのNewtonsoftは(更新途中であるとはいえ)F#のコアクラスを駆使するようには
+なっていないため、今のところは古典的OOスタイルの可変型をいくつか作ることにする：
+
+```fsharp
+type Id () =
+    member val UniqueId = Guid() with get, set
+    member val Name = "" with get, set
+
+type Port () =
+    member val Id = Id() with get, set
+    member val Type = "" with get, set
+
+type Node () =
+    member val Id = Id() with get, set
+    member val Ports = Collections.Generic.List<Port>() with get, set
+```
+
+(ただし心配は無用。これらがそのままメインインターフェイスとして公開されるわけではない。)
+
+Jsonからこの新しいCLR型への変換は簡単に実装できる：
+
+```fsharp
+let nodes =
+    JsonConvert.DeserializeObject<seq<Node>>(IO.File.ReadAllText(@"C:\Temp\Graph.json"))
+```
+
+さてここが面白いところだ。
+これらのノードからグラフを組み立てるにはいくつかの手順が必要になる。
+
+まずノード型の特定のインスタンスを組み立てる必要がある。
+しかしこれはどの `Split` ノードだろうか？
+
+そこで、インスタンスに対して、基底をなす具象型を用意することにする：
+
+```fsharp
+type nodeInstance =
+    {
+        Node : Node
+        InstanceId : Id
+        Config : string
+    }
+
+module private NodeInstance =
+    let create node name guid config =
+        { Node = node; InstanceId = Id(Name = name, UniqueId = guid); Config = config }
+```
+
+そしてJsonから読み取ったそれぞれのノード型を受け付けるコンストラクタを持った、
+より具体的な型を構築する：
+
+```fsharp
+let nodeType = ProvidedTypeDefinition(asm, ns, node.Id.Name, Some typeof<nodeInstance>)
+let ctor = ProvidedConstructor(
+            [
+                ProvidedParameter("Name", typeof<string>)
+                ProvidedParameter("UniqueId", typeof<Guid>)
+                ProvidedParameter("Config", typeof<string>)
+            ],
+            InvokeCode = fun [name;unique;config] -> <@@ NodeInstance.create (GetNode id) (%%name:string) (%%unique:Guid) (%%config:string) @@>)
+```
+
+そうすると(Jsonデータを再確認してもらいたいが)
+`let simple = Simple("simpleInstance", Guid.NewGuid(), "MyConfig")`
+というコードで `Simple` ノードのインスタンスを生成することができる。
+また、このインスタンスには基底型の `InstanceId` `Config` `Node`
+というプロパティが既に備わっている。
+
+なかなか順調だ。
+しかし入出力を表すうまい方法がないものだろうか？
+出力を互いに接続したりといった下らない処理を禁止するような、
+何らかのコネクションビルダー関数を用意したい。
+そこで入力と出力をそれぞれ別の型として用意することになる。
+
+```fsharp
+// F# for Fun and Profitのサイトにある、単一ケースを持った
+// 判別共用体でデータをモデル化する方法についての
+// すばらしい記事も要チェック：
+// http://fsharpforfunandprofit.com/posts/designing-with-types-single-case-dus/
+
+type InputPort = | InputPort of Port
+type OutputPort = | OutputPort of Port
+```
+
+そして最後にノード生成用の関数を更新して、
+`Inputs` と `Outputs` という2つの補助型を各ノード型に追加する。
+また、それぞれのポートを表すオブジェクトに対応するプロパティを作成する。
+ノードを作成する最終的なコードは以下のようになる：
+
+```fsharp
+let addInputPort (inputs : ProvidedTypeDefinition) (port : Port) =
+    let port = ProvidedProperty(
+                    port.Id.Name, 
+                    typeof<InputPort>, 
+                    GetterCode = fun args -> 
+                        let id = port.Id.UniqueId.ToString()
+                        <@@ GetPort id @@>)
+    inputs.AddMember(port)
+ 
+let addOutputPort (outputs : ProvidedTypeDefinition) (port : Port) =
+    let port = ProvidedProperty(
+                    port.Id.Name, 
+                    typeof<OutputPort>, 
+                    GetterCode = fun args -> 
+                        let id = port.Id.UniqueId.ToString()
+                        <@@ GetPort id @@>)
+    outputs.AddMember(port)
+ 
+let addPorts inputs outputs (portList : seq<Port>) =
+    portList
+    |> Seq.iter (fun port -> 
+                    match port.Type with
+                    | "input" -> addInputPort inputs port
+                    | "output" -> addOutputPort outputs port
+                    | _ -> failwithf "ポート %s/%s に対応する型が不明" port.Id.Name (port.Id.UniqueId.ToString()))
+ 
+let createNodeType id (node : Node) =
+    let nodeType = ProvidedTypeDefinition(asm, ns, node.Id.Name, Some typeof<nodeInstance>)
+    let ctor = ProvidedConstructor(
+                [
+                    ProvidedParameter("Name", typeof<string>)
+                    ProvidedParameter("UniqueId", typeof<Guid>)
+                    ProvidedParameter("Config", typeof<string>)
+                ],
+                InvokeCode = fun [name;unique;config] -> <@@ NodeInstance.create (GetNode id) (%%name:string) (%%unique:Guid) (%%config:string) @@>)
+    nodeType.AddMember(ctor)
+ 
+    let outputs = ProvidedTypeDefinition("Outputs", Some typeof<obj>)
+    let outputCtor = ProvidedConstructor([], InvokeCode = fun args -> <@@ obj() @@>)
+    outputs.AddMember(outputCtor)
+    outputs.HideObjectMethods <- true
+ 
+    let inputs = ProvidedTypeDefinition("Inputs", Some typeof<obj>)
+    let inputCtor = ProvidedConstructor([], InvokeCode = fun args -> <@@ obj() @@>)
+    inputs.AddMember(inputCtor)
+    inputs.HideObjectMethods <- true
+    addPorts inputs outputs node.Ports
+ 
+    // Node型の下に入力と出力を表すネスト型を追加する
+    nodeType.AddMembers([inputs;outputs])
+ 
+    // そしてノードのインスタンスでそれぞれにアクセスできるようにインスタンスプロパティをいくつか追加する
+    let outputPorts = ProvidedProperty("OutputPorts", outputs, [],
+                        GetterCode = fun args -> <@@ obj() @@>)
+    let inputPorts = ProvidedProperty("InputPorts", inputs, [],
+                        GetterCode = fun args -> <@@ obj() @@>)
+ 
+    nodeType.AddMembers([inputPorts;outputPorts])
+ 
+    nodeType
+```
+
+残された謎はあと1つ。
+`GetPort` と `GetNode` は何者だろうか？
+そして単に `<@@ node @@>` というようにはせず、
+なぜこれらの関数をクォート式で使っているのだろうか？
+
+クォート式の評価は、使用される評価器(evaluator)の実装によって
+限定されるという話を覚えているだろうか。
+最初の手順として追加した型プロバイダー用のファイルにはクォート式を
+IL命令に変換するための評価器が同梱されている。
+しかしカスタム型のリテラルについてはサポートされていない。
+実際、 [ProvidedTypes.fsの該当箇所][link08]を確認すると
+実に模範的な処理しか行われていないことがわかる。
+
+したがって受付可能な型のうちの1つ(今回の場合は `string` )から
+適切なポートやノードを見つけ出す方法を知るための
+privateヘルパーメソッドをいくつか用意することになる：
+
+```fsharp
+let private nodes = JsonConvert.DeserializeObject<seq<Node>>(IO.File.ReadAllText(@"c:\Temp\Graph.json"))
+                    |> Seq.map (fun n -> n.Id.UniqueId.ToString(), n)
+                    |> Map.ofSeq
+ 
+let GetNode id =
+    nodes.[id]
+ 
+let private ports =
+    nodes
+    |> Map.toSeq
+    |> Seq.map (fun (_, node) -> node.Ports)
+    |> Seq.concat
+    |> Seq.map (fun p -> p.Id.UniqueId.ToString(), p)
+    |> Map.ofSeq
+ 
+let GetPort id =
+    ports.[id]
+```
+
+さてこれですべてそろった。
+Json形式で提供されたメタデータを使ってCLR型を生成するような
+型プロバイダーが完成して動作するようになった。
+ただし製品用のコードにするためには
+(遅延読み込み、同名の複数ポートに対する処理、ファイル名をハードコードしない等、)
+まだ数多くの処理を追加する必要があるだろう。
+
+![Intellisenseによる補完][img01]
+
+> 訳注：図は [原文のサイト][link01] に掲載されたものを転用しています。
+
+疑問点や修正点があれば是非教えてほしい。
+既に述べたとおり、私が型プロバイダーを使ったのは今回が本当に初めてのことだ。
+しかしこのレベルであっても十分価値のある機能が利用できている。
 
 [link01]: http://blog.mavnn.co.uk/type-providers-from-the-ground-up/ "Type Providers From the Ground Up"
 [link02]: http://blogs.msdn.com/b/dsyme/archive/2013/01/30/twelve-type-providers-in-pictures.aspx "Twelve F# type providers in action"
@@ -248,3 +556,7 @@ let thing2InnerState = thing2.InnerState
 [link04]: https://raw.github.com/fsharp/FSharp.Data/master/src/CommonProviderImplementation/ProvidedTypes.fsi
 [link05]: https://raw.github.com/fsharp/FSharp.Data/master/src/CommonProviderImplementation/ProvidedTypes.fs
 [link06]: http://msdn.microsoft.com/ja-jp/library/dd233212.aspx "コード クォート"
+[link07]: https://github.com/mavnn/Mavnn.Blog.TypeProvider 
+[link08]: https://github.com/fsharp/FSharp.Data/blob/master/src/CommonProviderImplementation/ProvidedTypes.fs#L1876
+
+[img01]: img/img01.png
