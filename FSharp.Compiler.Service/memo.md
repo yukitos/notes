@@ -3,7 +3,28 @@
 # F# File Structure
 
 * `ParsedInput`
-  * `ImplFile` of ParsedImplFileInput
-    * `ParsedImplFileInput` of (filename:string) * (isScript:bool) * (qualifiedNameOfFile:QualifiedNameOfFile) * (scopedPragmas:ScopedPragma list) * (parsedHashDirectives:ParsedHashDirective list) * (symbolsOfModuleOrNamespace:SynModuleOrNamespace list) * (isLastCompiland:bool)
-  * `SigFile` of ParsedSigFileInput
-    * `ParsedSigFileInput` of (filename:string) * (qualifiedNameOfFile:QualifiedNameOfFile) * (scopedPragmas:ScopedPragma list) * (parsedHashDirectives:ParsedHashDirective list) * (symbolsOfModuleOrNamespaceInSignature:SynModuleOrNamespaceSig list)
+  * `ImplFile`
+    * `ParsedImplFileInput`
+      * `string` : filename
+      * `bool` : isScript
+      * `QualifiedNameOfFile` : qualifiedNameOfFile
+        * `Ident`
+          * `idText`
+          * `idRange`
+      * `ScopedPragma list` : scopedPragmas
+        * `WarningOff`
+          * `range` : pragmaRange
+          * `int` : warningNumFromPragma
+      * `ParsedHashDirective list` : parsedHashDirectives
+        * `string` : name
+        * `string list` : parameters
+        * `range` : declarationRange
+      * `SynModuleOrNamespace list` : symbolsOfModuleOrNamespace
+      * `bool` : isLastCompiland
+  * `SigFile`
+    * `ParsedSigFileInput`
+      * `string` : filename
+      * `QualifiedNameOfFile` : qualifiedNameOfFile
+      * `ScopedPragma list` : scopedPragmas
+      * `ParsedHashDirective list` : parsedHashDirectives
+      * `SynModuleOrNamespaceSig list` : symbolsOfModuleOrNamespaceInSignagure
