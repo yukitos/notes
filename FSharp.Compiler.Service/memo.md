@@ -8,12 +8,26 @@
       * `string` : file name
       * `bool` : true if this is a script file
       * `QualifiedNameOfFile` : qualified name of file
-        * `Ident`
-          * `idText`
-          * `idRange`
+        * `Ident` : a class holds an id text and its declaration location
+          * `idText` : `string` id text
+          * `idRange` : `range` declaration location of the id
       * `ScopedPragma list` : pragmas that is available in the current scope
         * `WarningOff`
-          * `range` : location of this pragma
+          * `range` : an object which indicates location of this pragma
+            * `StartLine` : `int`
+            * `StartColumn` : `int`
+            * `EndLine` : `int`
+            * `EndColumn` : `int`
+            * `Start` : `pos`
+              * `Line` : `int`
+              * `Column` : `int`
+              * `Encoding` : `int32`
+            * `End` : `pos`
+            * `StartRange` : `range`
+            * `EndRange` : `range`
+            * `FileIndex` : `int`
+            * `FileName` : `string`
+            * `IsSynthetic` : `bool`
           * `int` : number of warnings from this pragma (?)
       * `ParsedHashDirective list` : parsed hash directives, ex: `#directive XXX`
         * `string` : name of the hash directive
