@@ -38,6 +38,140 @@
           * `Ident list`
         * `bool` : true if this is a module
         * `SynModuleDecls` : declarations in this module (or namespace)
+          * `SynModuleDecl list`
+            * `ModuleAbbrev`
+              * `Ident`
+              * `LongIdent`
+              * `range`
+            * `NestedModule`
+              * `SynComponentInfo`
+                * `ComponentInfo`
+                  * `SynAttributes`
+                    * `SynAttribute list`
+                      * `LongIdentWithDots` : TypeName
+                        * `LongIdent`
+                        * `range list`
+                      * `SynExpr` : ArgExpr
+                        * `----- TODO: describe in another section -----`
+                      * `Ident option` : Target
+                      * `bool` : AppliesToGetterAndSetter
+                      * `range` : Range
+                  * `SynTyparDecl list`
+                    * `TyparDecl`
+                      * `SynAttributes`
+                      * `SynTypar`
+                        * `Typar`
+                          * `Ident`
+                          * `TyparStaticReq`
+                          * `bool` : isCompGen
+                  * `SynTypeConstraint list`
+                    * `WhereTyparIsValueType`
+                      * `SynTypar`
+                      * `range`
+                    * `WhereTyparIsReferenceType`
+                      * `SynTypar`
+                      * `range`
+                    * `WhereTyparIsUnmanaged`
+                      * `SynTypar`
+                      * `range`
+                    * `WhereTyparIsSupportsNull`
+                      * `SynTypar`
+                      * `range`
+                    * `WhereTyparIsIsComparable`
+                      * `SynTypar`
+                      * `range`
+                    * `WhereTyparIsEquatable`
+                      * `SynTypar`
+                      * `range`
+                    * `WhereTyparIsDefaultsToType`
+                      * `SynTypar`
+                      * `SynTypar`
+                      * `range`
+                    * `WhereTyparIsSubtypeOfType`
+                      * `SynTypar`
+                      * `SynTypar`
+                      * `range`
+                    * `WhereTyparIsSupportsMember`
+                      * `SynTypar list`
+                      * `SynMemberSig`
+                        * `Member`
+                          * `SynValSig`
+                            * `ValSpfn`
+                              * `SynAttributes`
+                              * `Ident`
+                              * `SynValTyparDecls`
+                              * `SynType`
+                              * `SynValInfo`
+                              * `bool`
+                              * `bool` : mutable?
+                              * `PreXmlDoc`
+                              * `SynAccess option`
+                              * `SynExpr option`
+                              * `range`
+                          * `MemberFlags`
+                          * `range`
+                        * `Interface`
+                          * `SynType`
+                          * `range`
+                        * `Inherit`
+                          * `SynType`
+                          * `range`
+                        * `ValField`
+                          * `SynField`
+                          * `range`
+                        * `NestedType`
+                          * `SynTypeDefnSig`
+                          * `range`
+                      * `range`
+                    * `WhereTyparIsIsEnum`
+                      * `SynTypar`
+                      * `SynType list`
+                      * `range`
+                    * `WhereTyparIsIsDelegate`
+                      * `SynTypar`
+                      * `SynType list`
+                      * `range`
+                  * `LongIdent`
+                  * `PreXmlDoc`
+                    * `PreXmlMerge`
+                      * `PreXmlDoc`
+                      * `PreXmlDoc`
+                    * `PreXmlDoc`
+                      * `pos`
+                      * `XmlDocCollector`
+                    * `PreXmlDocEmpty`
+                  * `bool` : prefer postfix
+                  * `SynAccess option`
+                  * `range`
+              * `SynModuleDecls`
+              * `bool`
+              * `range`
+            * `Let`
+              * `bool`
+              * `SynBinding list`
+              * `SynExpr`
+              * `range`
+            * `DoExpr`
+              * `SequencePointInfoForBinding`
+              * `SynExpr`
+              * `range`
+            * `Types`
+              * `SynTypeDefn list`
+              * `range`
+            * `Exception`
+              * `SynExceptionDefn`
+              * `range`
+            * `Open`
+              * `LongIdentWithDots`
+              * `range`
+            * `Attributes`
+              * `SynAttributes`
+              * `range`
+            * `HashDirective`
+              * `ParsedHashDirective`
+              * `range`
+            * `NamespaceFragment`
+              * `SynModuleOrnamespace`
         * `PreXmlDoc` : XmlDocument specified in front of this module or namespace declaration
         * `SynAttributes` : Attributes specified for this module (or namespace)
         * `SynAccess option` : access modifier for this module
