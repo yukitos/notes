@@ -3,7 +3,7 @@ let info =
   [ "project-name", "Tutorial: Functional Reactive Programming in F# and WPF"
     "project-author", "Stephen Elliott"
     "project-summary", "Trying to use FSharp.Formatting"
-    "project-github", "https://github.com/yukitos/notes/Tutorial_Functional_Reactive_Programming_in_FSharp_and_WPF"]
+    "project-github", "https://github.com/yukitos/notes/tree/master/Try_Tutorial_FRP_in_FS_and_WPF"]
 
 #I "packages/FSharp.Formatting.2.4.1/lib/net40"
 #I "packages/RazorEngine.3.3.0/lib/net40"
