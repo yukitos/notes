@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>Tutorial: Functional Reactive Programming in F# and WPF を試す
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Trying to use FSharp.Formatting">
+    <meta name="author" content="Stephen Elliott">
+
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" href="/TryFSharp.Formatting/content/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+        </ul>
+        <h3 class="muted"><a href="/TryFSharp.Formatting/part1.html">Tutorial: Functional Reactive Programming in F# and WPF</a></h3>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="span9" id="main">
+          
+<h1>Tutorial: Functional Reactive Programming in F# and WPF を試す</h1>
+
+<p>ここでは Stephen Elliott 氏によって書かれた
+<a href="http://steellworks.blogspot.jp/2014/03/tutorial-functional-reactive.html">Tutorial: Functional Reactive Programming in F# and WPF</a>
+をfsi.exeで実行可能にしつつ、
+<a href="http://tpetricek.github.io/FSharp.Formatting/">FSharp.Formatting</a>
+で文書化したりします。</p>
+
+<p>実行方法：</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">1: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="i">fsi</span><span class="o">.</span><span class="i">exe</span> [<span class="o">-</span><span class="i">d</span><span class="o">:</span><span class="i">VERSIONX</span>] <span class="o">--</span><span class="i">exec</span> <span class="i">part1</span><span class="o">.</span><span class="i">fsx</span></pre>
+</td>
+</tr>
+</table>
+
+<p><code>VERSIONX</code> の <code>X</code> には <code>1</code> から <code>5</code> までの数字が入ります。</p>
+
+<p>例：</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">1: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span onmouseout="hideTip(event, 'fs1', 2)" onmouseover="showTip(event, 'fs1', 2)" class="i">fsi</span><span class="o">.</span><span class="i">exe</span> <span class="o">-</span><span class="i">d</span><span class="o">:</span><span class="i">VERSION5</span> <span class="o">--</span><span class="i">exec</span> <span class="i">part1</span><span class="o">.</span><span class="i">fsx</span></pre>
+</td>
+</tr>
+</table>
+
+<p>TODO: 後で書く</p>
+
+<table class="pre"><tr><td class="lines"><pre class="fssnip">
+<span class="l">  1: </span>
+<span class="l">  2: </span>
+<span class="l">  3: </span>
+<span class="l">  4: </span>
+<span class="l">  5: </span>
+<span class="l">  6: </span>
+<span class="l">  7: </span>
+<span class="l">  8: </span>
+<span class="l">  9: </span>
+<span class="l"> 10: </span>
+<span class="l"> 11: </span>
+<span class="l"> 12: </span>
+<span class="l"> 13: </span>
+<span class="l"> 14: </span>
+<span class="l"> 15: </span>
+<span class="l"> 16: </span>
+<span class="l"> 17: </span>
+<span class="l"> 18: </span>
+<span class="l"> 19: </span>
+<span class="l"> 20: </span>
+<span class="l"> 21: </span>
+<span class="l"> 22: </span>
+<span class="l"> 23: </span>
+<span class="l"> 24: </span>
+<span class="l"> 25: </span>
+<span class="l"> 26: </span>
+<span class="l"> 27: </span>
+<span class="l"> 28: </span>
+<span class="l"> 29: </span>
+<span class="l"> 30: </span>
+<span class="l"> 31: </span>
+<span class="l"> 32: </span>
+<span class="l"> 33: </span>
+<span class="l"> 34: </span>
+<span class="l"> 35: </span>
+<span class="l"> 36: </span>
+<span class="l"> 37: </span>
+<span class="l"> 38: </span>
+<span class="l"> 39: </span>
+<span class="l"> 40: </span>
+<span class="l"> 41: </span>
+<span class="l"> 42: </span>
+<span class="l"> 43: </span>
+<span class="l"> 44: </span>
+<span class="l"> 45: </span>
+<span class="l"> 46: </span>
+<span class="l"> 47: </span>
+<span class="l"> 48: </span>
+<span class="l"> 49: </span>
+<span class="l"> 50: </span>
+<span class="l"> 51: </span>
+<span class="l"> 52: </span>
+<span class="l"> 53: </span>
+<span class="l"> 54: </span>
+<span class="l"> 55: </span>
+<span class="l"> 56: </span>
+<span class="l"> 57: </span>
+<span class="l"> 58: </span>
+<span class="l"> 59: </span>
+<span class="l"> 60: </span>
+<span class="l"> 61: </span>
+<span class="l"> 62: </span>
+<span class="l"> 63: </span>
+<span class="l"> 64: </span>
+<span class="l"> 65: </span>
+<span class="l"> 66: </span>
+<span class="l"> 67: </span>
+<span class="l"> 68: </span>
+<span class="l"> 69: </span>
+<span class="l"> 70: </span>
+<span class="l"> 71: </span>
+<span class="l"> 72: </span>
+<span class="l"> 73: </span>
+<span class="l"> 74: </span>
+<span class="l"> 75: </span>
+<span class="l"> 76: </span>
+<span class="l"> 77: </span>
+<span class="l"> 78: </span>
+<span class="l"> 79: </span>
+<span class="l"> 80: </span>
+<span class="l"> 81: </span>
+<span class="l"> 82: </span>
+<span class="l"> 83: </span>
+<span class="l"> 84: </span>
+<span class="l"> 85: </span>
+<span class="l"> 86: </span>
+<span class="l"> 87: </span>
+<span class="l"> 88: </span>
+<span class="l"> 89: </span>
+<span class="l"> 90: </span>
+<span class="l"> 91: </span>
+<span class="l"> 92: </span>
+<span class="l"> 93: </span>
+<span class="l"> 94: </span>
+<span class="l"> 95: </span>
+<span class="l"> 96: </span>
+<span class="l"> 97: </span>
+<span class="l"> 98: </span>
+<span class="l"> 99: </span>
+<span class="l">100: </span>
+<span class="l">101: </span>
+<span class="l">102: </span>
+<span class="l">103: </span>
+<span class="l">104: </span>
+<span class="l">105: </span>
+<span class="l">106: </span>
+<span class="l">107: </span>
+<span class="l">108: </span>
+<span class="l">109: </span>
+<span class="l">110: </span>
+<span class="l">111: </span>
+<span class="l">112: </span>
+<span class="l">113: </span>
+<span class="l">114: </span>
+<span class="l">115: </span>
+<span class="l">116: </span>
+<span class="l">117: </span>
+<span class="l">118: </span>
+<span class="l">119: </span>
+<span class="l">120: </span>
+<span class="l">121: </span>
+<span class="l">122: </span>
+<span class="l">123: </span>
+<span class="l">124: </span>
+<span class="l">125: </span>
+<span class="l">126: </span>
+<span class="l">127: </span>
+<span class="l">128: </span>
+<span class="l">129: </span>
+<span class="l">130: </span>
+<span class="l">131: </span>
+<span class="l">132: </span>
+<span class="l">133: </span>
+<span class="l">134: </span>
+<span class="l">135: </span>
+<span class="l">136: </span>
+<span class="l">137: </span>
+<span class="l">138: </span>
+<span class="l">139: </span>
+<span class="l">140: </span>
+<span class="l">141: </span>
+<span class="l">142: </span>
+<span class="l">143: </span>
+<span class="l">144: </span>
+<span class="l">145: </span>
+<span class="l">146: </span>
+<span class="l">147: </span>
+<span class="l">148: </span>
+<span class="l">149: </span>
+<span class="l">150: </span>
+<span class="l">151: </span>
+<span class="l">152: </span>
+<span class="l">153: </span>
+<span class="l">154: </span>
+<span class="l">155: </span>
+<span class="l">156: </span>
+<span class="l">157: </span>
+<span class="l">158: </span>
+<span class="l">159: </span>
+<span class="l">160: </span>
+<span class="l">161: </span>
+<span class="l">162: </span>
+<span class="l">163: </span>
+<span class="l">164: </span>
+<span class="l">165: </span>
+<span class="l">166: </span>
+<span class="l">167: </span>
+<span class="l">168: </span>
+<span class="l">169: </span>
+<span class="l">170: </span>
+<span class="l">171: </span>
+<span class="l">172: </span>
+<span class="l">173: </span>
+<span class="l">174: </span>
+<span class="l">175: </span>
+<span class="l">176: </span>
+<span class="l">177: </span>
+<span class="l">178: </span>
+<span class="l">179: </span>
+<span class="l">180: </span>
+<span class="l">181: </span>
+<span class="l">182: </span>
+<span class="l">183: </span>
+<span class="l">184: </span>
+<span class="l">185: </span>
+<span class="l">186: </span>
+<span class="l">187: </span>
+<span class="l">188: </span>
+<span class="l">189: </span>
+<span class="l">190: </span>
+<span class="l">191: </span>
+<span class="l">192: </span>
+<span class="l">193: </span>
+<span class="l">194: </span>
+<span class="l">195: </span>
+<span class="l">196: </span>
+<span class="l">197: </span>
+<span class="l">198: </span>
+<span class="l">199: </span>
+<span class="l">200: </span>
+<span class="l">201: </span>
+<span class="l">202: </span>
+<span class="l">203: </span>
+<span class="l">204: </span>
+<span class="l">205: </span>
+<span class="l">206: </span>
+<span class="l">207: </span>
+<span class="l">208: </span>
+<span class="l">209: </span>
+<span class="l">210: </span>
+<span class="l">211: </span>
+<span class="l">212: </span>
+<span class="l">213: </span>
+<span class="l">214: </span>
+<span class="l">215: </span>
+<span class="l">216: </span>
+<span class="l">217: </span>
+<span class="l">218: </span>
+<span class="l">219: </span>
+<span class="l">220: </span>
+<span class="l">221: </span>
+<span class="l">222: </span>
+<span class="l">223: </span>
+<span class="l">224: </span>
+<span class="l">225: </span>
+<span class="l">226: </span>
+<span class="l">227: </span>
+<span class="l">228: </span>
+<span class="l">229: </span>
+<span class="l">230: </span>
+<span class="l">231: </span>
+<span class="l">232: </span>
+<span class="l">233: </span>
+<span class="l">234: </span>
+<span class="l">235: </span>
+<span class="l">236: </span>
+<span class="l">237: </span>
+<span class="l">238: </span>
+<span class="l">239: </span>
+<span class="l">240: </span>
+<span class="l">241: </span>
+<span class="l">242: </span>
+<span class="l">243: </span>
+<span class="l">244: </span>
+<span class="l">245: </span>
+<span class="l">246: </span>
+<span class="l">247: </span>
+<span class="l">248: </span>
+<span class="l">249: </span>
+<span class="l">250: </span>
+<span class="l">251: </span>
+<span class="l">252: </span>
+<span class="l">253: </span>
+<span class="l">254: </span>
+<span class="l">255: </span>
+<span class="l">256: </span>
+<span class="l">257: </span>
+<span class="l">258: </span>
+<span class="l">259: </span>
+<span class="l">260: </span>
+<span class="l">261: </span>
+<span class="l">262: </span>
+<span class="l">263: </span>
+<span class="l">264: </span>
+<span class="l">265: </span>
+<span class="l">266: </span>
+<span class="l">267: </span>
+<span class="l">268: </span>
+<span class="l">269: </span>
+<span class="l">270: </span>
+<span class="l">271: </span>
+<span class="l">272: </span>
+<span class="l">273: </span>
+<span class="l">274: </span>
+<span class="l">275: </span>
+<span class="l">276: </span>
+<span class="l">277: </span>
+<span class="l">278: </span>
+<span class="l">279: </span>
+<span class="l">280: </span>
+<span class="l">281: </span>
+<span class="l">282: </span>
+<span class="l">283: </span>
+<span class="l">284: </span>
+<span class="l">285: </span>
+<span class="l">286: </span>
+<span class="l">287: </span>
+<span class="l">288: </span>
+<span class="l">289: </span>
+<span class="l">290: </span>
+<span class="l">291: </span>
+<span class="l">292: </span>
+<span class="l">293: </span>
+<span class="l">294: </span>
+<span class="l">295: </span>
+<span class="l">296: </span>
+<span class="l">297: </span>
+<span class="l">298: </span>
+<span class="l">299: </span>
+</pre>
+</td>
+<td class="snippet"><pre class="fssnip">
+<span class="prep">#r</span> <span class="s">&quot;</span><span class="s">PresentationCore</span><span class="s">.</span><span class="s">dll</span><span class="s">&quot;</span>
+<span class="prep">#r</span> <span class="s">&quot;</span><span class="s">PresentationFramework</span><span class="s">.</span><span class="s">dll</span><span class="s">&quot;</span>
+<span class="prep">#r</span> <span class="s">&quot;</span><span class="s">System</span><span class="s">.</span><span class="s">Xaml</span><span class="s">.</span><span class="s">dll</span><span class="s">&quot;</span>
+<span class="prep">#r</span> <span class="s">&quot;</span><span class="s">WindowsBase</span><span class="s">.</span><span class="s">dll</span><span class="s">&quot;</span>
+
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 3)" onmouseover="showTip(event, 'fs2', 3)" class="i">System</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 4)" onmouseover="showTip(event, 'fs2', 4)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 5)" onmouseover="showTip(event, 'fs3', 5)" class="i">Windows</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 6)" onmouseover="showTip(event, 'fs2', 6)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs3', 7)" onmouseover="showTip(event, 'fs3', 7)" class="i">Windows</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs4', 8)" onmouseover="showTip(event, 'fs4', 8)" class="i">Controls</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 9)" onmouseover="showTip(event, 'fs2', 9)" class="i">System</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs5', 10)" onmouseover="showTip(event, 'fs5', 10)" class="i">Xaml</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs6', 11)" onmouseover="showTip(event, 'fs6', 11)" class="i">xamlString</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span><span class="s">&lt;</span><span class="s">?</span><span class="s">xml</span><span class="s"> </span><span class="s">version</span><span class="s">=</span><span class="s">&quot;</span><span class="s">1</span><span class="s">.</span><span class="s">0</span><span class="s">&quot;</span><span class="s"> </span><span class="s">encoding</span><span class="s">=</span><span class="s">&quot;</span><span class="s">utf</span><span class="s">-</span><span class="s">8</span><span class="s">&quot;</span><span class="s">?</span><span class="s">&gt;</span>
+<span class="s">&lt;</span><span class="s">Window</span>
+<span class="s">        </span><span class="s">xmlns</span><span class="s">=</span><span class="s">&quot;</span><span class="s">http</span><span class="s">:</span><span class="s">/</span><span class="s">/</span><span class="s">schemas</span><span class="s">.</span><span class="s">microsoft</span><span class="s">.</span><span class="s">com</span><span class="s">/</span><span class="s">winfx</span><span class="s">/</span><span class="s">2006</span><span class="s">/</span><span class="s">xaml</span><span class="s">/</span><span class="s">presentation</span><span class="s">&quot;</span>
+<span class="s">        </span><span class="s">xmlns</span><span class="s">:</span><span class="s">x</span><span class="s">=</span><span class="s">&quot;</span><span class="s">http</span><span class="s">:</span><span class="s">/</span><span class="s">/</span><span class="s">schemas</span><span class="s">.</span><span class="s">microsoft</span><span class="s">.</span><span class="s">com</span><span class="s">/</span><span class="s">winfx</span><span class="s">/</span><span class="s">2006</span><span class="s">/</span><span class="s">xaml</span><span class="s">&quot;</span>
+<span class="s">        </span><span class="s">Height</span><span class="s">=</span><span class="s">&quot;</span><span class="s">600</span><span class="s">&quot;</span><span class="s"> </span><span class="s">Width</span><span class="s">=</span><span class="s">&quot;</span><span class="s">800</span><span class="s">&quot;</span><span class="s">&gt;</span>
+
+<span class="s">    </span><span class="s">&lt;</span><span class="s">Canvas</span><span class="s"> </span><span class="s">Name</span><span class="s">=</span><span class="s">&quot;</span><span class="s">Canvas</span><span class="s">&quot;</span><span class="s"> </span><span class="s">Background</span><span class="s">=</span><span class="s">&quot;</span><span class="s">White</span><span class="s">&quot;</span><span class="s">&gt;</span>
+<span class="s">        </span><span class="s">&lt;</span><span class="s">Rectangle</span><span class="s"> </span><span class="s">Name</span><span class="s">=</span><span class="s">&quot;</span><span class="s">Rectangle</span><span class="s">&quot;</span><span class="s"> </span><span class="s">Width</span><span class="s">=</span><span class="s">&quot;</span><span class="s">100</span><span class="s">&quot;</span><span class="s"> </span><span class="s">Height</span><span class="s">=</span><span class="s">&quot;</span><span class="s">100</span><span class="s">&quot;</span><span class="s"> </span><span class="s">Fill</span><span class="s">=</span><span class="s">&quot;</span><span class="s">Black</span><span class="s">&quot;</span><span class="s"> </span><span class="s">RadiusY</span><span class="s">=</span><span class="s">&quot;</span><span class="s">10</span><span class="s">&quot;</span><span class="s"> </span><span class="s">RadiusX</span><span class="s">=</span><span class="s">&quot;</span><span class="s">10</span><span class="s">&quot;</span><span class="s">/</span><span class="s">&gt;</span>
+<span class="s">    </span><span class="s">&lt;</span><span class="s">/</span><span class="s">Canvas</span><span class="s">&gt;</span>
+<span class="s">&lt;</span><span class="s">/</span><span class="s">Window</span><span class="s">&gt;</span>
+<span class="s">&quot;&quot;&quot;</span>
+
+<span class="k">module</span> <span class="i">version1</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs7', 12)" onmouseover="showTip(event, 'fs7', 12)" class="i">handle</span> (<span onmouseout="hideTip(event, 'fs8', 13)" onmouseover="showTip(event, 'fs8', 13)" class="i">canvas</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs9', 14)" onmouseover="showTip(event, 'fs9', 14)" class="i">Canvas</span>) (<span onmouseout="hideTip(event, 'fs10', 15)" onmouseover="showTip(event, 'fs10', 15)" class="i">rectangle</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs11', 16)" onmouseover="showTip(event, 'fs11', 16)" class="i">Shapes</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 17)" onmouseover="showTip(event, 'fs12', 17)" class="i">Rectangle</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 18)" onmouseover="showTip(event, 'fs13', 18)" class="i">mouse_down_handler</span> (<span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="i">args</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs15', 20)" onmouseover="showTip(event, 'fs15', 20)" class="i">Input</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 21)" onmouseover="showTip(event, 'fs16', 21)" class="i">MouseButtonEventArgs</span>) <span class="o">=</span>
+            <span class="k">let</span> <span onmouseout="hideTip(event, 'fs17', 22)" onmouseover="showTip(event, 'fs17', 22)" class="i">mouse_position</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 23)" onmouseover="showTip(event, 'fs14', 23)" class="i">args</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 24)" onmouseover="showTip(event, 'fs18', 24)" class="i">GetPosition</span> <span onmouseout="hideTip(event, 'fs8', 25)" onmouseover="showTip(event, 'fs8', 25)" class="i">canvas</span>
+            <span onmouseout="hideTip(event, 'fs9', 26)" onmouseover="showTip(event, 'fs9', 26)" class="i">Canvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 27)" onmouseover="showTip(event, 'fs19', 27)" class="i">SetLeft</span>(<span onmouseout="hideTip(event, 'fs10', 28)" onmouseover="showTip(event, 'fs10', 28)" class="i">rectangle</span>, <span onmouseout="hideTip(event, 'fs17', 29)" onmouseover="showTip(event, 'fs17', 29)" class="i">mouse_position</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 30)" onmouseover="showTip(event, 'fs20', 30)" class="i">X</span>)
+            <span onmouseout="hideTip(event, 'fs9', 31)" onmouseover="showTip(event, 'fs9', 31)" class="i">Canvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 32)" onmouseover="showTip(event, 'fs21', 32)" class="i">SetTop</span>(<span onmouseout="hideTip(event, 'fs10', 33)" onmouseover="showTip(event, 'fs10', 33)" class="i">rectangle</span>, <span onmouseout="hideTip(event, 'fs17', 34)" onmouseover="showTip(event, 'fs17', 34)" class="i">mouse_position</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 35)" onmouseover="showTip(event, 'fs22', 35)" class="i">Y</span>)
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 36)" onmouseover="showTip(event, 'fs23', 36)" class="i">subscription</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs24', 37)" onmouseover="showTip(event, 'fs24', 37)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 38)" onmouseover="showTip(event, 'fs25', 38)" class="i">subscribe</span> <span onmouseout="hideTip(event, 'fs13', 39)" onmouseover="showTip(event, 'fs13', 39)" class="i">mouse_down_handler</span> <span onmouseout="hideTip(event, 'fs8', 40)" onmouseover="showTip(event, 'fs8', 40)" class="i">canvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 41)" onmouseover="showTip(event, 'fs26', 41)" class="i">MouseDown</span>
+        <span onmouseout="hideTip(event, 'fs23', 42)" onmouseover="showTip(event, 'fs23', 42)" class="i">subscription</span>
+
+<span class="k">module</span> <span class="i">version2</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs27', 43)" onmouseover="showTip(event, 'fs27', 43)" class="i">handle</span> (<span onmouseout="hideTip(event, 'fs8', 44)" onmouseover="showTip(event, 'fs8', 44)" class="i">canvas</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs9', 45)" onmouseover="showTip(event, 'fs9', 45)" class="i">Canvas</span>) (<span onmouseout="hideTip(event, 'fs10', 46)" onmouseover="showTip(event, 'fs10', 46)" class="i">rectangle</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs11', 47)" onmouseover="showTip(event, 'fs11', 47)" class="i">Shapes</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 48)" onmouseover="showTip(event, 'fs12', 48)" class="i">Rectangle</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 49)" onmouseover="showTip(event, 'fs28', 49)" class="i">get_canvas_position</span> (<span onmouseout="hideTip(event, 'fs14', 50)" onmouseover="showTip(event, 'fs14', 50)" class="i">args</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs15', 51)" onmouseover="showTip(event, 'fs15', 51)" class="i">Input</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 52)" onmouseover="showTip(event, 'fs16', 52)" class="i">MouseButtonEventArgs</span>) <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs14', 53)" onmouseover="showTip(event, 'fs14', 53)" class="i">args</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 54)" onmouseover="showTip(event, 'fs18', 54)" class="i">GetPosition</span> <span onmouseout="hideTip(event, 'fs8', 55)" onmouseover="showTip(event, 'fs8', 55)" class="i">canvas</span>
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs29', 56)" onmouseover="showTip(event, 'fs29', 56)" class="i">set_rect_position</span> (<span onmouseout="hideTip(event, 'fs30', 57)" onmouseover="showTip(event, 'fs30', 57)" class="i">position</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs31', 58)" onmouseover="showTip(event, 'fs31', 58)" class="i">Point</span>) <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs9', 59)" onmouseover="showTip(event, 'fs9', 59)" class="i">Canvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 60)" onmouseover="showTip(event, 'fs19', 60)" class="i">SetLeft</span>(<span onmouseout="hideTip(event, 'fs10', 61)" onmouseover="showTip(event, 'fs10', 61)" class="i">rectangle</span>, <span onmouseout="hideTip(event, 'fs30', 62)" onmouseover="showTip(event, 'fs30', 62)" class="i">position</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 63)" onmouseover="showTip(event, 'fs20', 63)" class="i">X</span>)
+            <span onmouseout="hideTip(event, 'fs9', 64)" onmouseover="showTip(event, 'fs9', 64)" class="i">Canvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 65)" onmouseover="showTip(event, 'fs21', 65)" class="i">SetTop</span>(<span onmouseout="hideTip(event, 'fs10', 66)" onmouseover="showTip(event, 'fs10', 66)" class="i">rectangle</span>, <span onmouseout="hideTip(event, 'fs30', 67)" onmouseover="showTip(event, 'fs30', 67)" class="i">position</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 68)" onmouseover="showTip(event, 'fs22', 68)" class="i">Y</span>)
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 69)" onmouseover="showTip(event, 'fs23', 69)" class="i">subscription</span> <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs24', 70)" onmouseover="showTip(event, 'fs24', 70)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 71)" onmouseover="showTip(event, 'fs25', 71)" class="i">subscribe</span>
+                <span onmouseout="hideTip(event, 'fs29', 72)" onmouseover="showTip(event, 'fs29', 72)" class="i">set_rect_position</span>
+                (<span onmouseout="hideTip(event, 'fs24', 73)" onmouseover="showTip(event, 'fs24', 73)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 74)" onmouseover="showTip(event, 'fs32', 74)" class="i">map</span> <span onmouseout="hideTip(event, 'fs28', 75)" onmouseover="showTip(event, 'fs28', 75)" class="i">get_canvas_position</span> <span onmouseout="hideTip(event, 'fs8', 76)" onmouseover="showTip(event, 'fs8', 76)" class="i">canvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 77)" onmouseover="showTip(event, 'fs26', 77)" class="i">MouseDown</span>)
+        <span onmouseout="hideTip(event, 'fs23', 78)" onmouseover="showTip(event, 'fs23', 78)" class="i">subscription</span>
+
+<span class="k">module</span> <span class="i">version2_5</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs33', 79)" onmouseover="showTip(event, 'fs33', 79)" class="i">handle</span> (<span onmouseout="hideTip(event, 'fs8', 80)" onmouseover="showTip(event, 'fs8', 80)" class="i">canvas</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs9', 81)" onmouseover="showTip(event, 'fs9', 81)" class="i">Canvas</span>) (<span onmouseout="hideTip(event, 'fs10', 82)" onmouseover="showTip(event, 'fs10', 82)" class="i">rectangle</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs11', 83)" onmouseover="showTip(event, 'fs11', 83)" class="i">Shapes</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 84)" onmouseover="showTip(event, 'fs12', 84)" class="i">Rectangle</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 85)" onmouseover="showTip(event, 'fs28', 85)" class="i">get_canvas_position</span> (<span onmouseout="hideTip(event, 'fs14', 86)" onmouseover="showTip(event, 'fs14', 86)" class="i">args</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs15', 87)" onmouseover="showTip(event, 'fs15', 87)" class="i">Input</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 88)" onmouseover="showTip(event, 'fs16', 88)" class="i">MouseButtonEventArgs</span>) <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs14', 89)" onmouseover="showTip(event, 'fs14', 89)" class="i">args</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 90)" onmouseover="showTip(event, 'fs18', 90)" class="i">GetPosition</span> <span onmouseout="hideTip(event, 'fs8', 91)" onmouseover="showTip(event, 'fs8', 91)" class="i">canvas</span>
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs29', 92)" onmouseover="showTip(event, 'fs29', 92)" class="i">set_rect_position</span> (<span onmouseout="hideTip(event, 'fs30', 93)" onmouseover="showTip(event, 'fs30', 93)" class="i">position</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs31', 94)" onmouseover="showTip(event, 'fs31', 94)" class="i">Point</span>) <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs9', 95)" onmouseover="showTip(event, 'fs9', 95)" class="i">Canvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 96)" onmouseover="showTip(event, 'fs19', 96)" class="i">SetLeft</span>(<span onmouseout="hideTip(event, 'fs10', 97)" onmouseover="showTip(event, 'fs10', 97)" class="i">rectangle</span>, <span onmouseout="hideTip(event, 'fs30', 98)" onmouseover="showTip(event, 'fs30', 98)" class="i">position</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 99)" onmouseover="showTip(event, 'fs20', 99)" class="i">X</span>)
+            <span onmouseout="hideTip(event, 'fs9', 100)" onmouseover="showTip(event, 'fs9', 100)" class="i">Canvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 101)" onmouseover="showTip(event, 'fs21', 101)" class="i">SetTop</span>(<span onmouseout="hideTip(event, 'fs10', 102)" onmouseover="showTip(event, 'fs10', 102)" class="i">rectangle</span>, <span onmouseout="hideTip(event, 'fs30', 103)" onmouseover="showTip(event, 'fs30', 103)" class="i">position</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 104)" onmouseover="showTip(event, 'fs22', 104)" class="i">Y</span>)
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 105)" onmouseover="showTip(event, 'fs23', 105)" class="i">subscription</span> <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs8', 106)" onmouseover="showTip(event, 'fs8', 106)" class="i">canvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 107)" onmouseover="showTip(event, 'fs26', 107)" class="i">MouseDown</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 108)" onmouseover="showTip(event, 'fs24', 108)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 109)" onmouseover="showTip(event, 'fs32', 109)" class="i">map</span> <span onmouseout="hideTip(event, 'fs28', 110)" onmouseover="showTip(event, 'fs28', 110)" class="i">get_canvas_position</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 111)" onmouseover="showTip(event, 'fs24', 111)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 112)" onmouseover="showTip(event, 'fs25', 112)" class="i">subscribe</span> <span onmouseout="hideTip(event, 'fs29', 113)" onmouseover="showTip(event, 'fs29', 113)" class="i">set_rect_position</span>
+        <span onmouseout="hideTip(event, 'fs23', 114)" onmouseover="showTip(event, 'fs23', 114)" class="i">subscription</span>
+
+<span class="k">module</span> <span class="i">version3</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs34', 115)" onmouseover="showTip(event, 'fs34', 115)" class="i">handle</span> (<span onmouseout="hideTip(event, 'fs8', 116)" onmouseover="showTip(event, 'fs8', 116)" class="i">canvas</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs9', 117)" onmouseover="showTip(event, 'fs9', 117)" class="i">Canvas</span>) (<span onmouseout="hideTip(event, 'fs10', 118)" onmouseover="showTip(event, 'fs10', 118)" class="i">rectangle</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs11', 119)" onmouseover="showTip(event, 'fs11', 119)" class="i">Shapes</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 120)" onmouseover="showTip(event, 'fs12', 120)" class="i">Rectangle</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 121)" onmouseover="showTip(event, 'fs28', 121)" class="i">get_canvas_position</span> (<span onmouseout="hideTip(event, 'fs14', 122)" onmouseover="showTip(event, 'fs14', 122)" class="i">args</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs15', 123)" onmouseover="showTip(event, 'fs15', 123)" class="i">Input</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 124)" onmouseover="showTip(event, 'fs16', 124)" class="i">MouseButtonEventArgs</span>) <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs14', 125)" onmouseover="showTip(event, 'fs14', 125)" class="i">args</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 126)" onmouseover="showTip(event, 'fs18', 126)" class="i">GetPosition</span> <span onmouseout="hideTip(event, 'fs8', 127)" onmouseover="showTip(event, 'fs8', 127)" class="i">canvas</span>
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs29', 128)" onmouseover="showTip(event, 'fs29', 128)" class="i">set_rect_position</span> (<span onmouseout="hideTip(event, 'fs30', 129)" onmouseover="showTip(event, 'fs30', 129)" class="i">position</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs31', 130)" onmouseover="showTip(event, 'fs31', 130)" class="i">Point</span>) <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs9', 131)" onmouseover="showTip(event, 'fs9', 131)" class="i">Canvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 132)" onmouseover="showTip(event, 'fs19', 132)" class="i">SetLeft</span>(<span onmouseout="hideTip(event, 'fs10', 133)" onmouseover="showTip(event, 'fs10', 133)" class="i">rectangle</span>, <span onmouseout="hideTip(event, 'fs30', 134)" onmouseover="showTip(event, 'fs30', 134)" class="i">position</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 135)" onmouseover="showTip(event, 'fs20', 135)" class="i">X</span>)
+            <span onmouseout="hideTip(event, 'fs9', 136)" onmouseover="showTip(event, 'fs9', 136)" class="i">Canvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 137)" onmouseover="showTip(event, 'fs21', 137)" class="i">SetTop</span>(<span onmouseout="hideTip(event, 'fs10', 138)" onmouseover="showTip(event, 'fs10', 138)" class="i">rectangle</span>, <span onmouseout="hideTip(event, 'fs30', 139)" onmouseover="showTip(event, 'fs30', 139)" class="i">position</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 140)" onmouseover="showTip(event, 'fs22', 140)" class="i">Y</span>)
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs35', 141)" onmouseover="showTip(event, 'fs35', 141)" class="i">is_left_click</span> (<span onmouseout="hideTip(event, 'fs14', 142)" onmouseover="showTip(event, 'fs14', 142)" class="i">args</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs15', 143)" onmouseover="showTip(event, 'fs15', 143)" class="i">Input</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 144)" onmouseover="showTip(event, 'fs16', 144)" class="i">MouseButtonEventArgs</span>) <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs14', 145)" onmouseover="showTip(event, 'fs14', 145)" class="i">args</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs36', 146)" onmouseover="showTip(event, 'fs36', 146)" class="i">ChangedButton</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 147)" onmouseover="showTip(event, 'fs15', 147)" class="i">Input</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 148)" onmouseover="showTip(event, 'fs37', 148)" class="i">MouseButton</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs38', 149)" onmouseover="showTip(event, 'fs38', 149)" class="i">Left</span>
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 150)" onmouseover="showTip(event, 'fs23', 150)" class="i">subscription</span> <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs8', 151)" onmouseover="showTip(event, 'fs8', 151)" class="i">canvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 152)" onmouseover="showTip(event, 'fs26', 152)" class="i">MouseDown</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 153)" onmouseover="showTip(event, 'fs24', 153)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 154)" onmouseover="showTip(event, 'fs39', 154)" class="i">filter</span> <span onmouseout="hideTip(event, 'fs35', 155)" onmouseover="showTip(event, 'fs35', 155)" class="i">is_left_click</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 156)" onmouseover="showTip(event, 'fs24', 156)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 157)" onmouseover="showTip(event, 'fs32', 157)" class="i">map</span> <span onmouseout="hideTip(event, 'fs28', 158)" onmouseover="showTip(event, 'fs28', 158)" class="i">get_canvas_position</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 159)" onmouseover="showTip(event, 'fs24', 159)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 160)" onmouseover="showTip(event, 'fs25', 160)" class="i">subscribe</span> <span onmouseout="hideTip(event, 'fs29', 161)" onmouseover="showTip(event, 'fs29', 161)" class="i">set_rect_position</span>
+        <span onmouseout="hideTip(event, 'fs23', 162)" onmouseover="showTip(event, 'fs23', 162)" class="i">subscription</span>
+
+<span class="k">module</span> <span class="i">version4</span> <span class="o">=</span>
+    <span class="c">/// ドラッグ操作の状態</span>
+    <span class="k">type</span> <span onmouseout="hideTip(event, 'fs40', 163)" onmouseover="showTip(event, 'fs40', 163)" class="i">DragState</span> <span class="o">=</span> { 
+        <span class="c">/// 現在ドラッグ中？</span>
+        <span onmouseout="hideTip(event, 'fs41', 164)" onmouseover="showTip(event, 'fs41', 164)" class="i">dragging</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs42', 165)" onmouseover="showTip(event, 'fs42', 165)" class="i">bool</span>;
+
+        <span class="c">/// ドラッグの現在位置</span>
+        <span onmouseout="hideTip(event, 'fs43', 166)" onmouseover="showTip(event, 'fs43', 166)" class="i">position</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs31', 167)" onmouseover="showTip(event, 'fs31', 167)" class="i">Point</span> }
+
+    <span class="c">/// 現在ドラッグ中？</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs44', 168)" onmouseover="showTip(event, 'fs44', 168)" class="i">currently_dragging</span> (<span onmouseout="hideTip(event, 'fs45', 169)" onmouseover="showTip(event, 'fs45', 169)" class="i">state</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs40', 170)" onmouseover="showTip(event, 'fs40', 170)" class="i">DragState</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs42', 171)" onmouseover="showTip(event, 'fs42', 171)" class="i">bool</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs45', 172)" onmouseover="showTip(event, 'fs45', 172)" class="i">state</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 173)" onmouseover="showTip(event, 'fs41', 173)" class="i">dragging</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs46', 174)" onmouseover="showTip(event, 'fs46', 174)" class="i">get_drag_position</span> (<span onmouseout="hideTip(event, 'fs45', 175)" onmouseover="showTip(event, 'fs45', 175)" class="i">state</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs40', 176)" onmouseover="showTip(event, 'fs40', 176)" class="i">DragState</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs31', 177)" onmouseover="showTip(event, 'fs31', 177)" class="i">Point</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs45', 178)" onmouseover="showTip(event, 'fs45', 178)" class="i">state</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs43', 179)" onmouseover="showTip(event, 'fs43', 179)" class="i">position</span>
+
+    <span class="c">/// ドラッグ操作の初期状態。</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs47', 180)" onmouseover="showTip(event, 'fs47', 180)" class="i">initial_state</span> <span class="o">=</span> { <span class="i">dragging</span><span class="o">=</span><span class="k">false</span>; <span class="i">position</span><span class="o">=</span><span class="k">new</span> <span onmouseout="hideTip(event, 'fs31', 181)" onmouseover="showTip(event, 'fs31', 181)" class="i">Point</span>() }
+
+    <span class="c">/// 既存のDragStateからドラッグ中のフラグだけが異なる新しいDragStateを作る。</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs48', 182)" onmouseover="showTip(event, 'fs48', 182)" class="i">update_dragging</span> (<span onmouseout="hideTip(event, 'fs49', 183)" onmouseover="showTip(event, 'fs49', 183)" class="i">dragging</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs42', 184)" onmouseover="showTip(event, 'fs42', 184)" class="i">bool</span>) (<span onmouseout="hideTip(event, 'fs50', 185)" onmouseover="showTip(event, 'fs50', 185)" class="i">op</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs40', 186)" onmouseover="showTip(event, 'fs40', 186)" class="i">DragState</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs40', 187)" onmouseover="showTip(event, 'fs40', 187)" class="i">DragState</span> <span class="o">=</span>
+        { <span onmouseout="hideTip(event, 'fs50', 188)" onmouseover="showTip(event, 'fs50', 188)" class="i">op</span> <span class="k">with</span> <span onmouseout="hideTip(event, 'fs49', 189)" onmouseover="showTip(event, 'fs49', 189)" class="i">dragging</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs49', 190)" onmouseover="showTip(event, 'fs49', 190)" class="i">dragging</span> }
+
+    <span class="c">/// DragStateのPositionを更新する。ドラッグ操作中では無い場合には何もしない。</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs51', 191)" onmouseover="showTip(event, 'fs51', 191)" class="i">update_drag_pos</span> (<span onmouseout="hideTip(event, 'fs30', 192)" onmouseover="showTip(event, 'fs30', 192)" class="i">position</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs31', 193)" onmouseover="showTip(event, 'fs31', 193)" class="i">Point</span>) (<span onmouseout="hideTip(event, 'fs50', 194)" onmouseover="showTip(event, 'fs50', 194)" class="i">op</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs40', 195)" onmouseover="showTip(event, 'fs40', 195)" class="i">DragState</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs40', 196)" onmouseover="showTip(event, 'fs40', 196)" class="i">DragState</span> <span class="o">=</span>
+        <span class="k">if</span> <span onmouseout="hideTip(event, 'fs44', 197)" onmouseover="showTip(event, 'fs44', 197)" class="i">currently_dragging</span> <span onmouseout="hideTip(event, 'fs50', 198)" onmouseover="showTip(event, 'fs50', 198)" class="i">op</span>
+        <span class="k">then</span> { <span onmouseout="hideTip(event, 'fs50', 199)" onmouseover="showTip(event, 'fs50', 199)" class="i">op</span> <span class="k">with</span> <span onmouseout="hideTip(event, 'fs30', 200)" onmouseover="showTip(event, 'fs30', 200)" class="i">position</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs30', 201)" onmouseover="showTip(event, 'fs30', 201)" class="i">position</span> }
+        <span class="k">else</span> <span onmouseout="hideTip(event, 'fs50', 202)" onmouseover="showTip(event, 'fs50', 202)" class="i">op</span>
+
+    <span class="c">/// DragStateによって起こりうる変更の種類。</span>
+    <span class="k">type</span> <span onmouseout="hideTip(event, 'fs52', 203)" onmouseover="showTip(event, 'fs52', 203)" class="i">DragChange</span> <span class="o">=</span> 
+        <span class="c">/// ドラッグ開始。</span>
+        | <span onmouseout="hideTip(event, 'fs53', 204)" onmouseover="showTip(event, 'fs53', 204)" class="i">StartDrag</span>
+        <span class="c">/// ドラッグ終了。</span>
+        | <span onmouseout="hideTip(event, 'fs54', 205)" onmouseover="showTip(event, 'fs54', 205)" class="i">StopDrag</span> 
+        <span class="c">/// ドラッグの位置を更新。</span>
+        | <span onmouseout="hideTip(event, 'fs55', 206)" onmouseover="showTip(event, 'fs55', 206)" class="i">UpdatePosition</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs31', 207)" onmouseover="showTip(event, 'fs31', 207)" class="i">Point</span>
+
+    <span class="c">/// DragChangeに応じてDragStateを更新して、新しいDragStateを返す。</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs56', 208)" onmouseover="showTip(event, 'fs56', 208)" class="i">update_drag_state</span> (<span onmouseout="hideTip(event, 'fs45', 209)" onmouseover="showTip(event, 'fs45', 209)" class="i">state</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs40', 210)" onmouseover="showTip(event, 'fs40', 210)" class="i">DragState</span>) (<span onmouseout="hideTip(event, 'fs57', 211)" onmouseover="showTip(event, 'fs57', 211)" class="i">change</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs52', 212)" onmouseover="showTip(event, 'fs52', 212)" class="i">DragChange</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs40', 213)" onmouseover="showTip(event, 'fs40', 213)" class="i">DragState</span> <span class="o">=</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs57', 214)" onmouseover="showTip(event, 'fs57', 214)" class="i">change</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs53', 215)" onmouseover="showTip(event, 'fs53', 215)" class="i">StartDrag</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs48', 216)" onmouseover="showTip(event, 'fs48', 216)" class="i">update_dragging</span> <span class="k">true</span> <span onmouseout="hideTip(event, 'fs45', 217)" onmouseover="showTip(event, 'fs45', 217)" class="i">state</span>
+        | <span onmouseout="hideTip(event, 'fs54', 218)" onmouseover="showTip(event, 'fs54', 218)" class="i">StopDrag</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs48', 219)" onmouseover="showTip(event, 'fs48', 219)" class="i">update_dragging</span> <span class="k">false</span> <span onmouseout="hideTip(event, 'fs45', 220)" onmouseover="showTip(event, 'fs45', 220)" class="i">state</span>
+        | <span onmouseout="hideTip(event, 'fs55', 221)" onmouseover="showTip(event, 'fs55', 221)" class="i">UpdatePosition</span>(<span onmouseout="hideTip(event, 'fs58', 222)" onmouseover="showTip(event, 'fs58', 222)" class="i">pos</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs51', 223)" onmouseover="showTip(event, 'fs51', 223)" class="i">update_drag_pos</span> <span onmouseout="hideTip(event, 'fs58', 224)" onmouseover="showTip(event, 'fs58', 224)" class="i">pos</span> <span onmouseout="hideTip(event, 'fs45', 225)" onmouseover="showTip(event, 'fs45', 225)" class="i">state</span>
+
+    <span class="c">/// マウスイベントが左クリックによって発生したかどうか。</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs59', 226)" onmouseover="showTip(event, 'fs59', 226)" class="i">is_left_click</span> (<span onmouseout="hideTip(event, 'fs14', 227)" onmouseover="showTip(event, 'fs14', 227)" class="i">args</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs15', 228)" onmouseover="showTip(event, 'fs15', 228)" class="i">Input</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 229)" onmouseover="showTip(event, 'fs16', 229)" class="i">MouseButtonEventArgs</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs42', 230)" onmouseover="showTip(event, 'fs42', 230)" class="i">bool</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs14', 231)" onmouseover="showTip(event, 'fs14', 231)" class="i">args</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs36', 232)" onmouseover="showTip(event, 'fs36', 232)" class="i">ChangedButton</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 233)" onmouseover="showTip(event, 'fs15', 233)" class="i">Input</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 234)" onmouseover="showTip(event, 'fs37', 234)" class="i">MouseButton</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs38', 235)" onmouseover="showTip(event, 'fs38', 235)" class="i">Left</span>
+
+    <span class="c">/// マウスイベント時にIInputElementからカーソルの相対位置を計算する。</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs60', 236)" onmouseover="showTip(event, 'fs60', 236)" class="i">get_mouse_position</span> (<span onmouseout="hideTip(event, 'fs61', 237)" onmouseover="showTip(event, 'fs61', 237)" class="i">relative_to</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs62', 238)" onmouseover="showTip(event, 'fs62', 238)" class="i">IInputElement</span>) (<span onmouseout="hideTip(event, 'fs63', 239)" onmouseover="showTip(event, 'fs63', 239)" class="i">args</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs15', 240)" onmouseover="showTip(event, 'fs15', 240)" class="i">Input</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs64', 241)" onmouseover="showTip(event, 'fs64', 241)" class="i">MouseEventArgs</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs31', 242)" onmouseover="showTip(event, 'fs31', 242)" class="i">Point</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs63', 243)" onmouseover="showTip(event, 'fs63', 243)" class="i">args</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 244)" onmouseover="showTip(event, 'fs18', 244)" class="i">GetPosition</span> <span onmouseout="hideTip(event, 'fs61', 245)" onmouseover="showTip(event, 'fs61', 245)" class="i">relative_to</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs65', 246)" onmouseover="showTip(event, 'fs65', 246)" class="i">handle</span> (<span onmouseout="hideTip(event, 'fs8', 247)" onmouseover="showTip(event, 'fs8', 247)" class="i">canvas</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs9', 248)" onmouseover="showTip(event, 'fs9', 248)" class="i">Canvas</span>) (<span onmouseout="hideTip(event, 'fs10', 249)" onmouseover="showTip(event, 'fs10', 249)" class="i">rectangle</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs11', 250)" onmouseover="showTip(event, 'fs11', 250)" class="i">Shapes</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 251)" onmouseover="showTip(event, 'fs12', 251)" class="i">Rectangle</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs29', 252)" onmouseover="showTip(event, 'fs29', 252)" class="i">set_rect_position</span> (<span onmouseout="hideTip(event, 'fs30', 253)" onmouseover="showTip(event, 'fs30', 253)" class="i">position</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs31', 254)" onmouseover="showTip(event, 'fs31', 254)" class="i">Point</span>) <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs9', 255)" onmouseover="showTip(event, 'fs9', 255)" class="i">Canvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 256)" onmouseover="showTip(event, 'fs19', 256)" class="i">SetLeft</span>(<span onmouseout="hideTip(event, 'fs10', 257)" onmouseover="showTip(event, 'fs10', 257)" class="i">rectangle</span>, <span onmouseout="hideTip(event, 'fs30', 258)" onmouseover="showTip(event, 'fs30', 258)" class="i">position</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 259)" onmouseover="showTip(event, 'fs20', 259)" class="i">X</span>)
+            <span onmouseout="hideTip(event, 'fs9', 260)" onmouseover="showTip(event, 'fs9', 260)" class="i">Canvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 261)" onmouseover="showTip(event, 'fs21', 261)" class="i">SetTop</span>(<span onmouseout="hideTip(event, 'fs10', 262)" onmouseover="showTip(event, 'fs10', 262)" class="i">rectangle</span>, <span onmouseout="hideTip(event, 'fs30', 263)" onmouseover="showTip(event, 'fs30', 263)" class="i">position</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 264)" onmouseover="showTip(event, 'fs22', 264)" class="i">Y</span>)
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs66', 265)" onmouseover="showTip(event, 'fs66', 265)" class="i">get_canvas_position</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs60', 266)" onmouseover="showTip(event, 'fs60', 266)" class="i">get_mouse_position</span> <span onmouseout="hideTip(event, 'fs8', 267)" onmouseover="showTip(event, 'fs8', 267)" class="i">canvas</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs67', 268)" onmouseover="showTip(event, 'fs67', 268)" class="i">get_rectangle_position</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs60', 269)" onmouseover="showTip(event, 'fs60', 269)" class="i">get_mouse_position</span> <span onmouseout="hideTip(event, 'fs10', 270)" onmouseover="showTip(event, 'fs10', 270)" class="i">rectangle</span>
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs35', 271)" onmouseover="showTip(event, 'fs35', 271)" class="i">is_left_click</span> (<span onmouseout="hideTip(event, 'fs14', 272)" onmouseover="showTip(event, 'fs14', 272)" class="i">args</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs15', 273)" onmouseover="showTip(event, 'fs15', 273)" class="i">Input</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 274)" onmouseover="showTip(event, 'fs16', 274)" class="i">MouseButtonEventArgs</span>) <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs14', 275)" onmouseover="showTip(event, 'fs14', 275)" class="i">args</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs36', 276)" onmouseover="showTip(event, 'fs36', 276)" class="i">ChangedButton</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 277)" onmouseover="showTip(event, 'fs15', 277)" class="i">Input</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 278)" onmouseover="showTip(event, 'fs37', 278)" class="i">MouseButton</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs38', 279)" onmouseover="showTip(event, 'fs38', 279)" class="i">Left</span>
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs68', 280)" onmouseover="showTip(event, 'fs68', 280)" class="i">start_stream</span> <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs10', 281)" onmouseover="showTip(event, 'fs10', 281)" class="i">rectangle</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 282)" onmouseover="showTip(event, 'fs26', 282)" class="i">MouseDown</span> 
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 283)" onmouseover="showTip(event, 'fs24', 283)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 284)" onmouseover="showTip(event, 'fs39', 284)" class="i">filter</span> <span onmouseout="hideTip(event, 'fs35', 285)" onmouseover="showTip(event, 'fs35', 285)" class="i">is_left_click</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 286)" onmouseover="showTip(event, 'fs24', 286)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 287)" onmouseover="showTip(event, 'fs32', 287)" class="i">map</span> (<span class="k">fun</span> _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs53', 288)" onmouseover="showTip(event, 'fs53', 288)" class="i">StartDrag</span>)
+        
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs69', 289)" onmouseover="showTip(event, 'fs69', 289)" class="i">stop_stream</span> <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs8', 290)" onmouseover="showTip(event, 'fs8', 290)" class="i">canvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs70', 291)" onmouseover="showTip(event, 'fs70', 291)" class="i">MouseUp</span> 
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 292)" onmouseover="showTip(event, 'fs24', 292)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 293)" onmouseover="showTip(event, 'fs39', 293)" class="i">filter</span> <span onmouseout="hideTip(event, 'fs35', 294)" onmouseover="showTip(event, 'fs35', 294)" class="i">is_left_click</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 295)" onmouseover="showTip(event, 'fs24', 295)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 296)" onmouseover="showTip(event, 'fs32', 296)" class="i">map</span> (<span class="k">fun</span> _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs54', 297)" onmouseover="showTip(event, 'fs54', 297)" class="i">StopDrag</span>)
+        
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs71', 298)" onmouseover="showTip(event, 'fs71', 298)" class="i">move_stream</span> <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs8', 299)" onmouseover="showTip(event, 'fs8', 299)" class="i">canvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs72', 300)" onmouseover="showTip(event, 'fs72', 300)" class="i">MouseMove</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 301)" onmouseover="showTip(event, 'fs24', 301)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 302)" onmouseover="showTip(event, 'fs32', 302)" class="i">map</span> (<span onmouseout="hideTip(event, 'fs66', 303)" onmouseover="showTip(event, 'fs66', 303)" class="i">get_canvas_position</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs55', 304)" onmouseover="showTip(event, 'fs55', 304)" class="i">UpdatePosition</span>)
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 305)" onmouseover="showTip(event, 'fs23', 305)" class="i">subscription</span> <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs24', 306)" onmouseover="showTip(event, 'fs24', 306)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs73', 307)" onmouseover="showTip(event, 'fs73', 307)" class="i">merge</span> <span onmouseout="hideTip(event, 'fs68', 308)" onmouseover="showTip(event, 'fs68', 308)" class="i">start_stream</span> <span onmouseout="hideTip(event, 'fs69', 309)" onmouseover="showTip(event, 'fs69', 309)" class="i">stop_stream</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 310)" onmouseover="showTip(event, 'fs24', 310)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs73', 311)" onmouseover="showTip(event, 'fs73', 311)" class="i">merge</span> <span onmouseout="hideTip(event, 'fs71', 312)" onmouseover="showTip(event, 'fs71', 312)" class="i">move_stream</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 313)" onmouseover="showTip(event, 'fs24', 313)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs74', 314)" onmouseover="showTip(event, 'fs74', 314)" class="i">scan</span> <span onmouseout="hideTip(event, 'fs56', 315)" onmouseover="showTip(event, 'fs56', 315)" class="i">update_drag_state</span> <span onmouseout="hideTip(event, 'fs47', 316)" onmouseover="showTip(event, 'fs47', 316)" class="i">initial_state</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 317)" onmouseover="showTip(event, 'fs24', 317)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 318)" onmouseover="showTip(event, 'fs39', 318)" class="i">filter</span> <span onmouseout="hideTip(event, 'fs44', 319)" onmouseover="showTip(event, 'fs44', 319)" class="i">currently_dragging</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 320)" onmouseover="showTip(event, 'fs24', 320)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 321)" onmouseover="showTip(event, 'fs32', 321)" class="i">map</span> <span onmouseout="hideTip(event, 'fs46', 322)" onmouseover="showTip(event, 'fs46', 322)" class="i">get_drag_position</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 323)" onmouseover="showTip(event, 'fs24', 323)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 324)" onmouseover="showTip(event, 'fs25', 324)" class="i">subscribe</span> <span onmouseout="hideTip(event, 'fs29', 325)" onmouseover="showTip(event, 'fs29', 325)" class="i">set_rect_position</span>
+        <span onmouseout="hideTip(event, 'fs23', 326)" onmouseover="showTip(event, 'fs23', 326)" class="i">subscription</span>
+
+<span class="k">module</span> <span class="i">version5</span> <span class="o">=</span>
+    <span class="c">/// ドラッグ操作の状態</span>
+    <span class="k">type</span> <span onmouseout="hideTip(event, 'fs75', 327)" onmouseover="showTip(event, 'fs75', 327)" class="i">DragState</span> <span class="o">=</span> { 
+        <span class="c">/// 現在ドラッグ中？</span>
+        <span onmouseout="hideTip(event, 'fs41', 328)" onmouseover="showTip(event, 'fs41', 328)" class="i">dragging</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs42', 329)" onmouseover="showTip(event, 'fs42', 329)" class="i">bool</span>;
+
+        <span class="c">/// ドラッグの現在位置</span>
+        <span onmouseout="hideTip(event, 'fs43', 330)" onmouseover="showTip(event, 'fs43', 330)" class="i">position</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs31', 331)" onmouseover="showTip(event, 'fs31', 331)" class="i">Point</span>; 
+
+        <span class="c">/// ドラッグの開始位置からのオフセット</span>
+        <span onmouseout="hideTip(event, 'fs76', 332)" onmouseover="showTip(event, 'fs76', 332)" class="i">offset</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs31', 333)" onmouseover="showTip(event, 'fs31', 333)" class="i">Point</span> }
+
+    <span class="c">/// 現在ドラッグ中？</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs77', 334)" onmouseover="showTip(event, 'fs77', 334)" class="i">currently_dragging</span> (<span onmouseout="hideTip(event, 'fs45', 335)" onmouseover="showTip(event, 'fs45', 335)" class="i">state</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs75', 336)" onmouseover="showTip(event, 'fs75', 336)" class="i">DragState</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs42', 337)" onmouseover="showTip(event, 'fs42', 337)" class="i">bool</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs45', 338)" onmouseover="showTip(event, 'fs45', 338)" class="i">state</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs41', 339)" onmouseover="showTip(event, 'fs41', 339)" class="i">dragging</span>
+
+    <span class="c">/// ドラッグ操作の現在位置をドラッグ開始位置と相対位置から計算する。</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs78', 340)" onmouseover="showTip(event, 'fs78', 340)" class="i">get_drag_position</span> (<span onmouseout="hideTip(event, 'fs45', 341)" onmouseover="showTip(event, 'fs45', 341)" class="i">state</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs75', 342)" onmouseover="showTip(event, 'fs75', 342)" class="i">DragState</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs31', 343)" onmouseover="showTip(event, 'fs31', 343)" class="i">Point</span> <span class="o">=</span> 
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs79', 344)" onmouseover="showTip(event, 'fs79', 344)" class="i">diff</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs45', 345)" onmouseover="showTip(event, 'fs45', 345)" class="i">state</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs43', 346)" onmouseover="showTip(event, 'fs43', 346)" class="i">position</span> <span class="o">-</span> <span onmouseout="hideTip(event, 'fs45', 347)" onmouseover="showTip(event, 'fs45', 347)" class="i">state</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs76', 348)" onmouseover="showTip(event, 'fs76', 348)" class="i">offset</span>
+        <span class="k">new</span> <span onmouseout="hideTip(event, 'fs31', 349)" onmouseover="showTip(event, 'fs31', 349)" class="i">Point</span>(<span onmouseout="hideTip(event, 'fs79', 350)" onmouseover="showTip(event, 'fs79', 350)" class="i">diff</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs80', 351)" onmouseover="showTip(event, 'fs80', 351)" class="i">X</span>, <span onmouseout="hideTip(event, 'fs79', 352)" onmouseover="showTip(event, 'fs79', 352)" class="i">diff</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs81', 353)" onmouseover="showTip(event, 'fs81', 353)" class="i">Y</span>)
+
+    <span class="c">/// ドラッグ操作の初期状態。</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs82', 354)" onmouseover="showTip(event, 'fs82', 354)" class="i">initial_state</span> <span class="o">=</span> { <span class="i">dragging</span><span class="o">=</span><span class="k">false</span>; <span class="i">position</span><span class="o">=</span><span class="k">new</span> <span onmouseout="hideTip(event, 'fs31', 355)" onmouseover="showTip(event, 'fs31', 355)" class="i">Point</span>(); <span class="i">offset</span><span class="o">=</span><span class="k">new</span> <span onmouseout="hideTip(event, 'fs31', 356)" onmouseover="showTip(event, 'fs31', 356)" class="i">Point</span>() }
+
+    <span class="c">/// 既存のDragStateからドラッグ中のフラグだけが異なる新しいDragStateを作る。</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs83', 357)" onmouseover="showTip(event, 'fs83', 357)" class="i">update_dragging</span> (<span onmouseout="hideTip(event, 'fs49', 358)" onmouseover="showTip(event, 'fs49', 358)" class="i">dragging</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs42', 359)" onmouseover="showTip(event, 'fs42', 359)" class="i">bool</span>) (<span onmouseout="hideTip(event, 'fs50', 360)" onmouseover="showTip(event, 'fs50', 360)" class="i">op</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs75', 361)" onmouseover="showTip(event, 'fs75', 361)" class="i">DragState</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs75', 362)" onmouseover="showTip(event, 'fs75', 362)" class="i">DragState</span> <span class="o">=</span>
+        { <span onmouseout="hideTip(event, 'fs50', 363)" onmouseover="showTip(event, 'fs50', 363)" class="i">op</span> <span class="k">with</span> <span onmouseout="hideTip(event, 'fs49', 364)" onmouseover="showTip(event, 'fs49', 364)" class="i">dragging</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs49', 365)" onmouseover="showTip(event, 'fs49', 365)" class="i">dragging</span> }
+
+    <span class="c">/// DragStateのPositionを更新する。ドラッグ操作中では無い場合には何もしない。</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs84', 366)" onmouseover="showTip(event, 'fs84', 366)" class="i">update_drag_pos</span> (<span onmouseout="hideTip(event, 'fs30', 367)" onmouseover="showTip(event, 'fs30', 367)" class="i">position</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs31', 368)" onmouseover="showTip(event, 'fs31', 368)" class="i">Point</span>) (<span onmouseout="hideTip(event, 'fs50', 369)" onmouseover="showTip(event, 'fs50', 369)" class="i">op</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs75', 370)" onmouseover="showTip(event, 'fs75', 370)" class="i">DragState</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs75', 371)" onmouseover="showTip(event, 'fs75', 371)" class="i">DragState</span> <span class="o">=</span>
+        <span class="k">if</span> <span onmouseout="hideTip(event, 'fs77', 372)" onmouseover="showTip(event, 'fs77', 372)" class="i">currently_dragging</span> <span onmouseout="hideTip(event, 'fs50', 373)" onmouseover="showTip(event, 'fs50', 373)" class="i">op</span>
+        <span class="k">then</span> { <span onmouseout="hideTip(event, 'fs50', 374)" onmouseover="showTip(event, 'fs50', 374)" class="i">op</span> <span class="k">with</span> <span onmouseout="hideTip(event, 'fs30', 375)" onmouseover="showTip(event, 'fs30', 375)" class="i">position</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs30', 376)" onmouseover="showTip(event, 'fs30', 376)" class="i">position</span> }
+        <span class="k">else</span> <span onmouseout="hideTip(event, 'fs50', 377)" onmouseover="showTip(event, 'fs50', 377)" class="i">op</span>
+
+    <span class="c">/// DragStateによって起こりうる変更の種類。</span>
+    <span class="k">type</span> <span onmouseout="hideTip(event, 'fs85', 378)" onmouseover="showTip(event, 'fs85', 378)" class="i">DragChange</span> <span class="o">=</span> 
+        <span class="c">/// 特定のオフセットからのドラッグ開始。</span>
+        | <span onmouseout="hideTip(event, 'fs86', 379)" onmouseover="showTip(event, 'fs86', 379)" class="i">StartDrag</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs31', 380)" onmouseover="showTip(event, 'fs31', 380)" class="i">Point</span> 
+        <span class="c">/// ドラッグ終了。</span>
+        | <span onmouseout="hideTip(event, 'fs54', 381)" onmouseover="showTip(event, 'fs54', 381)" class="i">StopDrag</span> 
+        <span class="c">/// ドラッグの位置を更新。</span>
+        | <span onmouseout="hideTip(event, 'fs55', 382)" onmouseover="showTip(event, 'fs55', 382)" class="i">UpdatePosition</span> <span class="k">of</span> <span onmouseout="hideTip(event, 'fs31', 383)" onmouseover="showTip(event, 'fs31', 383)" class="i">Point</span>
+
+    <span class="c">/// DragChangeに応じてDragStateを更新して、新しいDragStateを返す。</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs87', 384)" onmouseover="showTip(event, 'fs87', 384)" class="i">update_drag_state</span> (<span onmouseout="hideTip(event, 'fs45', 385)" onmouseover="showTip(event, 'fs45', 385)" class="i">state</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs75', 386)" onmouseover="showTip(event, 'fs75', 386)" class="i">DragState</span>) (<span onmouseout="hideTip(event, 'fs57', 387)" onmouseover="showTip(event, 'fs57', 387)" class="i">change</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs85', 388)" onmouseover="showTip(event, 'fs85', 388)" class="i">DragChange</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs75', 389)" onmouseover="showTip(event, 'fs75', 389)" class="i">DragState</span> <span class="o">=</span>
+        <span class="k">match</span> <span onmouseout="hideTip(event, 'fs57', 390)" onmouseover="showTip(event, 'fs57', 390)" class="i">change</span> <span class="k">with</span>
+        | <span onmouseout="hideTip(event, 'fs86', 391)" onmouseover="showTip(event, 'fs86', 391)" class="i">StartDrag</span>(<span onmouseout="hideTip(event, 'fs88', 392)" onmouseover="showTip(event, 'fs88', 392)" class="i">offset</span>) <span class="k">-&gt;</span> { <span onmouseout="hideTip(event, 'fs45', 393)" onmouseover="showTip(event, 'fs45', 393)" class="i">state</span> <span class="k">with</span> <span class="i">dragging</span><span class="o">=</span><span class="k">true</span>; <span onmouseout="hideTip(event, 'fs88', 394)" onmouseover="showTip(event, 'fs88', 394)" class="i">offset</span><span class="o">=</span><span onmouseout="hideTip(event, 'fs88', 395)" onmouseover="showTip(event, 'fs88', 395)" class="i">offset</span> }
+        | <span onmouseout="hideTip(event, 'fs54', 396)" onmouseover="showTip(event, 'fs54', 396)" class="i">StopDrag</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs83', 397)" onmouseover="showTip(event, 'fs83', 397)" class="i">update_dragging</span> <span class="k">false</span> <span onmouseout="hideTip(event, 'fs45', 398)" onmouseover="showTip(event, 'fs45', 398)" class="i">state</span>
+        | <span onmouseout="hideTip(event, 'fs55', 399)" onmouseover="showTip(event, 'fs55', 399)" class="i">UpdatePosition</span>(<span onmouseout="hideTip(event, 'fs58', 400)" onmouseover="showTip(event, 'fs58', 400)" class="i">pos</span>) <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs84', 401)" onmouseover="showTip(event, 'fs84', 401)" class="i">update_drag_pos</span> <span onmouseout="hideTip(event, 'fs58', 402)" onmouseover="showTip(event, 'fs58', 402)" class="i">pos</span> <span onmouseout="hideTip(event, 'fs45', 403)" onmouseover="showTip(event, 'fs45', 403)" class="i">state</span>
+
+    <span class="c">/// マウスイベントが左クリックによって発生したかどうか。</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs89', 404)" onmouseover="showTip(event, 'fs89', 404)" class="i">is_left_click</span> (<span onmouseout="hideTip(event, 'fs14', 405)" onmouseover="showTip(event, 'fs14', 405)" class="i">args</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs15', 406)" onmouseover="showTip(event, 'fs15', 406)" class="i">Input</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 407)" onmouseover="showTip(event, 'fs16', 407)" class="i">MouseButtonEventArgs</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs42', 408)" onmouseover="showTip(event, 'fs42', 408)" class="i">bool</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs14', 409)" onmouseover="showTip(event, 'fs14', 409)" class="i">args</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs36', 410)" onmouseover="showTip(event, 'fs36', 410)" class="i">ChangedButton</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 411)" onmouseover="showTip(event, 'fs15', 411)" class="i">Input</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 412)" onmouseover="showTip(event, 'fs37', 412)" class="i">MouseButton</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs38', 413)" onmouseover="showTip(event, 'fs38', 413)" class="i">Left</span>
+
+    <span class="c">/// マウスイベント時にIInputElementからカーソルの相対位置を計算する。</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs90', 414)" onmouseover="showTip(event, 'fs90', 414)" class="i">get_mouse_position</span> (<span onmouseout="hideTip(event, 'fs61', 415)" onmouseover="showTip(event, 'fs61', 415)" class="i">relative_to</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs62', 416)" onmouseover="showTip(event, 'fs62', 416)" class="i">IInputElement</span>) (<span onmouseout="hideTip(event, 'fs63', 417)" onmouseover="showTip(event, 'fs63', 417)" class="i">args</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs15', 418)" onmouseover="showTip(event, 'fs15', 418)" class="i">Input</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs64', 419)" onmouseover="showTip(event, 'fs64', 419)" class="i">MouseEventArgs</span>) <span class="o">:</span> <span onmouseout="hideTip(event, 'fs31', 420)" onmouseover="showTip(event, 'fs31', 420)" class="i">Point</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs63', 421)" onmouseover="showTip(event, 'fs63', 421)" class="i">args</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs18', 422)" onmouseover="showTip(event, 'fs18', 422)" class="i">GetPosition</span> <span onmouseout="hideTip(event, 'fs61', 423)" onmouseover="showTip(event, 'fs61', 423)" class="i">relative_to</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs91', 424)" onmouseover="showTip(event, 'fs91', 424)" class="i">handle</span> (<span onmouseout="hideTip(event, 'fs8', 425)" onmouseover="showTip(event, 'fs8', 425)" class="i">canvas</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs9', 426)" onmouseover="showTip(event, 'fs9', 426)" class="i">Canvas</span>) (<span onmouseout="hideTip(event, 'fs10', 427)" onmouseover="showTip(event, 'fs10', 427)" class="i">rectangle</span><span class="o">:</span><span onmouseout="hideTip(event, 'fs11', 428)" onmouseover="showTip(event, 'fs11', 428)" class="i">Shapes</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 429)" onmouseover="showTip(event, 'fs12', 429)" class="i">Rectangle</span>) <span class="o">=</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs29', 430)" onmouseover="showTip(event, 'fs29', 430)" class="i">set_rect_position</span> (<span onmouseout="hideTip(event, 'fs30', 431)" onmouseover="showTip(event, 'fs30', 431)" class="i">position</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs31', 432)" onmouseover="showTip(event, 'fs31', 432)" class="i">Point</span>) <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs9', 433)" onmouseover="showTip(event, 'fs9', 433)" class="i">Canvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs19', 434)" onmouseover="showTip(event, 'fs19', 434)" class="i">SetLeft</span>(<span onmouseout="hideTip(event, 'fs10', 435)" onmouseover="showTip(event, 'fs10', 435)" class="i">rectangle</span>, <span onmouseout="hideTip(event, 'fs30', 436)" onmouseover="showTip(event, 'fs30', 436)" class="i">position</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs20', 437)" onmouseover="showTip(event, 'fs20', 437)" class="i">X</span>)
+            <span onmouseout="hideTip(event, 'fs9', 438)" onmouseover="showTip(event, 'fs9', 438)" class="i">Canvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs21', 439)" onmouseover="showTip(event, 'fs21', 439)" class="i">SetTop</span>(<span onmouseout="hideTip(event, 'fs10', 440)" onmouseover="showTip(event, 'fs10', 440)" class="i">rectangle</span>, <span onmouseout="hideTip(event, 'fs30', 441)" onmouseover="showTip(event, 'fs30', 441)" class="i">position</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs22', 442)" onmouseover="showTip(event, 'fs22', 442)" class="i">Y</span>)
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs66', 443)" onmouseover="showTip(event, 'fs66', 443)" class="i">get_canvas_position</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs90', 444)" onmouseover="showTip(event, 'fs90', 444)" class="i">get_mouse_position</span> <span onmouseout="hideTip(event, 'fs8', 445)" onmouseover="showTip(event, 'fs8', 445)" class="i">canvas</span>
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs92', 446)" onmouseover="showTip(event, 'fs92', 446)" class="i">get_rectangle_position</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs90', 447)" onmouseover="showTip(event, 'fs90', 447)" class="i">get_mouse_position</span> <span onmouseout="hideTip(event, 'fs10', 448)" onmouseover="showTip(event, 'fs10', 448)" class="i">rectangle</span>
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs35', 449)" onmouseover="showTip(event, 'fs35', 449)" class="i">is_left_click</span> (<span onmouseout="hideTip(event, 'fs14', 450)" onmouseover="showTip(event, 'fs14', 450)" class="i">args</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs15', 451)" onmouseover="showTip(event, 'fs15', 451)" class="i">Input</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs16', 452)" onmouseover="showTip(event, 'fs16', 452)" class="i">MouseButtonEventArgs</span>) <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs14', 453)" onmouseover="showTip(event, 'fs14', 453)" class="i">args</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs36', 454)" onmouseover="showTip(event, 'fs36', 454)" class="i">ChangedButton</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs15', 455)" onmouseover="showTip(event, 'fs15', 455)" class="i">Input</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs37', 456)" onmouseover="showTip(event, 'fs37', 456)" class="i">MouseButton</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs38', 457)" onmouseover="showTip(event, 'fs38', 457)" class="i">Left</span>
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs68', 458)" onmouseover="showTip(event, 'fs68', 458)" class="i">start_stream</span> <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs10', 459)" onmouseover="showTip(event, 'fs10', 459)" class="i">rectangle</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 460)" onmouseover="showTip(event, 'fs26', 460)" class="i">MouseDown</span> 
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 461)" onmouseover="showTip(event, 'fs24', 461)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 462)" onmouseover="showTip(event, 'fs39', 462)" class="i">filter</span> <span onmouseout="hideTip(event, 'fs35', 463)" onmouseover="showTip(event, 'fs35', 463)" class="i">is_left_click</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 464)" onmouseover="showTip(event, 'fs24', 464)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 465)" onmouseover="showTip(event, 'fs32', 465)" class="i">map</span> (<span onmouseout="hideTip(event, 'fs92', 466)" onmouseover="showTip(event, 'fs92', 466)" class="i">get_rectangle_position</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs86', 467)" onmouseover="showTip(event, 'fs86', 467)" class="i">StartDrag</span>)
+        
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs69', 468)" onmouseover="showTip(event, 'fs69', 468)" class="i">stop_stream</span> <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs8', 469)" onmouseover="showTip(event, 'fs8', 469)" class="i">canvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs70', 470)" onmouseover="showTip(event, 'fs70', 470)" class="i">MouseUp</span> 
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 471)" onmouseover="showTip(event, 'fs24', 471)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 472)" onmouseover="showTip(event, 'fs39', 472)" class="i">filter</span> <span onmouseout="hideTip(event, 'fs35', 473)" onmouseover="showTip(event, 'fs35', 473)" class="i">is_left_click</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 474)" onmouseover="showTip(event, 'fs24', 474)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 475)" onmouseover="showTip(event, 'fs32', 475)" class="i">map</span> (<span class="k">fun</span> _ <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs54', 476)" onmouseover="showTip(event, 'fs54', 476)" class="i">StopDrag</span>)
+        
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs71', 477)" onmouseover="showTip(event, 'fs71', 477)" class="i">move_stream</span> <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs8', 478)" onmouseover="showTip(event, 'fs8', 478)" class="i">canvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs72', 479)" onmouseover="showTip(event, 'fs72', 479)" class="i">MouseMove</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 480)" onmouseover="showTip(event, 'fs24', 480)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 481)" onmouseover="showTip(event, 'fs32', 481)" class="i">map</span> (<span onmouseout="hideTip(event, 'fs66', 482)" onmouseover="showTip(event, 'fs66', 482)" class="i">get_canvas_position</span> <span class="o">&gt;</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs55', 483)" onmouseover="showTip(event, 'fs55', 483)" class="i">UpdatePosition</span>)
+
+        <span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 484)" onmouseover="showTip(event, 'fs23', 484)" class="i">subscription</span> <span class="o">=</span>
+            <span onmouseout="hideTip(event, 'fs24', 485)" onmouseover="showTip(event, 'fs24', 485)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs73', 486)" onmouseover="showTip(event, 'fs73', 486)" class="i">merge</span> <span onmouseout="hideTip(event, 'fs68', 487)" onmouseover="showTip(event, 'fs68', 487)" class="i">start_stream</span> <span onmouseout="hideTip(event, 'fs69', 488)" onmouseover="showTip(event, 'fs69', 488)" class="i">stop_stream</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 489)" onmouseover="showTip(event, 'fs24', 489)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs73', 490)" onmouseover="showTip(event, 'fs73', 490)" class="i">merge</span> <span onmouseout="hideTip(event, 'fs71', 491)" onmouseover="showTip(event, 'fs71', 491)" class="i">move_stream</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 492)" onmouseover="showTip(event, 'fs24', 492)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs74', 493)" onmouseover="showTip(event, 'fs74', 493)" class="i">scan</span> <span onmouseout="hideTip(event, 'fs87', 494)" onmouseover="showTip(event, 'fs87', 494)" class="i">update_drag_state</span> <span onmouseout="hideTip(event, 'fs82', 495)" onmouseover="showTip(event, 'fs82', 495)" class="i">initial_state</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 496)" onmouseover="showTip(event, 'fs24', 496)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs39', 497)" onmouseover="showTip(event, 'fs39', 497)" class="i">filter</span> <span onmouseout="hideTip(event, 'fs77', 498)" onmouseover="showTip(event, 'fs77', 498)" class="i">currently_dragging</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 499)" onmouseover="showTip(event, 'fs24', 499)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs32', 500)" onmouseover="showTip(event, 'fs32', 500)" class="i">map</span> <span onmouseout="hideTip(event, 'fs78', 501)" onmouseover="showTip(event, 'fs78', 501)" class="i">get_drag_position</span>
+            <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 502)" onmouseover="showTip(event, 'fs24', 502)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 503)" onmouseover="showTip(event, 'fs25', 503)" class="i">subscribe</span> <span onmouseout="hideTip(event, 'fs29', 504)" onmouseover="showTip(event, 'fs29', 504)" class="i">set_rect_position</span>
+        <span onmouseout="hideTip(event, 'fs23', 505)" onmouseover="showTip(event, 'fs23', 505)" class="i">subscription</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs93', 506)" onmouseover="showTip(event, 'fs93', 506)" class="i">loadMainWindowFromXaml</span>() <span class="o">=</span>
+    <span onmouseout="hideTip(event, 'fs94', 507)" onmouseover="showTip(event, 'fs94', 507)" class="i">XamlServices</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs95', 508)" onmouseover="showTip(event, 'fs95', 508)" class="i">Parse</span>(<span onmouseout="hideTip(event, 'fs6', 509)" onmouseover="showTip(event, 'fs6', 509)" class="i">xamlString</span>) <span class="o">:?&gt;</span> <span onmouseout="hideTip(event, 'fs96', 510)" onmouseover="showTip(event, 'fs96', 510)" class="i">Window</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs97', 511)" onmouseover="showTip(event, 'fs97', 511)" class="i">startupAdd</span> <span onmouseout="hideTip(event, 'fs98', 512)" onmouseover="showTip(event, 'fs98', 512)" class="i">e</span> <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs99', 513)" onmouseover="showTip(event, 'fs99', 513)" class="i">window</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs93', 514)" onmouseover="showTip(event, 'fs93', 514)" class="i">loadMainWindowFromXaml</span>()
+    
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs100', 515)" onmouseover="showTip(event, 'fs100', 515)" class="i">windowCanvas</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs99', 516)" onmouseover="showTip(event, 'fs99', 516)" class="i">window</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs101', 517)" onmouseover="showTip(event, 'fs101', 517)" class="i">FindName</span>(<span class="s">&quot;</span><span class="s">Canvas</span><span class="s">&quot;</span>) <span class="o">:?&gt;</span> <span onmouseout="hideTip(event, 'fs9', 518)" onmouseover="showTip(event, 'fs9', 518)" class="i">Canvas</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs102', 519)" onmouseover="showTip(event, 'fs102', 519)" class="i">windowRectangle</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs99', 520)" onmouseover="showTip(event, 'fs99', 520)" class="i">window</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs101', 521)" onmouseover="showTip(event, 'fs101', 521)" class="i">FindName</span>(<span class="s">&quot;</span><span class="s">Rectangle</span><span class="s">&quot;</span>) <span class="o">:?&gt;</span> <span onmouseout="hideTip(event, 'fs11', 522)" onmouseover="showTip(event, 'fs11', 522)" class="i">Shapes</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs12', 523)" onmouseover="showTip(event, 'fs12', 523)" class="i">Rectangle</span>
+
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs23', 524)" onmouseover="showTip(event, 'fs23', 524)" class="i">subscription</span> <span class="o">=</span>
+        <span onmouseout="hideTip(event, 'fs100', 525)" onmouseover="showTip(event, 'fs100', 525)" class="i">windowCanvas</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs26', 526)" onmouseover="showTip(event, 'fs26', 526)" class="i">MouseDown</span>
+        <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs24', 527)" onmouseover="showTip(event, 'fs24', 527)" class="i">Observable</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs25', 528)" onmouseover="showTip(event, 'fs25', 528)" class="i">subscribe</span> (<span class="k">fun</span> <span onmouseout="hideTip(event, 'fs103', 529)" onmouseover="showTip(event, 'fs103', 529)" class="i">e</span> <span class="k">-&gt;</span>
+<span class="prep">#if</span> <span class="i">VERSION2</span>
+<span class="inactive">            </span><span class="inactive">version2.handle</span><span class="inactive"> </span><span class="inactive">windowCanvas</span><span class="inactive"> </span><span class="inactive">windowRectangle</span><span class="inactive"> </span><span class="inactive">|&gt;</span><span class="inactive"> </span><span class="inactive">ignore</span>
+<span class="prep">#else</span>
+    <span class="prep">#if</span> <span class="i">VERSION3</span>
+<span class="inactive">            </span><span class="inactive">version3.handle</span><span class="inactive"> </span><span class="inactive">windowCanvas</span><span class="inactive"> </span><span class="inactive">windowRectangle</span><span class="inactive"> </span><span class="inactive">|&gt;</span><span class="inactive"> </span><span class="inactive">ignore</span>
+    <span class="prep">#else</span>
+        <span class="prep">#if</span> <span class="i">VERSION4</span>
+<span class="inactive">            </span><span class="inactive">version4.handle</span><span class="inactive"> </span><span class="inactive">windowCanvas</span><span class="inactive"> </span><span class="inactive">windowRectangle</span><span class="inactive"> </span><span class="inactive">|&gt;</span><span class="inactive"> </span><span class="inactive">ignore</span>
+        <span class="prep">#else</span>
+            <span class="prep">#if</span> <span class="i">VERSION5</span>
+<span class="inactive">            </span><span class="inactive">version5.handle</span><span class="inactive"> </span><span class="inactive">windowCanvas</span><span class="inactive"> </span><span class="inactive">windowRectangle</span><span class="inactive"> </span><span class="inactive">|&gt;</span><span class="inactive"> </span><span class="inactive">ignore</span>
+            <span class="prep">#else</span>
+            <span onmouseout="hideTip(event, 'fs104', 530)" onmouseover="showTip(event, 'fs104', 530)" class="i">version1</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs7', 531)" onmouseover="showTip(event, 'fs7', 531)" class="i">handle</span> <span onmouseout="hideTip(event, 'fs100', 532)" onmouseover="showTip(event, 'fs100', 532)" class="i">windowCanvas</span> <span onmouseout="hideTip(event, 'fs102', 533)" onmouseover="showTip(event, 'fs102', 533)" class="i">windowRectangle</span> <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs105', 534)" onmouseover="showTip(event, 'fs105', 534)" class="i">ignore</span>
+            <span class="prep">#endif</span>
+        <span class="prep">#endif</span>
+    <span class="prep">#endif</span>
+<span class="prep">#endif</span>
+            )
+
+    <span onmouseout="hideTip(event, 'fs99', 535)" onmouseover="showTip(event, 'fs99', 535)" class="i">window</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs106', 536)" onmouseover="showTip(event, 'fs106', 536)" class="i">Show</span>()
+
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs107', 537)" onmouseover="showTip(event, 'fs107', 537)" class="i">App</span>() <span class="k">as</span> <span onmouseout="hideTip(event, 'fs108', 538)" onmouseover="showTip(event, 'fs108', 538)" class="i">x</span> <span class="o">=</span>
+    <span class="k">inherit</span> <span onmouseout="hideTip(event, 'fs109', 539)" onmouseover="showTip(event, 'fs109', 539)" class="i">Application</span>()
+    <span class="k">do</span>
+        <span onmouseout="hideTip(event, 'fs108', 540)" onmouseover="showTip(event, 'fs108', 540)" class="i">x</span><span class="o">.</span><span class="i">Startup</span><span class="o">.</span><span class="i">Add</span> <span class="o">&lt;|</span> <span onmouseout="hideTip(event, 'fs97', 541)" onmouseover="showTip(event, 'fs97', 541)" class="i">startupAdd</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs110', 542)" onmouseover="showTip(event, 'fs110', 542)" class="i">main</span>() <span class="o">=</span>
+    <span class="k">let</span> <span onmouseout="hideTip(event, 'fs111', 543)" onmouseover="showTip(event, 'fs111', 543)" class="i">app</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs107', 544)" onmouseover="showTip(event, 'fs107', 544)" class="i">App</span>()
+    <span onmouseout="hideTip(event, 'fs111', 545)" onmouseover="showTip(event, 'fs111', 545)" class="i">app</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs112', 546)" onmouseover="showTip(event, 'fs112', 546)" class="i">Run</span>() <span class="o">|&gt;</span> <span onmouseout="hideTip(event, 'fs105', 547)" onmouseover="showTip(event, 'fs105', 547)" class="i">ignore</span>
+
+[&lt;<span onmouseout="hideTip(event, 'fs113', 548)" onmouseover="showTip(event, 'fs113', 548)" class="i">STAThread</span>&gt;]
+<span class="k">do</span>
+    <span onmouseout="hideTip(event, 'fs110', 549)" onmouseover="showTip(event, 'fs110', 549)" class="i">main</span>()</pre>
+</td>
+</tr>
+</table>
+
+<div class="tip" id="fs1">val fsi : Compiler.Interactive.InteractiveSession<br /><br />Full name: Microsoft.FSharp.Compiler.Interactive.Settings.fsi</div>
+<div class="tip" id="fs2">namespace System</div>
+<div class="tip" id="fs3">namespace System.Windows</div>
+<div class="tip" id="fs4">namespace System.Windows.Controls</div>
+<div class="tip" id="fs5">namespace System.Xaml</div>
+<div class="tip" id="fs6">val xamlString : string<br /><br />Full name: Part1.xamlString</div>
+<div class="tip" id="fs7">val handle : canvas:Canvas -&gt; rectangle:Shapes.Rectangle -&gt; IDisposable<br /><br />Full name: Part1.version1.handle</div>
+<div class="tip" id="fs8">val canvas : Canvas</div>
+<div class="tip" id="fs9">Multiple items<br />type Canvas =<br />&#160;&#160;inherit Panel<br />&#160;&#160;new : unit -&gt; Canvas<br />&#160;&#160;static val LeftProperty : DependencyProperty<br />&#160;&#160;static val TopProperty : DependencyProperty<br />&#160;&#160;static val RightProperty : DependencyProperty<br />&#160;&#160;static val BottomProperty : DependencyProperty<br />&#160;&#160;static member GetBottom : element:UIElement -&gt; float<br />&#160;&#160;static member GetLeft : element:UIElement -&gt; float<br />&#160;&#160;static member GetRight : element:UIElement -&gt; float<br />&#160;&#160;static member GetTop : element:UIElement -&gt; float<br />&#160;&#160;static member SetBottom : element:UIElement * length:float -&gt; unit<br />&#160;&#160;...<br /><br />Full name: System.Windows.Controls.Canvas<br /><br />--------------------<br />Canvas() : unit</div>
+<div class="tip" id="fs10">val rectangle : Shapes.Rectangle</div>
+<div class="tip" id="fs11">namespace System.Windows.Shapes</div>
+<div class="tip" id="fs12">Multiple items<br />type Rectangle =<br />&#160;&#160;inherit Shape<br />&#160;&#160;new : unit -&gt; Rectangle<br />&#160;&#160;member GeometryTransform : Transform<br />&#160;&#160;member RadiusX : float with get, set<br />&#160;&#160;member RadiusY : float with get, set<br />&#160;&#160;member RenderedGeometry : Geometry<br />&#160;&#160;static val RadiusXProperty : DependencyProperty<br />&#160;&#160;static val RadiusYProperty : DependencyProperty<br /><br />Full name: System.Windows.Shapes.Rectangle<br /><br />--------------------<br />Shapes.Rectangle() : unit</div>
+<div class="tip" id="fs13">val mouse_down_handler : (Input.MouseButtonEventArgs -&gt; unit)</div>
+<div class="tip" id="fs14">val args : Input.MouseButtonEventArgs</div>
+<div class="tip" id="fs15">namespace System.Windows.Input</div>
+<div class="tip" id="fs16">Multiple items<br />type MouseButtonEventArgs =<br />&#160;&#160;inherit MouseEventArgs<br />&#160;&#160;new : mouse:MouseDevice * timestamp:int * button:MouseButton -&gt; MouseButtonEventArgs + 1 overload<br />&#160;&#160;member ButtonState : MouseButtonState<br />&#160;&#160;member ChangedButton : MouseButton<br />&#160;&#160;member ClickCount : int with get, set<br /><br />Full name: System.Windows.Input.MouseButtonEventArgs<br /><br />--------------------<br />Input.MouseButtonEventArgs(mouse: Input.MouseDevice, timestamp: int, button: Input.MouseButton) : unit<br />Input.MouseButtonEventArgs(mouse: Input.MouseDevice, timestamp: int, button: Input.MouseButton, stylusDevice: Input.StylusDevice) : unit</div>
+<div class="tip" id="fs17">val mouse_position : Point</div>
+<div class="tip" id="fs18">Input.MouseEventArgs.GetPosition(relativeTo: IInputElement) : Point</div>
+<div class="tip" id="fs19">Canvas.SetLeft(element: UIElement, length: float) : unit</div>
+<div class="tip" id="fs20">property Point.X: float</div>
+<div class="tip" id="fs21">Canvas.SetTop(element: UIElement, length: float) : unit</div>
+<div class="tip" id="fs22">property Point.Y: float</div>
+<div class="tip" id="fs23">val subscription : IDisposable</div>
+<div class="tip" id="fs24">module Observable<br /><br />from Microsoft.FSharp.Control</div>
+<div class="tip" id="fs25">val subscribe : callback:(&#39;T -&gt; unit) -&gt; source:IObservable&lt;&#39;T&gt; -&gt; IDisposable<br /><br />Full name: Microsoft.FSharp.Control.Observable.subscribe</div>
+<div class="tip" id="fs26">event UIElement.MouseDown: IEvent&lt;Input.MouseButtonEventHandler,Input.MouseButtonEventArgs&gt;</div>
+<div class="tip" id="fs27">val handle : canvas:Canvas -&gt; rectangle:Shapes.Rectangle -&gt; IDisposable<br /><br />Full name: Part1.version2.handle</div>
+<div class="tip" id="fs28">val get_canvas_position : (Input.MouseButtonEventArgs -&gt; Point)</div>
+<div class="tip" id="fs29">val set_rect_position : (Point -&gt; unit)</div>
+<div class="tip" id="fs30">val position : Point</div>
+<div class="tip" id="fs31">Multiple items<br />type Point =<br />&#160;&#160;struct<br />&#160;&#160;&#160;&#160;new : x:float * y:float -&gt; Point<br />&#160;&#160;&#160;&#160;member Equals : o:obj -&gt; bool + 1 overload<br />&#160;&#160;&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;&#160;&#160;member Offset : offsetX:float * offsetY:float -&gt; unit<br />&#160;&#160;&#160;&#160;member ToString : unit -&gt; string + 1 overload<br />&#160;&#160;&#160;&#160;member X : float with get, set<br />&#160;&#160;&#160;&#160;member Y : float with get, set<br />&#160;&#160;&#160;&#160;static member Add : point:Point * vector:Vector -&gt; Point<br />&#160;&#160;&#160;&#160;static member Equals : point1:Point * point2:Point -&gt; bool<br />&#160;&#160;&#160;&#160;static member Multiply : point:Point * matrix:Matrix -&gt; Point<br />&#160;&#160;&#160;&#160;...<br />&#160;&#160;end<br /><br />Full name: System.Windows.Point<br /><br />--------------------<br />Point()<br />Point(x: float, y: float) : unit</div>
+<div class="tip" id="fs32">val map : mapping:(&#39;T -&gt; &#39;U) -&gt; source:IObservable&lt;&#39;T&gt; -&gt; IObservable&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Control.Observable.map</div>
+<div class="tip" id="fs33">val handle : canvas:Canvas -&gt; rectangle:Shapes.Rectangle -&gt; IDisposable<br /><br />Full name: Part1.version2_5.handle</div>
+<div class="tip" id="fs34">val handle : canvas:Canvas -&gt; rectangle:Shapes.Rectangle -&gt; IDisposable<br /><br />Full name: Part1.version3.handle</div>
+<div class="tip" id="fs35">val is_left_click : (Input.MouseButtonEventArgs -&gt; bool)</div>
+<div class="tip" id="fs36">property Input.MouseButtonEventArgs.ChangedButton: Input.MouseButton</div>
+<div class="tip" id="fs37">type MouseButton =<br />&#160;&#160;| Left = 0<br />&#160;&#160;| Middle = 1<br />&#160;&#160;| Right = 2<br />&#160;&#160;| XButton1 = 3<br />&#160;&#160;| XButton2 = 4<br /><br />Full name: System.Windows.Input.MouseButton</div>
+<div class="tip" id="fs38">field Input.MouseButton.Left = 0</div>
+<div class="tip" id="fs39">val filter : predicate:(&#39;T -&gt; bool) -&gt; source:IObservable&lt;&#39;T&gt; -&gt; IObservable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Observable.filter</div>
+<div class="tip" id="fs40">type DragState =<br />&#160;&#160;{dragging: bool;<br />&#160;&#160;&#160;position: Point;}<br /><br />Full name: Part1.version4.DragState<br /><em><br /><br />&#160;ドラッグ操作の状態</em></div>
+<div class="tip" id="fs41">DragState.dragging: bool<br /><em><br /><br />&#160;現在ドラッグ中？</em></div>
+<div class="tip" id="fs42">type bool = Boolean<br /><br />Full name: Microsoft.FSharp.Core.bool</div>
+<div class="tip" id="fs43">DragState.position: Point<br /><em><br /><br />&#160;ドラッグの現在位置</em></div>
+<div class="tip" id="fs44">val currently_dragging : state:DragState -&gt; bool<br /><br />Full name: Part1.version4.currently_dragging<br /><em><br /><br />&#160;現在ドラッグ中？</em></div>
+<div class="tip" id="fs45">val state : DragState</div>
+<div class="tip" id="fs46">val get_drag_position : state:DragState -&gt; Point<br /><br />Full name: Part1.version4.get_drag_position</div>
+<div class="tip" id="fs47">val initial_state : DragState<br /><br />Full name: Part1.version4.initial_state<br /><em><br /><br />&#160;ドラッグ操作の初期状態。</em></div>
+<div class="tip" id="fs48">val update_dragging : dragging:bool -&gt; op:DragState -&gt; DragState<br /><br />Full name: Part1.version4.update_dragging<br /><em><br /><br />&#160;既存のDragStateからドラッグ中のフラグだけが異なる新しいDragStateを作る。</em></div>
+<div class="tip" id="fs49">val dragging : bool</div>
+<div class="tip" id="fs50">val op : DragState</div>
+<div class="tip" id="fs51">val update_drag_pos : position:Point -&gt; op:DragState -&gt; DragState<br /><br />Full name: Part1.version4.update_drag_pos<br /><em><br /><br />&#160;DragStateのPositionを更新する。ドラッグ操作中では無い場合には何もしない。</em></div>
+<div class="tip" id="fs52">type DragChange =<br />&#160;&#160;| StartDrag<br />&#160;&#160;| StopDrag<br />&#160;&#160;| UpdatePosition of Point<br /><br />Full name: Part1.version4.DragChange<br /><em><br /><br />&#160;DragStateによって起こりうる変更の種類。</em></div>
+<div class="tip" id="fs53">union case DragChange.StartDrag: DragChange<br /><em><br /><br />&#160;ドラッグ開始。</em></div>
+<div class="tip" id="fs54">union case DragChange.StopDrag: DragChange<br /><em><br /><br />&#160;ドラッグ終了。</em></div>
+<div class="tip" id="fs55">union case DragChange.UpdatePosition: Point -&gt; DragChange<br /><em><br /><br />&#160;ドラッグの位置を更新。</em></div>
+<div class="tip" id="fs56">val update_drag_state : state:DragState -&gt; change:DragChange -&gt; DragState<br /><br />Full name: Part1.version4.update_drag_state<br /><em><br /><br />&#160;DragChangeに応じてDragStateを更新して、新しいDragStateを返す。</em></div>
+<div class="tip" id="fs57">val change : DragChange</div>
+<div class="tip" id="fs58">val pos : Point</div>
+<div class="tip" id="fs59">val is_left_click : args:Input.MouseButtonEventArgs -&gt; bool<br /><br />Full name: Part1.version4.is_left_click<br /><em><br /><br />&#160;マウスイベントが左クリックによって発生したかどうか。</em></div>
+<div class="tip" id="fs60">val get_mouse_position : relative_to:IInputElement -&gt; args:Input.MouseEventArgs -&gt; Point<br /><br />Full name: Part1.version4.get_mouse_position<br /><em><br /><br />&#160;マウスイベント時にIInputElementからカーソルの相対位置を計算する。</em></div>
+<div class="tip" id="fs61">val relative_to : IInputElement</div>
+<div class="tip" id="fs62">type IInputElement =<br />&#160;&#160;member AddHandler : routedEvent:RoutedEvent * handler:Delegate -&gt; unit<br />&#160;&#160;member CaptureMouse : unit -&gt; bool<br />&#160;&#160;member CaptureStylus : unit -&gt; bool<br />&#160;&#160;member Focus : unit -&gt; bool<br />&#160;&#160;member Focusable : bool with get, set<br />&#160;&#160;member IsEnabled : bool<br />&#160;&#160;member IsKeyboardFocusWithin : bool<br />&#160;&#160;member IsKeyboardFocused : bool<br />&#160;&#160;member IsMouseCaptured : bool<br />&#160;&#160;member IsMouseDirectlyOver : bool<br />&#160;&#160;...<br /><br />Full name: System.Windows.IInputElement</div>
+<div class="tip" id="fs63">val args : Input.MouseEventArgs</div>
+<div class="tip" id="fs64">Multiple items<br />type MouseEventArgs =<br />&#160;&#160;inherit InputEventArgs<br />&#160;&#160;new : mouse:MouseDevice * timestamp:int -&gt; MouseEventArgs + 1 overload<br />&#160;&#160;member GetPosition : relativeTo:IInputElement -&gt; Point<br />&#160;&#160;member LeftButton : MouseButtonState<br />&#160;&#160;member MiddleButton : MouseButtonState<br />&#160;&#160;member MouseDevice : MouseDevice<br />&#160;&#160;member RightButton : MouseButtonState<br />&#160;&#160;member StylusDevice : StylusDevice<br />&#160;&#160;member XButton1 : MouseButtonState<br />&#160;&#160;member XButton2 : MouseButtonState<br /><br />Full name: System.Windows.Input.MouseEventArgs<br /><br />--------------------<br />Input.MouseEventArgs(mouse: Input.MouseDevice, timestamp: int) : unit<br />Input.MouseEventArgs(mouse: Input.MouseDevice, timestamp: int, stylusDevice: Input.StylusDevice) : unit</div>
+<div class="tip" id="fs65">val handle : canvas:Canvas -&gt; rectangle:Shapes.Rectangle -&gt; IDisposable<br /><br />Full name: Part1.version4.handle</div>
+<div class="tip" id="fs66">val get_canvas_position : (Input.MouseEventArgs -&gt; Point)</div>
+<div class="tip" id="fs67">val get_rectangle_position : (Input.MouseEventArgs -&gt; Point)</div>
+<div class="tip" id="fs68">val start_stream : IObservable&lt;DragChange&gt;</div>
+<div class="tip" id="fs69">val stop_stream : IObservable&lt;DragChange&gt;</div>
+<div class="tip" id="fs70">event UIElement.MouseUp: IEvent&lt;Input.MouseButtonEventHandler,Input.MouseButtonEventArgs&gt;</div>
+<div class="tip" id="fs71">val move_stream : IObservable&lt;DragChange&gt;</div>
+<div class="tip" id="fs72">event UIElement.MouseMove: IEvent&lt;Input.MouseEventHandler,Input.MouseEventArgs&gt;</div>
+<div class="tip" id="fs73">val merge : source1:IObservable&lt;&#39;T&gt; -&gt; source2:IObservable&lt;&#39;T&gt; -&gt; IObservable&lt;&#39;T&gt;<br /><br />Full name: Microsoft.FSharp.Control.Observable.merge</div>
+<div class="tip" id="fs74">val scan : collector:(&#39;U -&gt; &#39;T -&gt; &#39;U) -&gt; state:&#39;U -&gt; source:IObservable&lt;&#39;T&gt; -&gt; IObservable&lt;&#39;U&gt;<br /><br />Full name: Microsoft.FSharp.Control.Observable.scan</div>
+<div class="tip" id="fs75">type DragState =<br />&#160;&#160;{dragging: bool;<br />&#160;&#160;&#160;position: Point;<br />&#160;&#160;&#160;offset: Point;}<br /><br />Full name: Part1.version5.DragState<br /><em><br /><br />&#160;ドラッグ操作の状態</em></div>
+<div class="tip" id="fs76">DragState.offset: Point<br /><em><br /><br />&#160;ドラッグの開始位置からのオフセット</em></div>
+<div class="tip" id="fs77">val currently_dragging : state:DragState -&gt; bool<br /><br />Full name: Part1.version5.currently_dragging<br /><em><br /><br />&#160;現在ドラッグ中？</em></div>
+<div class="tip" id="fs78">val get_drag_position : state:DragState -&gt; Point<br /><br />Full name: Part1.version5.get_drag_position<br /><em><br /><br />&#160;ドラッグ操作の現在位置をドラッグ開始位置と相対位置から計算する。</em></div>
+<div class="tip" id="fs79">val diff : Vector</div>
+<div class="tip" id="fs80">property Vector.X: float</div>
+<div class="tip" id="fs81">property Vector.Y: float</div>
+<div class="tip" id="fs82">val initial_state : DragState<br /><br />Full name: Part1.version5.initial_state<br /><em><br /><br />&#160;ドラッグ操作の初期状態。</em></div>
+<div class="tip" id="fs83">val update_dragging : dragging:bool -&gt; op:DragState -&gt; DragState<br /><br />Full name: Part1.version5.update_dragging<br /><em><br /><br />&#160;既存のDragStateからドラッグ中のフラグだけが異なる新しいDragStateを作る。</em></div>
+<div class="tip" id="fs84">val update_drag_pos : position:Point -&gt; op:DragState -&gt; DragState<br /><br />Full name: Part1.version5.update_drag_pos<br /><em><br /><br />&#160;DragStateのPositionを更新する。ドラッグ操作中では無い場合には何もしない。</em></div>
+<div class="tip" id="fs85">type DragChange =<br />&#160;&#160;| StartDrag of Point<br />&#160;&#160;| StopDrag<br />&#160;&#160;| UpdatePosition of Point<br /><br />Full name: Part1.version5.DragChange<br /><em><br /><br />&#160;DragStateによって起こりうる変更の種類。</em></div>
+<div class="tip" id="fs86">union case DragChange.StartDrag: Point -&gt; DragChange<br /><em><br /><br />&#160;特定のオフセットからのドラッグ開始。</em></div>
+<div class="tip" id="fs87">val update_drag_state : state:DragState -&gt; change:DragChange -&gt; DragState<br /><br />Full name: Part1.version5.update_drag_state<br /><em><br /><br />&#160;DragChangeに応じてDragStateを更新して、新しいDragStateを返す。</em></div>
+<div class="tip" id="fs88">val offset : Point</div>
+<div class="tip" id="fs89">val is_left_click : args:Input.MouseButtonEventArgs -&gt; bool<br /><br />Full name: Part1.version5.is_left_click<br /><em><br /><br />&#160;マウスイベントが左クリックによって発生したかどうか。</em></div>
+<div class="tip" id="fs90">val get_mouse_position : relative_to:IInputElement -&gt; args:Input.MouseEventArgs -&gt; Point<br /><br />Full name: Part1.version5.get_mouse_position<br /><em><br /><br />&#160;マウスイベント時にIInputElementからカーソルの相対位置を計算する。</em></div>
+<div class="tip" id="fs91">val handle : canvas:Canvas -&gt; rectangle:Shapes.Rectangle -&gt; IDisposable<br /><br />Full name: Part1.version5.handle</div>
+<div class="tip" id="fs92">val get_rectangle_position : (Input.MouseButtonEventArgs -&gt; Point)</div>
+<div class="tip" id="fs93">val loadMainWindowFromXaml : unit -&gt; Window<br /><br />Full name: Part1.loadMainWindowFromXaml</div>
+<div class="tip" id="fs94">type XamlServices =<br />&#160;&#160;static member Load : fileName:string -&gt; obj + 4 overloads<br />&#160;&#160;static member Parse : xaml:string -&gt; obj<br />&#160;&#160;static member Save : instance:obj -&gt; string + 5 overloads<br />&#160;&#160;static member Transform : xamlReader:XamlReader * xamlWriter:XamlWriter -&gt; unit + 1 overload<br /><br />Full name: System.Xaml.XamlServices</div>
+<div class="tip" id="fs95">XamlServices.Parse(xaml: string) : obj</div>
+<div class="tip" id="fs96">Multiple items<br />type Window =<br />&#160;&#160;inherit ContentControl<br />&#160;&#160;new : unit -&gt; Window<br />&#160;&#160;member Activate : unit -&gt; bool<br />&#160;&#160;member AllowsTransparency : bool with get, set<br />&#160;&#160;member Close : unit -&gt; unit<br />&#160;&#160;member DialogResult : Nullable&lt;bool&gt; with get, set<br />&#160;&#160;member DragMove : unit -&gt; unit<br />&#160;&#160;member Hide : unit -&gt; unit<br />&#160;&#160;member Icon : ImageSource with get, set<br />&#160;&#160;member IsActive : bool<br />&#160;&#160;member Left : float with get, set<br />&#160;&#160;...<br /><br />Full name: System.Windows.Window<br /><br />--------------------<br />Window() : unit</div>
+<div class="tip" id="fs97">val startupAdd : e:&#39;a -&gt; unit<br /><br />Full name: Part1.startupAdd</div>
+<div class="tip" id="fs98">val e : &#39;a</div>
+<div class="tip" id="fs99">val window : Window</div>
+<div class="tip" id="fs100">val windowCanvas : Canvas</div>
+<div class="tip" id="fs101">FrameworkElement.FindName(name: string) : obj</div>
+<div class="tip" id="fs102">val windowRectangle : Shapes.Rectangle</div>
+<div class="tip" id="fs103">val e : Input.MouseButtonEventArgs</div>
+<div class="tip" id="fs104">module version1<br /><br />from Part1</div>
+<div class="tip" id="fs105">val ignore : value:&#39;T -&gt; unit<br /><br />Full name: Microsoft.FSharp.Core.Operators.ignore</div>
+<div class="tip" id="fs106">Window.Show() : unit</div>
+<div class="tip" id="fs107">Multiple items<br />type App =<br />&#160;&#160;inherit Application<br />&#160;&#160;new : unit -&gt; App<br /><br />Full name: Part1.App<br /><br />--------------------<br />new : unit -&gt; App</div>
+<div class="tip" id="fs108">val x : App</div>
+<div class="tip" id="fs109">Multiple items<br />type Application =<br />&#160;&#160;inherit DispatcherObject<br />&#160;&#160;new : unit -&gt; Application<br />&#160;&#160;member FindResource : resourceKey:obj -&gt; obj<br />&#160;&#160;member MainWindow : Window with get, set<br />&#160;&#160;member Properties : IDictionary<br />&#160;&#160;member Resources : ResourceDictionary with get, set<br />&#160;&#160;member Run : unit -&gt; int + 1 overload<br />&#160;&#160;member Shutdown : unit -&gt; unit + 1 overload<br />&#160;&#160;member ShutdownMode : ShutdownMode with get, set<br />&#160;&#160;member StartupUri : Uri with get, set<br />&#160;&#160;member TryFindResource : resourceKey:obj -&gt; obj<br />&#160;&#160;...<br /><br />Full name: System.Windows.Application<br /><br />--------------------<br />Application() : unit</div>
+<div class="tip" id="fs110">val main : unit -&gt; unit<br /><br />Full name: Part1.main</div>
+<div class="tip" id="fs111">val app : App</div>
+<div class="tip" id="fs112">Application.Run() : int<br />Application.Run(window: Window) : int</div>
+<div class="tip" id="fs113">Multiple items<br />type STAThreadAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; STAThreadAttribute<br /><br />Full name: System.STAThreadAttribute<br /><br />--------------------<br />STAThreadAttribute() : unit</div>
+
+        </div>
+        <div class="span3">
+          <a href="/TryFSharp.Formatting/index.html">
+            <!--<img src="/TryFSharp.Formatting/images/logo.png" style="width:99px;height:55px;margin:10px 0px 0px 35px;border-style:none;" />-->
+          </a>
+
+          <ul class="nav nav-list" id="menu">
+            <li class="nav-header">Tutorial: Functional Reactive Programming in F# and WPF</li>
+            <li class="divider"></li>
+            <li><a href="https://github.com/yukitos/notes/Tutorial_Functional_Reactive_Programming_in_FSharp_and_WPF">GitHub上のソースコード</a></li>
+
+            <li class="nav-header">チュートリアル</li>
+            <li><a href="/TryFSharp.Formatting/part1.html">パート1</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <a href="https://github.com/yukitos/notes/Tutorial_Functional_Reactive_Programming_in_FSharp_and_WPF"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+  </body>
+  </html>
