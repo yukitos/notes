@@ -4,12 +4,12 @@
   * Choose 'Console application' in Win32 Application Wizard
 2. Open project property dialog
 3. Open [Configuration Properties]-[C/C++]-[General]
-  * Set `Consume Windows Runtime Extension` `Yes (/ZW)`
+  * Set `Consume Windows Runtime Extension` option `Yes (/ZW)`
   * Add the following directories as `Additional #using Directories`:
     * $(WindowsSDK_MetadataPath)
     * $(VCInstallDir_120)vcpackages
 4. Open [Configuration Properties]-[C/C++]-[Code Generation]
-  * Set `Enable Minimal Rebuild` `No (/Gm-)`
+  * Set `Enable Minimal Rebuild` option `No (/Gm-)`
 5. Modify main entry point as follows:
 
 ```cpp
