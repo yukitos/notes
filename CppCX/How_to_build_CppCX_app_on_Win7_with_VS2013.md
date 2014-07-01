@@ -5,7 +5,7 @@
 2. Open project property dialog
 3. Open [Configuration Properties]-[C/C++]-[General]
   * Set `Consume Windows Runtime Extension` option `Yes (/ZW)`
-  * Add the following directories as `Additional #using Directories`:
+  * Add the following directory entries as `Additional #using Directories`:
     * $(WindowsSDK_MetadataPath)
     * $(VCInstallDir_120)vcpackages
 4. Open [Configuration Properties]-[C/C++]-[Code Generation]
