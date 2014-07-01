@@ -23,20 +23,19 @@ using namespace Platform;
 
 int main(Array<String^>^ args)
 {
-	APTTYPE at;
-	APTTYPEQUALIFIER atq;
-	::CoGetApartmentType(&at, &atq);
+  APTTYPE at;
+  APTTYPEQUALIFIER atq;
+  ::CoGetApartmentType(&at, &atq);
 
-	auto calendar = ref new Calendar;
-	calendar->SetToNow();
-	wcout << "It's now " <<
-		calendar->HourAsPaddedString(2)->Data() << L":" <<
-		calendar->MinuteAsPaddedString(2)->Data() << L":" <<
-		calendar->SecondAsPaddedString(2)->Data() << endl;
+  auto calendar = ref new Calendar;
+  calendar->SetToNow();
+  wcout << "It's now " <<
+    calendar->HourAsPaddedString(2)->Data() << L":" <<
+    calendar->MinuteAsPaddedString(2)->Data() << L":" <<
+    calendar->SecondAsPaddedString(2)->Data() << endl;
 
-	return 0;
+  return 0;
 }
 ```
 
-  NOTE: We can build this application successfully, but can't run on the Windows 7 environment because some WinRT runtime dlls are missing.
-  
+:warning: We can build this application successfully, but can't run on the Windows 7 environment because some WinRT runtime dlls are missing.
