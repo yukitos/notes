@@ -1,5 +1,7 @@
 # How to build C++/CX application on Windows 7 with Visual Studio 2013
 
+Based on: http://blogs.microsoft.co.il/pavely/2012/09/29/using-ccx-in-desktop-apps/
+
 1. Create Win32 Console application
   * Choose 'Console application' in Win32 Application Wizard
 2. Open project property dialog
