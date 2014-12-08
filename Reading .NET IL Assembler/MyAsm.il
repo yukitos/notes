@@ -15,39 +15,32 @@
             ldstr "Enter a number"
             call void [mscorlib]System.Console::WriteLine(string)
             call string [mscorlib]System.Console::ReadLine()
-            ldsflda valuetype CharArray8 Format
+            ldstr "%d"
             ldsflda int32 Odd.or.Even::val
-            call vararg int32 sscanf(string, int8*, ..., int32*)
-            stloc Retval
-            ldloc Retval
-            brfalse Error
+            call vararg int32 sscanf(string, string, ..., int32*)
+            stloc.0
+            ldloc.0
+            brfalse.s Error
             ldsfld int32 Odd.or.Even::val
-            ldc.i4 1
+            ldc.i4.1
             and
-            brfalse ItsEven
+            brfalse.s ItsEven
             ldstr "odd!"
-            br PrintAndReturn
+            br.s PrintAndReturn
         ItsEven:
             ldstr "even!"
-            br PrintAndReturn
+            br.s PrintAndReturn
         Error:
             ldstr "How rude!"
         PrintAndReturn:
             call void [mscorlib]System.Console::WriteLine(string)
-            ldloc Retval
-            brtrue AskForNumber
+            ldloc.0
+            brtrue.s AskForNumber
             ret
         }
     }
 }
-// Global items
-.field public static valuetype CharArray8 Format at FormatData
-// Data declaration
-.data FormatData = bytearray(25 64 00 00 00 00 00 00) // % d . . . . . .
-// Valuet type as placeholder
-.class public explicit CharArray8
-              extends [mscorlib]System.ValueType { .size 8 }
 // Calling unmanaged code
 .method public static pinvokeimpl("msvcrt.dll" cdecl)
-    vararg int32 sscanf(string, int8*) cil managed preservesig { }
+    vararg int32 sscanf(string, string) cil managed preservesig { }
 
