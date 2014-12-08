@@ -109,6 +109,7 @@
 * Microsoft Windows Portable Executable and Common Object File Format (PE/COFF)
 
 マネージ実行ファイルの構造
+
 | 名前 | 説明 |
 |:-----|:-----|
 | PE / COFFヘッダ | OSが使用する |
