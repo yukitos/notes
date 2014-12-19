@@ -107,17 +107,40 @@
 ## 4章
 
 * Microsoft Windows Portable Executable and Common Object File Format (PE/COFF)
-
-マネージ実行ファイルの構造
-
-| 名前 | 説明 |
-|:-----|:-----|
-| PE / COFFヘッダ | OSが使用する |
-| CLRヘッダ | CLRが使用する |
-| CLRデータ | メタデータやILコード、マネージ版構造例外処理、マネージリソースを含む |
-| ネイティブデータおよびコード | 省略可 |
-
+* マネージ実行ファイルの構造
+  * MS DOS ヘッダ (64 Bytes)
+  * MS DOS スタブ (64 Bytes)
+  * PE シグネチャ (4 Bytes)
+  * COFF ヘッダ (20 Bytes)
+  * PE ヘッダ (224 Bytes)
+    * Data Directory Table
+  * セクションヘッダ
+* MS DOS ヘッダ/スタブ/PE シグネチャ
+  * イメージファイルにのみ存在
+  * 0x3Cの位置にPEシグネチャへのファイルポインタが格納されている
+  * PEシグネチャはMS DOSスタブに続く4バイト
+    * 必ずしも直後ではない
+    * `P` `E` `null` `null`
+* COFF ヘッダ
+  * PEシグネチャの直後に格納されている
+  * PE/COFFファイルの最も汎用的な性質が記述されている
+  * COFFヘッダの定義は `Winnt.h`
+  * `Characteristics` フィールド
+    * 実行ファイルは `0x010E` (IMAGE_FILE_EXECUTABLE_IMAGE |
+      IMAGE_FILE_LINE_NUMS_STRIPPED | IMAGE_FILE_LOCAL_SYMS_STRIPPED |
+      IMAGE_FILE_32BIT_MACHINE)
+    * DLLファイルは `0x210E` (IMAGE_FILE_EXECUTABLE_IMAGE |
+      IMAGE_FILE_LINE_NUMS_STRIPPED | IMAGE_FILE_LOCAL_SYMS_STRIPPED |
+      IMAGE_FILE_32BIT_MACHINE | IMAGE_FILE_DLL)
+    * 64ビットバイナリの場合には `IMAGE_FILE_32BIT_MACHINE` が無いかも
+    * CLR 4.0以降では 実行ファイルは `0x0022` DLLファイルは `0x2022`
+* PE ヘッダ
+  * `オプションヘッダ` ではあるが、オブジェクトファイルには含まれないというだけ
+  * PEヘッダのサイズは不定
+    * `SizeOfOptionalHeader` フィールドで指定
+  * PEヘッダの定義は `Winnt.h`
 * Data Directory Table
+  * 32ビットの場合はオフセット96、64ビットの場合はオフセット112から開始
   * 0: エクスポートディレクトリテーブルアドレスおよびサイズ
   * 1: インポートテーブルアドレスおよびサイズ
   * 2: リソーステーブルアドレスおよびサイズ
@@ -135,9 +158,13 @@
   * 14: 共通言語ランタイムヘッダアドレスおよびサイズ
   * 15: 予約済み
 * セクションヘッダ
+  * 定義される位置は必ずPEヘッダの直後
   * COFFヘッダのNumberOfSectionsフィールドに個数が定義されている
   * 40バイトの構造体
+  * `IMAGE_SECTION_HEADER` の `VirtualAddress` は実際にはセクションの始点のRVA
   * セクション名はイメージファイルではASCIIで8文字の制限があるが、オブジェクトファイルの場合はそれよりも長い名前にできる
 * CLRヘッダ
   * .NET Framework SDKの`CorHdr.h`で定義されている
+
+## 5章
 
