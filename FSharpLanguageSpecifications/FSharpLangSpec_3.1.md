@@ -30,7 +30,7 @@ Donna Malayeri, Wonseok Chae, Uladzimir Matsveyeu, Lincoln Atkinson
 
 **警告**
 
-_© 2005-2013 Microsoft Corporation and contributors. Made available under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html)._
+_© 2005-2013 Microsoft Corporation and contributors. [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html)ライセンスの下に利用出来ます。_
 
 _Microsoft, Windows, Visual F#はアメリカ合衆国 Microsoft Corporationの商標、あるいはアメリカ合衆国内外における登録商標です。_
 
