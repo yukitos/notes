@@ -1,7 +1,5 @@
 # F# 3.1 言語仕様(ワーキングドラフト)
 
-----
-
 > 注釈：この文章はMicrosoftResearchおよびMicrosoftDeveloperDivisionによって
 > 2013年6月に作成された、F# 3.1リリース向けの言語仕様です。
 
@@ -22,7 +20,7 @@ Pull Requestを送信したりといった方法があります。
 
 この仕様書の一部ではC# 4.0やUnicode、IEEEといった仕様への言及があります。
 
-**筆者：**
+**著者：**
 Don Syme および補佐として Anar Alimov, Keith Battocchi, Jomo Fisher,
 Michael Hale, Jack Hu, Luke Hoban, Tao Liu, Dmitry Lomov,
 James Margetson, Brian McNamara, Joe Pamer, Penny Orwick,
@@ -32,12 +30,11 @@ Donna Malayeri, Wonseok Chae, Uladzimir Matsveyeu, Lincoln Atkinson
 
 **警告**
 
-* © 2005-2013 Microsoft Corporation and contributors. Made available under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html). *
+_ © 2005-2013 Microsoft Corporation and contributors. Made available under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html). _
 
-* Microsoft, Windows, Visual F#はアメリカ合衆国 Microsoft Corporationの商標、
-あるいはアメリカ合衆国内外における登録商標です。 *
+_ Microsoft, Windows, Visual F#はアメリカ合衆国 Microsoft Corporationの商標、あるいはアメリカ合衆国内外における登録商標です。 _
 
-* 文章内で言及されるその他の製品や会社名にはそれぞれ固有の所有者が存在する場合があります。 *
+_ 文章内で言及されるその他の製品や会社名にはそれぞれ固有の所有者が存在する場合があります。 _
 
 **更新履歴**
 
