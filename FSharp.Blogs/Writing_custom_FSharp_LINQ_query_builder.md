@@ -1,6 +1,6 @@
 # 独自のF# LINQクエリビルダーを作成する
 
-> 原題：[Writing custom F# LINQ query builder][link1]
+> 原文：[Writing custom F# LINQ query builder][link1]
 
 私が開催している [F# in Finance][link2] コースの参加者である[Stuart][link3] から、
 F#で独自のクエリを作成するにはどうしたらいいかという、
@@ -24,7 +24,7 @@ query {
 `DynamoDB` は(Dynamo DB上で利用可能なすべてのテーブルを利用できるように)
 型プロバイダーで生成された型とすることもできるでしょう。
 上の例では組み込みの`query`ビルダーを使っていて、
-これを拡張していくことも可能ではありますが、
+これを拡張していくことも可能ではあります。
 しかしその場合、私が知る限りではLINQの式ツリーを使わないといけないはずです。
 そこで今回の記事では別の方法として、独自のビルダーを作成していくことにします
 (つまり`query { ... }`ではなく`dynamo { ... }`というコードになります)。
@@ -236,7 +236,7 @@ Call (Some (Value (FSI_0080+QueryBuilder)), SelectCount
 
 ```fsharp
 open Microsoft.FSharp.Quotations.Patterns
-open Microsoft.FSharp.Quotations.DrivedPatterns
+open Microsoft.FSharp.Quotations.DerivedPatterns
 
 let rec translateQuery e =
     match e with
@@ -305,7 +305,7 @@ let rec translateQuery e =
 let translateWhere = function
     | Lambda(var1, Call (None, op, [left; right])) ->
         match left, right with
-        | PropertyGet(Some (Var var2), prop, []), Value(value _) when
+        | PropertyGet(Some (Var var2), prop, []), Value(value, _) when
             var1.Name = var2.Name && op.Name.StartsWith("op_") ->
             // 理解できる'where'句を発見。QueryConditionを組み立てよう！
             { Property = prop.Name
