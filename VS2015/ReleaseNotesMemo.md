@@ -6,14 +6,31 @@
 
 * 第1級関数としてのコンストラクタ
 
+  コンストラクタを関数として扱う事ができるように。
+
   ````fsharp
   let urlStrings = [| "http://www1.example.com"; "http://www2.example.com" |]
   //let urls = urlStrings |> Array.map (fun s -> new Url(s))
 
-  let urls = urlStrings |> Array.map Url
+  let urls = urlStrings |> Array.map System.Uri
   ````
 
 * `mutable`と`ref`の一元化
+
+  これまでは`変数`を扱いたい場合は`ref`を使っていたのを、
+  `mutable`に揃えて簡潔に記述できるように。
+
+  ````fsharp
+  let sumSquares n =
+      let total = ref 0
+      Seq.iter (fun i -> total := !total + i * i) { 1 .. n }
+      !total
+
+  let sumSquares n =
+      let mutable total = 0
+      Seq.iter (fun i -> total <- total + i * i) { 1 .. n }
+      total
+  ````
 
 * 型プロバイダーのメソッドにおける静的パラメータのサポート
 
