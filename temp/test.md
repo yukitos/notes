@@ -6,7 +6,7 @@
 
 
 今年も
-[英語版][https://sergeytihon.wordpress.com/2015/10/25/f-advent-calendar-in-english-2015/]
+[英語版](https://sergeytihon.wordpress.com/2015/10/25/f-advent-calendar-in-english-2015/)
 が同時に開催される模様です。
 
 # 内容は？
@@ -56,11 +56,11 @@ F# に関連することであればどんな内容でも構いません。
 
 # 過去の開催状況
 
-- [F# Advent Calendar 2014 : connpass][http://connpass.com/event/9758/]
-- [F# Advent Calendar 2013 : connpass][http://connpass.com/event/3935/]
-- [F# Advent Calendar 2012 : ATND][http://atnd.org/events/33927]
-- [F# Advent Calendar 2011 - PARTAKE][http://partake.in/events/1c24993a-c475-4fc2-bca4-7a1cd2f81869]
-- [F# Advent Calendar jp 2010 : ATND][http://atnd.org/events/10685]
+- [F# Advent Calendar 2014 : connpass](http://connpass.com/event/9758/)
+- [F# Advent Calendar 2013 : connpass](http://connpass.com/event/3935/)
+- [F# Advent Calendar 2012 : ATND](http://atnd.org/events/33927)
+- [F# Advent Calendar 2011 - PARTAKE](http://partake.in/events/1c24993a-c475-4fc2-bca4-7a1cd2f81869)
+- [F# Advent Calendar jp 2010 : ATND](http://atnd.org/events/10685)
 
 # 今年の他のAdvent Calendar
 
